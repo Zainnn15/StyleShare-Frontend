@@ -1,13 +1,17 @@
 import './App.css';
 import React from 'react';
-import GarmentMeasurements from './views/garmentMeasurements'
+import {Routes, Route } from 'react-router-dom';
+import GarmentMeasurements from './views/garmentMeasurements';
+import Home from './views/home';
+import Group from './views/group';
 
 function App() {
   return (
-    <section>
-      <h1>Garment Measurements</h1>
-      <GarmentMeasurements />
-    </section>
+    <Routes>
+      <Route path='/' element={<Home/>}>Home</Route>
+      <Route path='/group' element={<Group/>}>Group</Route>
+      <Route path='/garment_measurements' element={<GarmentMeasurements/>}>Garment Measurements</Route>
+    </Routes>
   );
 }
 
