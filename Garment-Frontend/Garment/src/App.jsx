@@ -9,6 +9,7 @@ import { UserContextProvider } from '../context/userContext'
 import Dashboard from './pages/Dashboard'
 import GarmentMeasure from './pages/GarmentPages/GarmentMeasure'
 import Profile from './pages/Profile'
+import GarmentWash from './pages/GarmentPages/GarmentWash'
 
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
@@ -24,6 +25,7 @@ function App() {
       <Route path='/register' element={<Register />} /> 
       <Route path='/userprofile' element={<Profile />} /> 
       <Route path='/garment-measure' element={<GarmentMeasure />} />
+      <Route path='/garment-wash' element={<GarmentWash />} />
     </Routes>
     </UserContextProvider>
   )
