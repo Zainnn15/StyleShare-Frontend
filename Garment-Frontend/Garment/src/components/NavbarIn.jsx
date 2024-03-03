@@ -29,6 +29,7 @@ export default function NavbarIn() {
       <li><Link to='/userprofile'>Profile</Link></li>
       <li><Link to='/garment-measure'>Measure Garment</Link></li>
       <li><Link to='/garment-wash'>Wash Garment</Link></li>
+      <li><Link to='/usersearch'>Find a User</Link></li>
       <li><button onClick={handleLogout}>Log out</button></li>
     </ul>
   </nav>

@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import {useNavigate} from 'react-router-dom';
@@ -20,12 +20,18 @@ export default function Login() {
                 toast.error(data.error);
             } else {
                 setData({});
-                navigate('/dashboard');
             }
         } catch (error) {
             console.log(error);
         }
     }
+
+    useEffect(() => {
+        if (Object.keys(data).length === 0) {
+          // Navigate only when the data has been cleared
+          navigate('/dashboard');
+        }
+      }, [data, navigate]);
   return (
     <div>
         <Navbar />
