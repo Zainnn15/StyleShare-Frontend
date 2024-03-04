@@ -1,0 +1,45 @@
+@use "Fonts";
+@use "Colors";
+@use "Sizes";
+@use "Buttons";
+@use "Containers";
+@use "Inputs";
+@use "Images";
+
+body {
+    box-sizing: border-box;
+    font-family: Fonts.$mainFont;
+    font-size: Sizes.$medium;
+    background-color: Colors.$purplePink;
+    accent-color: Colors.$purpleDark;
+}
+
+h1, h2, h3 {
+    color: Colors.$purpleScarlet;
+    text-align: center;
+}
+
+hr {
+    border: 1px solid Colors.$purpleScarlet;
+}
+
+a {
+    text-decoration: none;
+}
+
+label {
+    color: Colors.$purpleDark;
+}
+
+::placeholder {
+    color: Colors.$gray2;
+    opacity: 1; /* Firefox */
+}
+  
+::-ms-input-placeholder { /* Edge 12 -18 */
+    color: Colors.$gray2;
+}
+
+.hide {
+    visibility: hidden;
+}

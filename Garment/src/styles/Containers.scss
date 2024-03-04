@@ -1,0 +1,387 @@
+@use "Colors";
+@use "Sizes";
+@use "Fonts";
+@use "sass:math";
+
+/*Header*/
+$headerHeight_sm: 45px;
+$headerHeight_lg: 60px;
+
+/*Header Dropdown*/
+$numProfileItems: 3;
+$profileItemHeight: 2.25em;
+$profileItemWidth: 8em;
+
+/*Device size*/
+// Small tablets and large smartphones (landscape view)
+$screen-sm-min: 576px;
+
+// Small tablets (portrait view)
+$screen-md-min: 768px;
+
+// Tablets and small desktops
+$screen-lg-min: 992px;
+
+// Large tablets and desktops
+$screen-xl-min: 1200px;
+
+// Small devices
+@mixin sm {
+    @media (min-width: #{$screen-sm-min}) {
+        @content;
+    }
+ }
+ 
+ // Medium devices
+ @mixin md {
+    @media (min-width: #{$screen-md-min}) {
+        @content;
+    }
+ }
+ 
+ // Large devices
+ @mixin lg {
+    @media (min-width: #{$screen-lg-min}) {
+        @content;
+    }
+ }
+ 
+ // Extra large devices
+ @mixin xl {
+    @media (min-width: #{$screen-xl-min}) {
+        @content;
+    }
+ }
+
+ /*Basic containers*/
+
+@mixin container-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin container-col {
+    @include container-row;
+    flex-direction: column;
+}
+
+@mixin input {
+    margin: 1.5em 1em;
+    border-radius: 10px;
+}
+
+@mixin title {
+    @include Fonts.bold;
+    display: block;
+    color: Colors.$purpleScarlet;
+    text-align: center;
+    margin: 0.5em;
+}
+
+@mixin button-form {
+    @include container-row;
+    display: flex;
+    justify-content: space-around;
+}
+
+@mixin header-menu {
+    @include container-col;
+    justify-content: flex-start;
+    align-items: center;
+    position: fixed;
+    top: $headerHeight_sm;
+    background-color: Colors.$purpleDark;
+    cursor: pointer;
+    z-index: 4;
+
+    div {
+        display: none;
+    }
+
+    a, label {
+        height: 0;
+        font-size: 0;
+        transition: height 0.5s;
+        color: Colors.$purpleLight;
+        cursor: pointer;
+    }
+}
+
+@mixin header-menu-active {
+    div, a {
+        height: $profileItemHeight;
+        display: block;
+        border: 1px solid darken(Colors.$purpleDark, 1);
+        text-align: center;
+        padding-top: math.div($profileItemHeight, 2);
+        box-shadow: inset 0.1em 0.15em 0.1em rgba(0,0,0,0.2);
+    }
+
+    label, a {
+        font-size: Sizes.$medium;
+    }
+
+    // large devices
+    @include lg {
+        top: $headerHeight_lg;
+    }
+}
+
+.container {
+    margin: 1em auto;
+    max-width: 95%;
+
+    // large devices
+    @include lg {
+        max-width: 80%;
+    }
+}
+
+.container.main {    
+    margin-top: 4em;
+    // large devices
+    @include lg {
+        margin-top: 6em;
+    }
+}
+
+.container-row {
+    @include container-row;
+}
+
+.container-col {
+    @include container-col;
+}
+
+.container-title {
+    @include title;
+    font-size: Sizes.$xLarge;
+
+    // large devices
+    @include lg {
+        font-size: Sizes.$xxLarge;
+    }
+}
+.container-subtitle {
+    @include title;
+    font-size: Sizes.$large;
+
+    // large devices
+    @include lg {
+        font-size: Sizes.$xLarge;
+    }
+}
+.container-subtitle-2 {
+    @include title;
+    text-align: initial;
+    font-size: Sizes.$medium;
+
+    // large devices
+    @include lg {
+        font-size: Sizes.$large;
+    }
+}
+
+.container-button-form {
+    @include button-form;
+    margin-top: 3em;
+}
+
+.container-header {
+    @include container-row;
+    justify-content: space-between;
+    width: 100%;
+    height: $headerHeight_sm;
+    background-color: Colors.$purpleDark;
+    position: fixed;
+    top: 0;
+    z-index: 4;
+
+    // large devices
+    @include lg {
+        height: $headerHeight_lg;
+    }
+}
+
+.container-header-button {
+    background-color: inherit;
+    width: 2.5em;
+    margin: 0 1em;
+
+    img {
+        border-radius: 50%;
+        object-fit: contain;
+    }
+
+    // large devices
+    @include lg {
+        width: 3em;
+    }
+}
+
+.container-header-profile {
+    @include header-menu;
+    width: $profileItemWidth;
+    right: 0;
+}
+.container-header-profile.pop-active {
+    @include header-menu-active;
+
+    a, div {
+        width: $profileItemWidth;
+    }
+}
+
+.container-header-menu {
+    @include header-menu;
+    width: 100%;
+    left: 0;
+}
+.container-header-menu.pop-active {
+    @include header-menu-active;
+    
+    a, div {
+        width: 100%;
+    }
+}
+
+.container-header-profile, .container-header-menu {
+    a:hover, div:hover {
+        background-color: lighten(Colors.$purpleDark, 5);
+    }
+}
+
+.container-prompt {
+    @include input;
+    @include container-row;
+    background-color: Colors.$purple;
+    p {
+        color: Colors.$purpleLight;
+        text-align: center;
+    }
+}
+
+.container-input {
+    @include container-row;
+    @include input;
+
+    label {
+        margin: 1em;
+    }
+}
+
+.container-radio {
+    @include container-col;
+}
+.container-radio-group {
+    margin-bottom: 1em;
+    label {
+        cursor: pointer;
+    }
+}
+
+.container-checkbox {
+    @include container-col;
+    align-items: flex-start;
+}
+.container-checkbox-group {
+    margin-bottom: 1em;
+    label {
+        cursor: pointer;
+    }
+}
+
+.container-materials {
+    display: block;
+    width: 90%;
+    margin: 0 auto;
+
+    label:first-child {
+        display: inline;
+        position: absolute;
+        background-color: Colors.$purple;
+        color: Colors.$purpleLight;
+        font-size: Sizes.$small;
+        padding: 0.25em;
+        border-radius: 1px;
+    }
+}
+.container-materials-group {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5em;
+    border: 0.1em solid Colors.$purple;
+    border-radius: 10px;
+    padding: 1em;
+
+    input {
+        padding: 1em 0;
+        margin: 0;
+    }
+
+    label {
+        margin-left: 0.5em;
+    }
+    
+    // medium devices
+    @include md {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        input {
+            width: 100%;
+        }
+    }
+}
+.container-materials-remove {
+    display: inline;
+    position: relative;
+    left: 92%;
+    top: -9.75em;
+
+    // medium devices
+    @include md {
+        position: relative;
+        top: -3.5em;
+        right: 2em;
+    }
+}
+
+.container-care {
+    @include container-row;
+    flex-wrap: wrap;
+    @include input;
+}
+.container-care-group {
+    @include container-row;
+    padding-bottom: 0.5em;
+}
+.container-care-img {
+    @include container-col;
+    border-radius: 5px;
+    label {
+        max-width: 6em;
+        font-size: Sizes.$small;
+    }
+}
+
+.container-popup {
+    position: relative;
+    z-index: 3;
+
+    img {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        background-color: Colors.$purpleLight;
+    }
+}
+
+.container-info {
+    display: flex;
+    flex-direction: row;
+}

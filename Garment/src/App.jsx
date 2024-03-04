@@ -11,6 +11,7 @@ import GarmentMeasure from './pages/GarmentPages/GarmentMeasure'
 import Profile from './pages/Profile'
 import GarmentWash from './pages/GarmentPages/GarmentWash'
 import UserSearch from './pages/UserSearch'
+import GarmentDetails from './pages/GarmentPages/GarmentDetails'
 
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
@@ -28,6 +29,7 @@ function App() {
       <Route path='/garment-measure' element={<GarmentMeasure />} />
       <Route path='/garment-wash' element={<GarmentWash />} />
       <Route path='/usersearch' element={<UserSearch />}/>
+      <Route path='/garment-details' element={<GarmentDetails />} />
     </Routes>
     </UserContextProvider>
   )

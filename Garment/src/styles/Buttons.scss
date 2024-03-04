@@ -1,0 +1,98 @@
+@use "Colors";
+@use "Containers";
+@use "Sizes";
+
+@function hoverColor($color) {
+    @return darken($color, 5);
+}
+
+@function focusColor($color) {
+    @return darken($color, 10);
+}
+
+@mixin form {
+    align-self: flex-start;
+    background-color: Colors.$purpleScarlet;
+    color: Colors.$purpleLight;
+    padding: 0.75em 1em;
+}
+
+@mixin header {
+    align-self: center;
+    background-color: Colors.$purpleDark;
+}
+
+@mixin btn-img {
+    background-color: inherit;
+    img {
+        border-radius: 50%;
+    }
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 0.5em;
+}
+button:active {
+    opacity: 0.7;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.button-form {
+    @include form;
+
+    // large devices
+    @include Containers.lg {
+        font-size: Sizes.$large;
+    }
+}
+.button-form:hover {
+    background-color: hoverColor(Colors.$purpleScarlet);
+}
+
+.button-header {
+    @include header;
+    border-radius: 50%;
+}
+
+.button-remove {
+    @include btn-img;
+    img {
+        background-color: Colors.$error;
+        padding: 0.25em;
+    }
+}
+.button-remove:hover {
+    img {
+        background-color: hoverColor(Colors.$error);
+    }
+}
+
+.button-add {
+    @include btn-img;
+    img {
+        background-color: Colors.$purple;
+        padding: 0.5em;
+    }
+}
+.button-add:hover {
+    img {
+        background-color: hoverColor(Colors.$purple);
+    }
+}
+
+.button-info {
+    @include btn-img;
+    img {
+        background-color: Colors.$purpleDark;
+    }
+}
+.button-info:hover {
+    img {
+        opacity: 0.8;
+    }
+}

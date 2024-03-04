@@ -1,0 +1,54 @@
+@use "Sizes";
+@use "Colors";
+@use "Buttons";
+@use "Fonts";
+
+@mixin input {
+    @include Fonts.regular;
+    background-color: Colors.$purpleLight;
+    color: Colors.$purpleDark;
+    width: 100%;
+    font-size: Sizes.$medium;
+    border: 0.1em solid Colors.$purpleLight;
+    border-radius: 10px;
+    padding: 1em;
+    margin: 0;
+}
+
+textarea {
+    @include input;
+    resize: none;
+}
+input, select, datalist {
+    @include input;
+    text-align: center;
+}
+input:hover, select:hover, datalist:hover, textarea:hover {
+    border: 0.1em solid Colors.$purple;
+}
+input:focus, select:focus, datalist:hover, textarea:focus {
+    outline: 1px solid Buttons.focusColor(Colors.$purple);
+    border: 0.1em solid Buttons.focusColor(Colors.$purple);
+}
+
+input[type='radio'], input[type='checkbox'] {
+    width: auto;
+    margin-right: 0.5em;
+}
+input[type='radio']:focus, input[type='checkbox']:focus {
+    outline: none;
+}
+
+//date input
+input[type='date'] {
+    width: auto;
+}
+::-webkit-datetime-edit { 
+    @include Fonts.regular;
+    color: Colors.$purpleDark; 
+    text-align: center;
+}
+
+input[type='number'] {
+    width: 30%;
+}
