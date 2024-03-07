@@ -1,12 +1,9 @@
 /* eslint-disable react/prop-types */
 import '../../styles/main.scss';
 
-import { addErrorMessageByID, checkOnID, selectID, validate, validatePage } from "../../constants/inputHandlers";
+import { addErrorMessageByID, checkOnID, selectID, validate, validatePage } from "../../constants/functions/inputHandlers";
 
 const GarmentDetails_First = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
-
-  
-
     //handle next button
     function validateAndNext() {
         let querySelect = "input[type='text'],input[type='date']";

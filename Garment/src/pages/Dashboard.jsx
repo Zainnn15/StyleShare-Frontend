@@ -1,14 +1,17 @@
 import { useContext } from "react"
 import { UserContext } from "../../context/userContext"
-import NavbarIn from "../components/NavbarIn";
+import ScreenHeader from "../components/common/ScreenHeader";
+import { changeTitle } from "../constants/functions/inputHandlers";
 
 export default function Dashboard() {
-    const {user} = useContext(UserContext);
+  const {user} = useContext(UserContext);
+  changeTitle("Home");
   return (
-    <div>
-        <NavbarIn />
-        <h1>Dashboard</h1>
-        <h2>Welcome, {user.name}</h2>
-    </div>
-  )
+      <div>
+          <ScreenHeader />
+          <div className="container main">
+              <h1>Welcome, {user.name}</h1>
+          </div>
+      </div>
+  );
 }

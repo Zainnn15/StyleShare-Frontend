@@ -2,7 +2,10 @@ import {useState} from 'react';
 import axios from 'axios';
 import {toast} from 'react-hot-toast';
 import {useNavigate} from 'react-router-dom';
-import Navbar from '../components/Navbar'
+import ScreenHeader from '../components/common/ScreenHeader';
+import CircleImg from '../components/common/CircleImg';
+
+import logo from '../assets/icons/logo192.png';
 
 export default function Register() {
     const navigate = useNavigate();
@@ -11,7 +14,6 @@ export default function Register() {
         username: '',
         email: '',
         password: '',
-        
     })
 
     const handleSubmit = async (e) => {
@@ -34,28 +36,46 @@ export default function Register() {
 
   return (
     <div>
-        <Navbar />
-        <form onSubmit={handleSubmit}>
-            <h1>Register</h1>
+        <ScreenHeader isLogin={false}/>
+        <div className='container main'>           
+            <form onSubmit={handleSubmit}>
+                <div className='container-small'>
+                    <div className='container-col'>
+                    <CircleImg iconUrl={logo} width="30%"/>
+                    </div>
+                    <div>
+                        <label className="container-title">Register</label>
+                        <hr/>
+                    </div>    
+                    <br/>
 
-            <label htmlFor="name">Full Name</label>
-            <input type="text" id="name" value={data.name} onChange={(e) => setData({...data, name: e.target.value})} />
+                    <div>
+                        <label htmlFor="name">Full Name</label>
+                        <input type="text" id="name" value={data.name} 
+                            onChange={(e) => setData({...data, name: e.target.value})} 
+                        />
 
-            <label htmlFor="name">Username</label>
-            <input type="text" id="username" value={data.username} onChange={(e) => setData({...data, username: e.target.value})} />
+                        <label htmlFor="name">Username</label>
+                        <input type="text" id="username" value={data.username} 
+                            onChange={(e) => setData({...data, username: e.target.value})} 
+                        />
 
-            <label htmlFor="email">Email</label>
-            <input type="email" id="email" value={data.email} onChange={(e) => setData({...data, email: e.target.value})}/>
+                        <label htmlFor="email">Email</label>
+                        <input type="email" id="email" value={data.email} 
+                            onChange={(e) => setData({...data, email: e.target.value})}
+                        />
+                        
+                        <label htmlFor="password">Password</label>
+                        <input type="password" id="password" value={data.password} 
+                            onChange={(e) => setData({...data, password: e.target.value})}
+                        />
+                    </div>
+                    <br/>
             
-            <label htmlFor="password">Password</label>
-            <input type="password" id="password" value={data.password} onChange={(e) => setData({...data, password: e.target.value})}/>
-          
-         
-                <button type="submit">Register</button>
-            
-        </form>
-
-
+                    <button className='button-form' type="submit" style={{width:"100%"}}>Register</button>
+                </div>                
+            </form>
+        </div>
     </div>
   )
 }

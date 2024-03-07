@@ -1,22 +1,25 @@
 import moment from "moment";
+import axios from "axios";
+
 import '../../styles/main.scss';
+
 import { useContext, useState } from "react";
 import { UserContext } from "../../../context/userContext";
-import First from './GarmentDetails_First';
-import Second from './GarmentDetails_Second';
-import Third from './GarmentDetails_Third';
-import Fourth from './GarmentDetails_Fourth';
-import Fifth from './GarmentDetails_Fifth';
-import Sixth from './GarmentDetails_Sixth';
-import Seventh from './GarmentDetails_Seventh';
-import Eight from './GarmentDetails_Eighth';
-import Ninth from './GarmentDetails_Ninth';
-import Tenth from './GarmentDetails_Tenth';
-import { changeTitle } from "../../constants/inputHandlers";
+import { changeTitle } from "../../constants/functions/inputHandlers";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-hot-toast";
-import NavbarIn from "../../components/NavbarIn";
+
+import ScreenHeader from "../../components/common/ScreenHeader";
+import First from '../../components/garment_details/GarmentDetails_First.jsx';
+import Second from '../../components/garment_details/GarmentDetails_Second.jsx';
+import Third from '../../components/garment_details/GarmentDetails_Third.jsx';
+import Fourth from '../../components/garment_details/GarmentDetails_Fourth.jsx';
+import Fifth from '../../components/garment_details/GarmentDetails_Fifth.jsx';
+import Sixth from '../../components/garment_details/GarmentDetails_Sixth.jsx';
+import Seventh from '../../components/garment_details/GarmentDetails_Seventh.jsx';
+import Eight from '../../components/garment_details/GarmentDetails_Eighth.jsx';
+import Ninth from '../../components/garment_details/GarmentDetails_Ninth.jsx';
+import Tenth from '../../components/garment_details/GarmentDetails_Tenth.jsx';
 
 const GarmentDetails = () => {
     const navigate = useNavigate();
@@ -192,7 +195,7 @@ const GarmentDetails = () => {
     changeTitle("Garment Details")
     return (
         <div>
-            <NavbarIn/>
+            <ScreenHeader />
             <div className="container main">
                 <div>
                     <label className="container-subtitle-2" style={{textAlign: "right"}}>{page+1}/{numPages}</label>

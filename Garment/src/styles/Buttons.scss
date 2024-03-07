@@ -1,6 +1,7 @@
 @use "Colors";
 @use "Containers";
 @use "Sizes";
+@use "Fonts";
 
 @function hoverColor($color) {
     @return darken($color, 5);
@@ -15,6 +16,11 @@
     background-color: Colors.$purpleScarlet;
     color: Colors.$purpleLight;
     padding: 0.75em 1em;
+
+    // large devices
+    @include Containers.lg {
+        font-size: Sizes.$large;
+    }
 }
 
 @mixin header {
@@ -33,6 +39,7 @@ button {
     cursor: pointer;
     border: none;
     border-radius: 0.5em;
+    font-size: Sizes.$medium;
 }
 button:active {
     opacity: 0.7;
@@ -42,13 +49,27 @@ button:active {
     cursor: pointer;
 }
 
+.button-regular {
+    background-color: Colors.$purpleScarlet;
+    color: Colors.$purpleLight;
+    padding: 0.75em 1em;
+}
+.button-regular:hover {
+    background-color: hoverColor(Colors.$purpleScarlet);
+}
+
+.button-cancel {
+    background-color: inherit;
+    outline: 0.1em solid Colors.$purpleScarlet;
+    padding: 0.75em 1em;
+    color: Colors.$purpleScarlet;
+}
+.button-cancel:hover {
+    opacity: 0.7;
+}
+
 .button-form {
     @include form;
-
-    // large devices
-    @include Containers.lg {
-        font-size: Sizes.$large;
-    }
 }
 .button-form:hover {
     background-color: hoverColor(Colors.$purpleScarlet);
@@ -57,6 +78,12 @@ button:active {
 .button-header {
     @include header;
     border-radius: 50%;
+}
+
+.button-header-link {
+    @include form;
+    background-color: inherit;
+    font-family: Fonts.$mainFont;
 }
 
 .button-remove {
@@ -96,3 +123,14 @@ button:active {
         opacity: 0.8;
     }
 }
+
+.button-upload {
+    background-color: Colors.$purpleBlue;
+    padding: 1em;
+    color: Colors.$purpleLight;
+}
+.button-upload:hover {
+    background-color: hoverColor(Colors.$purpleBlue);
+}
+
+

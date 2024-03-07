@@ -3,13 +3,13 @@ import '../../styles/main.scss';
 import info from '../../assets/icons/info.png';
 import symbols from '../../assets/images/care_symbols.png';
 
-import { checkOnID, clickID, addErrorMessageByID, validateInpName } from "../../constants/inputHandlers";
-import { careInstructions } from "../../constants/lists";
-import CircleBtn from "../../components/common/CircleBtn";
-import CircleImg from "../../components/common/CircleImg";
-import PopupImg from "../../components/common/PopupImg";
+import { checkOnID, clickID, addErrorMessageByID, validateInpName } from "../../constants/functions/inputHandlers";
+import { careInstructions } from "../../constants/data/lists";
+import CircleBtn from "../common/CircleBtn";
+import CircleImg from "../common/CircleImg";
+import PopupImg from "../common/PopupImg";
 
-const GarmentDetails_Tenth = ({formData, setFormData, page, numPages, handleBack}) => {
+const GarmentDetails_Tenth = ({formData, setFormData, page, numPages, handleBack, handleForward}) => {
     const bleachTree = {
         "Bleach": "bleach_yes",
     };
@@ -31,9 +31,10 @@ const GarmentDetails_Tenth = ({formData, setFormData, page, numPages, handleBack
             return false;
         }
         setFormData({
-            ...formData,
-            willSubmit: true
+            ...formData
+            // willSubmit: true
         });
+        handleForward();
         return true;
     }
 
@@ -162,8 +163,8 @@ const GarmentDetails_Tenth = ({formData, setFormData, page, numPages, handleBack
                 }
                 <button 
                     className="button-form" 
-                    type={ page+1 < numPages ? "button" : "submit" }
                     onClick={validateAndNext}
+                    type={ page+1 < numPages ? "button" : "submit" }
                 >
                     { page+1 < numPages ? "Next" : "Submit" }
                 </button>

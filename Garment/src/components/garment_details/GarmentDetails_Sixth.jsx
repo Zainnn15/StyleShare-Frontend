@@ -3,11 +3,11 @@ import '../../styles/main.scss';
 import info from '../../assets/icons/info.png';
 import symbols from '../../assets/images/care_symbols.png';
 
-import { checkOnID, clickID, addErrorMessageByID, validateInpName } from "../../constants/inputHandlers";
-import { careInstructions } from "../../constants/lists";
-import CircleBtn from "../../components/common/CircleBtn";
-import CircleImg from "../../components/common/CircleImg";
-import PopupImg from "../../components/common/PopupImg";
+import { checkOnID, clickID, addErrorMessageByID, validateInpName } from "../../constants/functions/inputHandlers";
+import { careInstructions } from "../../constants/data/lists";
+import CircleBtn from "../common/CircleBtn";
+import CircleImg from "../common/CircleImg";
+import PopupImg from "../common/PopupImg";
 
 const GarmentDetails_Sixth = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
     const dryTree = {

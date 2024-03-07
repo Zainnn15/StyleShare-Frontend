@@ -1,13 +1,14 @@
-/* eslint-disable no-case-declarations */
 /* eslint-disable react/prop-types */
+import { useState } from "react";
+
 import '../../styles/main.scss';
+
 import cross from '../../assets/icons/x.png';
 import plus from '../../assets/icons/plus.png';
-import CircleBtn from "../../components/common/CircleBtn";
-import { useState } from 'react';
+import CircleBtn from "../common/CircleBtn";
 
-import { FIBRES } from "../../constants/options";
-import { addErrorMessage, addErrorMessageByID } from "../../constants/inputHandlers";
+import { FIBRES } from "../../constants/data/options";
+import { addErrorMessage, addErrorMessageByID } from "../../constants/functions/inputHandlers";
 
 const GarmentDetails_Fourth = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
     const [nextMainKey, setNextMainKey] = useState(formData.compositionMain.length);
@@ -21,27 +22,25 @@ const GarmentDetails_Fourth = ({formData, setFormData, page, numPages, handleFor
     const options = FIBRES;
 
     function addInput(type) {
+        const newInput = {value:'', percent:''};
         switch(type) {
             case "lining":
-                const newLiningInput = {value:'', percent:''};
                 setNextLiningKey(nextLiningKey+1);
                 setFormData({
                     ...formData,
-                    compositionLining: [...formData.compositionLining, newLiningInput]
+                    compositionLining: [...formData.compositionLining, newInput]
                 });
                 setIdCount({...idCount, "lining": idCount[type]+1});
                 break;
             case "padding":
-                const newPaddingInput = {value:'', percent:''};
                 setNextPaddingKey(nextPaddingKey+1);
                 setFormData({
                     ...formData,
-                    compositionPadding: [...formData.compositionPadding, newPaddingInput]
+                    compositionPadding: [...formData.compositionPadding, newInput]
                 });
                 setIdCount({...idCount, "padding": idCount[type]+1});
                 break;
             default:
-                const newInput = {value:'', percent:''};
                 setNextMainKey(nextMainKey+1);
                 setFormData({
                     ...formData,
@@ -155,9 +154,9 @@ const GarmentDetails_Fourth = ({formData, setFormData, page, numPages, handleFor
         }
 
         let errMessage = "";
+        let pattern = /^[0-9]{1,3}$/;
         switch(fieldType) {
             case "percent":
-                let pattern = /^[0-9]{1,3}$/;
                 if(pattern.test(val) && val <= 100 && val > 0) {
                     //remove error message if any
                     addErrorMessage(e_to.id+"_error", null);

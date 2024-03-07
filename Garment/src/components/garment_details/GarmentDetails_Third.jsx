@@ -1,9 +1,8 @@
 /* eslint-disable react/prop-types */
 import '../../styles/main.scss';
 
-import { checkOnID, selectID, addErrorMessageByID, addErrorMessage, validateInpName } from "../../constants/inputHandlers";
-import { COUNTRIES } from "../../constants/options";
-
+import { checkOnID, selectID, addErrorMessageByID, addErrorMessage, validateInpName } from "../../constants/functions/inputHandlers";
+import { COUNTRIES } from "../../constants/data/options";
 
 const GarmentDetails_Third = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
     const options = COUNTRIES;
@@ -29,9 +28,9 @@ const GarmentDetails_Third = ({formData, setFormData, page, numPages, handleForw
         }
 
         let errMessage = "";
+        let pattern = /^[0-9]+([.][0-9]{1,2})?$/;
         switch(fieldType) {
             case "price":
-                let pattern = /^[0-9]+([.][0-9]{1,2})?$/;
                 if(pattern.test(val) && val >= 0) {
                     //remove error message if any
                     addErrorMessage(e_to.id+"_error", null);

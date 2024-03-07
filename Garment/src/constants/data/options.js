@@ -2,13 +2,13 @@ import { countryListAllIsoData, genericFibre } from "./lists";
 
 //garment types
 const GARMENT_TYPES = [
-    { value: 'shirt', label: 'Shirt' },
-    { value: 'dressShirt', label: 'Dress-Shirt' },
-    { value: 'sweater', label: 'Sweater' },
-    { value: 'pants', label: 'Pants' },
-    { value: 'denim', label: 'Denim' },
-    { value: 'dress', label: 'Dress' },
-    { value: 'skirt', label: 'Skirt' }
+    { cat: 1, value: 'shirt', label: 'Shirt' },
+    { cat: 1, value: 'dressShirt', label: 'Dress-Shirt' },
+    { cat: 1, value: 'sweater', label: 'Sweater' },
+    { cat: 2, value: 'pants', label: 'Pants' },
+    { cat: 2, value: 'denim', label: 'Denim' },
+    { cat: 2, value: 'skirt', label: 'Skirt' },
+    { cat: 3, value: 'dress', label: 'Dress' },
 ];
 
 //countries

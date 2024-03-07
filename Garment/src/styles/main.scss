@@ -7,6 +7,8 @@
 @use "Images";
 
 body {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
     font-family: Fonts.$mainFont;
     font-size: Sizes.$medium;
@@ -27,8 +29,18 @@ a {
     text-decoration: none;
 }
 
-label {
+label, p {
     color: Colors.$purpleDark;
+}
+
+ul, ol {
+    font-family: Fonts.$mainFont;
+    color: Colors.$purpleDark;
+    list-style-position: inside;
+    li {
+        display: list-item;
+        list-style-type: disc;
+    }
 }
 
 ::placeholder {
@@ -42,4 +54,13 @@ label {
 
 .hide {
     visibility: hidden;
+}
+
+.text-b {
+    font-weight: bold;
+}
+
+.tab {
+    display: inline-block;
+    margin-left: 1em;
 }

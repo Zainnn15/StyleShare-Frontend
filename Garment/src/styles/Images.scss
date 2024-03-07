@@ -1,0 +1,20 @@
+@use "Colors";
+@use "Sizes";
+
+.img-care {
+    background-color: Colors.$purpleLight;
+    border-radius: 10%;
+    position: relative;
+    margin: 1em;
+}
+
+.popup-box-outer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: gray;
+    opacity: 0.75;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}

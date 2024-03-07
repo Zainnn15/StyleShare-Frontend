@@ -1,4 +1,4 @@
-import './App.css'
+//import './App.css'
 import {Routes, Route} from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -10,6 +10,7 @@ import { GarmentContextProvider } from '../context/garmentContext'
 import Dashboard from './pages/Dashboard'
 import GarmentMeasure from './pages/GarmentPages/GarmentMeasure'
 import Profile from './pages/Profile'
+import Group from './pages/Group'
 import GarmentWash from './pages/GarmentPages/GarmentWash'
 import UserSearch from './pages/UserSearch'
 import GarmentDetails from './pages/GarmentPages/GarmentDetails'
@@ -28,6 +29,7 @@ function App() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path='/register' element={<Register />} /> 
       <Route path='/userprofile' element={<Profile />} /> 
+      <Route path='/group' element={<Group />} /> 
       <Route path='/garment-measure' element={<GarmentMeasure />} />
       <Route path='/garment-wash' element={<GarmentWash />} />
       <Route path='/usersearch' element={<UserSearch />}/>

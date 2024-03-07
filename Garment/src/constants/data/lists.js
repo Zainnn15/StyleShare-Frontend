@@ -1,50 +1,50 @@
 //care instructions icons
-import noWash from '../assets/icons/wash_no.png';
-import wash from '../assets/icons/wash.png';
-import washHand from '../assets/icons/wash_hand.png';
-import washPress from '../assets/icons/wash_press.png';
-import washDelicate from '../assets/icons/wash_delicate.png';
-import wash30Min from '../assets/icons/wash_30_min.png';
-import wash30Med from '../assets/icons/wash_30_med.png';
-import wash30Max from '../assets/icons/wash_30_max.png';
-import washCold from '../assets/icons/wash_cold.png';
-import washWarm from '../assets/icons/wash_warm.png';
-import washHot from '../assets/icons/wash_hot.png';
-import noDry from '../assets/icons/dry_no.png';
-import dry from '../assets/icons/dry.png';
-import dryDrip from '../assets/icons/dry_drip.png';
-import dryFlat from '../assets/icons/dry_flat.png';
-import dryHang from '../assets/icons/dry_hang.png';
-import dryShade from '../assets/icons/dry_shade.png';
-import dryShadeDrip from '../assets/icons/dry_shade_drip.png';
-import dryShadeFlat from '../assets/icons/dry_shade_flat.png';
-import dryShadeHang from '../assets/icons/dry_shade_hang.png';
-import noTumble from '../assets/icons/tumble_no.png';
-import tumble from '../assets/icons/tumble.png';
-import tumblePress from '../assets/icons/tumble_press.png';
-import tumbleDelicate from '../assets/icons/tumble_delicate.png';
-import tumbleHeatLow from '../assets/icons/tumble_heat_low.png';
-import tumbleHeatMed from '../assets/icons/tumble_heat_medium.png';
-import tumbleHeatHigh from '../assets/icons/tumble_heat_high.png';
-import tumbleHeatNo from '../assets/icons/tumble_heat_no.png';
-import noDryC from '../assets/icons/dryclean_no.png';
-import dryC from '../assets/icons/dryclean.png';
-import dryCA from '../assets/icons/dryclean_a.png';
-import dryCP from '../assets/icons/dryclean_p.png';
-import dryCF from '../assets/icons/dryclean_f.png';
-import dryCSort from '../assets/icons/dryclean_sort.png';
-import dryCRedMoist from '../assets/icons/dryclean_redmoist.png';
-import dryCSteamNo from '../assets/icons/dryclean_nosteam.png';
-import dryCHeatLow from '../assets/icons/dryclean_lowheat.png';
-import noIron from '../assets/icons/iron_no.png';
-import iron from '../assets/icons/iron.png';
-import ironSteamNo from '../assets/icons/iron_nosteam.png';
-import ironHeatLow from '../assets/icons/iron_heat_low.png';
-import ironHeatMed from '../assets/icons/iron_heat_medium.png';
-import ironHeatHigh from '../assets/icons/iron_heat_high.png';
-import noBleach from '../assets/icons/bleach_no.png';
-import bleach from '../assets/icons/bleach.png';
-import bleachNonCl from '../assets/icons/bleach_noncl.png';
+import noWash from '../../assets/icons/wash_no.png';
+import wash from '../../assets/icons/wash.png';
+import washHand from '../../assets/icons/wash_hand.png';
+import washPress from '../../assets/icons/wash_press.png';
+import washDelicate from '../../assets/icons/wash_delicate.png';
+import wash30Min from '../../assets/icons/wash_30_min.png';
+import wash30Med from '../../assets/icons/wash_30_med.png';
+import wash30Max from '../../assets/icons/wash_30_max.png';
+import washCold from '../../assets/icons/wash_cold.png';
+import washWarm from '../../assets/icons/wash_warm.png';
+import washHot from '../../assets/icons/wash_hot.png';
+import noDry from '../../assets/icons/dry_no.png';
+import dry from '../../assets/icons/dry.png';
+import dryDrip from '../../assets/icons/dry_drip.png';
+import dryFlat from '../../assets/icons/dry_flat.png';
+import dryHang from '../../assets/icons/dry_hang.png';
+import dryShade from '../../assets/icons/dry_shade.png';
+import dryShadeDrip from '../../assets/icons/dry_shade_drip.png';
+import dryShadeFlat from '../../assets/icons/dry_shade_flat.png';
+import dryShadeHang from '../../assets/icons/dry_shade_hang.png';
+import noTumble from '../../assets/icons/tumble_no.png';
+import tumble from '../../assets/icons/tumble.png';
+import tumblePress from '../../assets/icons/tumble_press.png';
+import tumbleDelicate from '../../assets/icons/tumble_delicate.png';
+import tumbleHeatLow from '../../assets/icons/tumble_heat_low.png';
+import tumbleHeatMed from '../../assets/icons/tumble_heat_medium.png';
+import tumbleHeatHigh from '../../assets/icons/tumble_heat_high.png';
+import tumbleHeatNo from '../../assets/icons/tumble_heat_no.png';
+import noDryC from '../../assets/icons/dryclean_no.png';
+import dryC from '../../assets/icons/dryclean.png';
+import dryCA from '../../assets/icons/dryclean_a.png';
+import dryCP from '../../assets/icons/dryclean_p.png';
+import dryCF from '../../assets/icons/dryclean_f.png';
+import dryCSort from '../../assets/icons/dryclean_sort.png';
+import dryCRedMoist from '../../assets/icons/dryclean_redmoist.png';
+import dryCSteamNo from '../../assets/icons/dryclean_nosteam.png';
+import dryCHeatLow from '../../assets/icons/dryclean_lowheat.png';
+import noIron from '../../assets/icons/iron_no.png';
+import iron from '../../assets/icons/iron.png';
+import ironSteamNo from '../../assets/icons/iron_nosteam.png';
+import ironHeatLow from '../../assets/icons/iron_heat_low.png';
+import ironHeatMed from '../../assets/icons/iron_heat_medium.png';
+import ironHeatHigh from '../../assets/icons/iron_heat_high.png';
+import noBleach from '../../assets/icons/bleach_no.png';
+import bleach from '../../assets/icons/bleach.png';
+import bleachNonCl from '../../assets/icons/bleach_noncl.png';
 
 const countryListAllIsoData = [
 	{"code": "AF", "code3": "AFG", "name": "Afghanistan", "number": "004"},
@@ -394,4 +394,24 @@ const careInstructions = {
 		"value":"bleachChloride1", "img":bleach},
 };
 
-export { countryListAllIsoData, genericFibre, careInstructions };
+//garment measurement per category
+const measurementTypes = [
+	{value: 'length', label: 'Length', categories:[1,2,3], img:''},
+	{value: 'sleeveLength', label: 'Sleeve Length', categories:[1,3], img:''},
+    {value: 'chestWidth', label: 'Chest Width', categories:[1,3], img:''},
+    {value: 'hipWidth', label: 'Hip Width', categories:[2,3], img:''},
+    {value: 'waistWidth', label: 'Waist Width', categories:[2,3], img:''},
+];
+
+//days of the week
+const weekDays = [
+	{value: 0, label:'Sunday', short:'Sun'},
+	{value: 1, label:'Monday', short:'Mon'},
+	{value: 2, label:'Tuesday', short:'Tue'},
+	{value: 3, label:'Wednesday', short:'Wed'},
+	{value: 4, label:'Thursday', short:'Thu'},
+	{value: 5, label:'Friday', short:'Fri'},
+	{value: 6, label:'Saturday', short:'Sat'},
+];
+
+export { countryListAllIsoData, genericFibre, careInstructions, measurementTypes, weekDays };

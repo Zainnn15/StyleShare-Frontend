@@ -2,6 +2,7 @@
 @use "Colors";
 @use "Buttons";
 @use "Fonts";
+@use "Containers";
 
 @mixin input {
     @include Fonts.regular;
@@ -34,13 +35,14 @@ input:focus, select:focus, datalist:hover, textarea:focus {
 input[type='radio'], input[type='checkbox'] {
     width: auto;
     margin-right: 0.5em;
+    cursor: pointer;
 }
 input[type='radio']:focus, input[type='checkbox']:focus {
     outline: none;
 }
 
 //date input
-input[type='date'] {
+input[type='date'], input[type='time'] {
     width: auto;
 }
 ::-webkit-datetime-edit { 
@@ -50,5 +52,13 @@ input[type='date'] {
 }
 
 input[type='number'] {
-    width: 30%;
+    width: 50%;
+    @include Containers.sm {
+        width: 30%;
+    }
+}
+
+.message-error {
+    color: Colors.$error;
+    font-size: Sizes.$xSmall;
 }

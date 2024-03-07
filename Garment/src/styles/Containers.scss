@@ -67,7 +67,27 @@ $screen-xl-min: 1200px;
     flex-direction: column;
 }
 
+@mixin grid {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+@mixin grid-2-md {
+    @include grid;
+    // large devices
+    @include md {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+@mixin grid-2-lg {
+    @include grid;
+    // large devices
+    @include lg {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
 @mixin input {
+    flex-wrap: wrap;
     margin: 1.5em 1em;
     border-radius: 10px;
 }
@@ -144,6 +164,24 @@ $screen-xl-min: 1200px;
     // large devices
     @include lg {
         margin-top: 6em;
+    }
+}
+
+.container-small {
+    max-width: 70%;
+    margin: auto;
+    padding: 2em;
+    border: 0.1em solid Colors.$purpleScarlet;
+    border-radius: 0.5em;
+
+    input {
+        margin: 1em 0;
+        padding: 1em 0;
+    }
+
+    // large devices
+    @include lg {
+        max-width: 50%;
     }
 }
 
@@ -253,6 +291,10 @@ $screen-xl-min: 1200px;
     }
 }
 
+.container-content {
+    @include input;
+}
+
 .container-prompt {
     @include input;
     @include container-row;
@@ -270,6 +312,11 @@ $screen-xl-min: 1200px;
     label {
         margin: 1em;
     }
+}
+
+.container-input-label {
+    @include container-row;
+    width: 100%;
 }
 
 .container-radio {
@@ -300,7 +347,8 @@ $screen-xl-min: 1200px;
 
     label:first-child {
         display: inline;
-        position: absolute;
+        position: relative;
+        top: 1.6em;
         background-color: Colors.$purple;
         color: Colors.$purpleLight;
         font-size: Sizes.$small;
@@ -338,19 +386,18 @@ $screen-xl-min: 1200px;
     display: inline;
     position: relative;
     left: 92%;
-    top: -9.75em;
+    top: 1em;
 
     // medium devices
     @include md {
         position: relative;
-        top: -3.5em;
+        top: 3.5em;
         right: 2em;
     }
 }
 
 .container-care {
     @include container-row;
-    flex-wrap: wrap;
     @include input;
 }
 .container-care-group {
@@ -360,9 +407,11 @@ $screen-xl-min: 1200px;
 .container-care-img {
     @include container-col;
     border-radius: 5px;
+    cursor: pointer;
     label {
         max-width: 6em;
         font-size: Sizes.$small;
+        cursor: pointer;
     }
 }
 
@@ -384,4 +433,40 @@ $screen-xl-min: 1200px;
 .container-info {
     display: flex;
     flex-direction: row;
+}
+
+//grid containers
+.container-grid {
+    @include grid;
+}
+.container-grid-2-md {
+    @include grid-2-md;
+}
+.container-grid-2-lg {
+    @include grid-2-lg;
+}
+.gap {
+    gap: 1em;
+}
+
+.container-measure-group {
+    @include container-row;
+    @include input;
+    justify-content: space-evenly;
+    gap: 1em;
+    input, select {
+        width: auto;
+    }
+}
+
+.container-border {
+    border: 0.05em solid Colors.$purpleScarlet;
+    border-radius: 1em;
+    padding: 0.5em 1em;
+}
+.greeting {
+    margin: 2em;
+}
+.clear-box {
+    background-color: Colors.$purpleLight;
 }
