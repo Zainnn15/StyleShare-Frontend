@@ -415,6 +415,19 @@ $screen-xl-min: 1200px;
     }
 }
 
+.container-info-popup {
+    background-color: white;
+    border-radius: 1em;
+    padding: 0.15em 0.5em;
+    margin: 0;
+    position: relative;
+    left: -4px;
+
+    label {
+        font-size: Sizes.$small;
+    }
+}
+
 .container-popup {
     position: relative;
     z-index: 3;

@@ -1,7 +1,11 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
-import Popup from 'reactjs-popup';
+
+import '../../styles/main.scss';
+
 import ScreenHeader from "../../components/common/ScreenHeader";
+import { CARE_DRY_METHODS, CARE_WASH_METHODS } from '../../constants/data/options';
+import InfoPopup from '../../components/common/InfoPopup';
 
 export default function GarmentWash() {
   const [washDate, setWashDate] = useState('');
@@ -30,15 +34,15 @@ export default function GarmentWash() {
     setVentilatedTime(event.target.value);
   };
 
-  function InfoPopup({ text }) {
-    return (
-      <Popup trigger={<button type='button'>Info</button>} position='right center'>
-        <div>
-          {text}
-        </div>
-      </Popup>
-    );
-  }
+  // function InfoPopup({ text }) {
+  //   return (
+  //     <Popup trigger={<button type='button'>Info</button>} position='right center'>
+  //       <div>
+  //         {text}
+  //       </div>
+  //     </Popup>
+  //   );
+  // }
 
   return (
     <div>
@@ -49,62 +53,103 @@ export default function GarmentWash() {
             <hr/>
         </div>
         <form>
-          <label>
-            Wash Date:
+          <div className='container-content'>
+            <label className='text-b'>Wash Date:</label>
+            <label className='tab'></label>
             <input type='date' value={washDate} onChange={handleDateChange} />
-          </label>
-          <br />
+          </div>
 
-          <label>
-            Wash Method:
-            <select value={washMethod} onChange={handleWashMethodChange}>
-              <option value=''>--</option>
-              <option value='washingMachine'>Washing Machine</option>
-              <option value='handWash'>Hand Wash</option>
-            </select>
-            <InfoPopup text='Select the method used to wash the garment.' />
-          </label>
-          <br />
+          <div className='container-grid-2-md'>
+            <div>
+              <div className='container-prompt'>
+                <p>Wash Method</p>
+                <InfoPopup text='Select the method used to wash the garment' />
+              </div>
+              <div className='container-input'>
+                <select id='washMethod' 
+                  name='washMethod' 
+                  value={washMethod} 
+                  onChange={handleWashMethodChange}
+                  required
+                >
+                  <option key='wash_null' value=''>Select a wash method...</option>
+                  {CARE_WASH_METHODS.map((opt) => {
+                      return (
+                          <option key={"wash_" + opt.value} value={opt.value}>
+                              {opt.label}
+                          </option>
+                      )
+                  })}
+                </select> 
+              </div>
+            </div>
 
-          <label>
-            Dryer Method:
-            <select value={dryerMethod} onChange={handleDryerMethodChange}>
-              <option value=''>--</option>
-              <option value='dryer'>Dryer</option>
-              <option value='hangDry'>Hang & Dry</option>
-            </select>
-            <InfoPopup text='Select the method used for drying the garment.' />
-          </label>
-          <br />
+            <div>
+              <div className='container-prompt'>
+                <p>Dryer Method</p>
+                <InfoPopup text='Select the method used for drying the garment'/>
+              </div>
+              <div className='container-input'>
+                <select id='dryMethod' 
+                  name='dryMethod' 
+                  value={dryerMethod} 
+                  onChange={handleDryerMethodChange}
+                  required
+                >
+                  <option key='dry_null' value=''>Select a dryer method...</option>
+                  {CARE_DRY_METHODS.map((opt) => {
+                      return (
+                          <option key={"dry_" + opt.value} value={opt.value}>
+                              {opt.label}
+                          </option>
+                      )
+                  })}
+                </select> 
+              </div>
+            </div>
 
-          <label>
-            Use Iron:
-            <input type='checkbox' checked={useIron} onChange={handleUseIronChange} />
-            <InfoPopup text='Check if an iron was used on the garment after washing.' />
-          </label>
-          <br />
+            <div className='container-content'>
+              <label className='text-b'>Use Iron:</label>
+              <label className='tab'></label>
+              <input type='checkbox' checked={useIron} onChange={handleUseIronChange} />
+              <InfoPopup text='Check if an iron was used on the garment after washing'/>
+            </div>
 
-          {useIron && (
-            <label>
-              Ventilated Time:
-              <input
-                type='text'
-                value={ventilatedTime}
-                onChange={handleVentilatedTimeChange}
-                placeholder='Enter time (e.g., 1 hour)'
-              />
-              <InfoPopup text='Enter the duration for which the garment was ventilated after ironing.' />
-            </label>
-          )}
-          <br />
+            {useIron && (
+              <div>
+                <div className='container-prompt'>
+                  <p>Ventilated Time (in minutes)</p>
+                  <InfoPopup text='Enter the duration for which the garment was ventilated after ironing'/>
+                </div>
+                <div className='container-input'>
+                  <input
+                    type='number'
+                    value={ventilatedTime}
+                    onChange={handleVentilatedTimeChange}
+                    placeholder='Enter minutes'
+                    min={0}
+                    step={1}
+                  />                
+                </div>
+              </div>
+            )}
+          </div>
+          
+          <div>
+            <div className='container-prompt'>
+                <p>Select a photo of you wearing the garment</p>
+            </div>
+            <div className="container-input">
+                <input id="fileWear" name="fileWear" type="file" required />
+            </div>
+          </div>
 
-          <label>
-            Select a photo of you wearing the garment:
-            <input type='file' />
-          </label>
-          <br />
-
-          <button type='submit'>Save</button>
+          <br/>
+          <div className='container-input'>
+              <button className="button-form full" type="submit">
+                  Save
+              </button>
+          </div>
         </form>
       </div>      
     </div>

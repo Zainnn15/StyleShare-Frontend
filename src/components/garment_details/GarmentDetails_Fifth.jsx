@@ -57,7 +57,7 @@ const GarmentDetails_Fifth = ({formData, setFormData, page, numPages, handleForw
                 <CircleBtn 
                     iconUrl={info} 
                     className="button-info" 
-                    width="1.5em" 
+                    width="1em" 
                     handlePress={()=>{
                         let e = document.getElementById("info_care_symbols");
                         if(e) {
@@ -236,7 +236,7 @@ const GarmentDetails_Fifth = ({formData, setFormData, page, numPages, handleForw
                                     <CircleBtn 
                                         iconUrl={info} 
                                         className="button-info" 
-                                        width="1.5em" 
+                                        width="1em" 
                                         handlePress={()=>{
                                             let e = document.getElementById("info_temp");
                                             if(e) {

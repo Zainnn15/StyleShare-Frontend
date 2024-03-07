@@ -46,7 +46,7 @@ const GarmentDetails_Tenth = ({formData, setFormData, page, numPages, handleBack
                 <CircleBtn 
                     iconUrl={info} 
                     className="button-info" 
-                    width="1.5em" 
+                    width="1em" 
                     handlePress={()=>{
                         let e = document.getElementById("info_care_symbols");
                         if(e) {

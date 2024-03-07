@@ -5,7 +5,7 @@ import '../../styles/main.scss';
 
 import info from '../../assets/icons/info.png';
 import { selectID } from "../../constants/functions/inputHandlers";
-import { GARMENT_TYPES } from "../../constants/data/options";
+import { GARMENT_TYPES, GARMENT_SIZES, GARMENT_FITS } from "../../constants/data/options";
 import { measurementTypes } from "../../constants/data/lists";
 import PopupImg from "../common/PopupImg";
 import CircleBtn from "../common/CircleBtn";
@@ -81,7 +81,7 @@ const GarmentMeasurements = () => {
                             <CircleBtn 
                                 iconUrl={info} 
                                 className="button-info" 
-                                width="1.5em" 
+                                width="1em" 
                                 handlePress={()=>{
                                     let e = document.getElementById("info_temp");
                                     if(e) {
@@ -116,7 +116,16 @@ const GarmentMeasurements = () => {
                                 <p>Enter the size of the garment</p>
                             </div>
                             <div className="container-input">
-                                <input id="garmentSize" name="garmentSize" type="text" required />
+                                <select id='garmentSize' name='garmentSize' required>
+                                    <option key='size_null' value=''>Select a size...</option>
+                                    {GARMENT_SIZES.map((opt) => {
+                                        return (
+                                            <option key={"size_" + opt.value} value={opt.value}>
+                                                {`${opt.label} (${opt.value.toUpperCase()})`}
+                                            </option>
+                                        )
+                                    })}
+                                </select> 
                             </div>
                         </div>
                         <div>
@@ -124,10 +133,15 @@ const GarmentMeasurements = () => {
                                 <p>How well does it fit?</p>
                             </div>
                             <div className='container-input'>
-                                <select name='clothingType' id='clothingType' required>
-                                    <option>Comfortable</option>
-                                    <option>Tight</option>
-                                    <option>Loose</option>
+                                <select id='clothingType' name='clothingType' required>
+                                    <option key='fit_null' value=''>Select a fit...</option>
+                                    {GARMENT_FITS.map((opt) => {
+                                        return (
+                                            <option key={"fit_" + opt.value} value={opt.value}>
+                                                {opt.label}
+                                            </option>
+                                        )
+                                    })}
                                 </select> 
                             </div>
                         </div>

@@ -11,6 +11,25 @@ const GARMENT_TYPES = [
     { cat: 3, value: 'dress', label: 'Dress' },
 ];
 
+//garment sizes
+const GARMENT_SIZES = [
+    {value: 'xxs', label: 'Double extra small'},
+    {value: 'xs', label: 'Extra small'},
+    {value: 's', label: 'Small'},
+    {value: 'm', label: 'Medium'},
+    {value: 'l', label: 'Large'},
+    {value: 'xl', label: 'Extra large'},
+    {value: 'xxl', label: 'Double extra large'},
+    {value: 'xxxl', label: 'Triple extra large'},
+];
+
+//garment fits
+const GARMENT_FITS = [
+    {value: 'comfortable', label: 'Comfortable'},
+    {value: 'tight', label: 'Tight'},
+    {value: 'loose', label: 'Loose'},
+];
+
 //countries
 const COUNTRIES = [];
 for(let country of countryListAllIsoData) {
@@ -23,4 +42,17 @@ for(let fibre of genericFibre) {
     FIBRES.push({value: fibre.code, label: fibre.name});
 }
 
-export { GARMENT_TYPES, COUNTRIES, FIBRES };
+//wash methods
+const CARE_WASH_METHODS = [
+    {value: 'washingMachine', label: 'Washing Machine'},
+    {value: 'handWash', label: 'Hand Wash'},
+];
+
+//dry methods
+const CARE_DRY_METHODS = [
+    {value: 'dryer', label: 'Dryer'},
+    {value: 'hangDry', label: 'Hang & Dry'},
+];
+
+export { GARMENT_TYPES, GARMENT_SIZES, GARMENT_FITS, COUNTRIES, FIBRES,
+    CARE_WASH_METHODS, CARE_DRY_METHODS };
