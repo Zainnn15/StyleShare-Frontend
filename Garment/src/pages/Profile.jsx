@@ -1,6 +1,7 @@
 import NavbarIn from "../components/NavbarIn";
 import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../context/userContext";
+import { GarmentContext } from "../../context/garmentContext";
 import Axios from "axios";
 
 
@@ -9,6 +10,8 @@ export default function Profile() {
     const [profile, setProfile] = useState(null);
     const [selectedDays, setSelectedDays] = useState([]);
     const [editMode, setEditMode] = useState(false);
+    const {garment} = useContext(GarmentContext);
+    const [garmentDetails, setGarmentDetails] = useState(null);
 
     const handleCheckboxChange = (day) => {
         if (selectedDays.includes(day)) {
@@ -37,15 +40,28 @@ export default function Profile() {
     
 
       useEffect(() => {
-        if (!profile) {
-          fetch('/profile')
+        if (!profile && garmentDetails === null) {
+          // Fetch user profile
+          fetch('/profile', { cache: 'no-store' })
             .then((res) => res.json())
             .then((data) => {
+              console.log('User Profile:', data); // Log user profile to console
               setProfile(data);
               setSelectedDays(data?.SenecaDays || []); // Load the existing SenecaDays
-            });
+            })
+            .catch((error) => console.error('Error fetching user profile:', error));
+      
+          // Fetch garment details based on the user ID
+          fetch(`/getGarmentDetails/${user.id}`, { cache: 'no-store' })
+          .then((res) => res.json())
+          .then((garmentData) => {
+            console.log('Garment Details:', garmentData); // Log garment details to console
+            setGarmentDetails(garmentData);
+          })
+          .catch((error) => console.error('Error fetching garment details:', error));
         }
       }, []);
+    
 
 
   return (
@@ -121,8 +137,13 @@ export default function Profile() {
       <button onClick={handleUpdateProfile}>Save</button>
     </div>
      )}
-
-    
+       <hr /> {/* Horizontal line */}
+          <div>
+            <p>Purchase Location: {garment.purchaseLocation}</p>
+            <p>Purchase Method: {garment.purchaseMethod}</p>
+            {/* Add more details based on your garment schema */}
+          </div>
   </div>
   )
+
 }

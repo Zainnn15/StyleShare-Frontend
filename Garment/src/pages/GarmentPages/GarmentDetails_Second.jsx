@@ -1,29 +1,57 @@
+/* eslint-disable react/prop-types */
 import '../../styles/main.scss';
 
 
-const GarmentDetails_Second = () => {
+import { GARMENT_TYPES } from "../../constants/options";
+import { selectID, validate, validatePage } from "../../constants/inputHandlers";
+
+const GarmentDetails_Second = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
+    const options = GARMENT_TYPES;
+
+    //handle next button
+    function validateAndNext() {
+        let querySelect = "select,textarea";
+        if(!validatePage(querySelect)) {
+            return false;
+        }
+        handleForward();
+        return true;
+    }
     return(
 
         <div>
             <div>
-                <div className="container-prompt">
+                <div className="container-prompt" onClick={()=>selectID("garmentType")}>
                     <p>What type of garment is it?</p>
                 </div>
+                <div id={"garmentType_error"} style={{textAlign:"center"}}></div>
                 <div className="container-input">
                     <select 
                         name="garmentType" 
                         id="garmentType"
+                        value={formData.garmentType}
+                        onChange={(e) => {
+                            setFormData({
+                                ...formData,
+                                garmentType: e.target.value
+                            });
+                            validate("garmentType");
+                        }}
                         required
                     >
                         <option key='type_null' value=''>Select a garment...</option>
+                        {options.map((opt) => {
+                            return <option key={"type_" + opt.value} value={opt.value}>{opt.label}</option>
+                        })}
                     </select>
                 </div>
             </div>
 
             <div>
-                <div className="container-prompt" >
+                <div className="container-prompt" onClick={()=>selectID("garmentDescription")}>
                     <p>Give a short description about the garment</p>
                 </div>
+                <div id={"garmentDescription_error"} style={{textAlign:"center"}}></div>
                 <div className="container-input">
                     <textarea 
                         name="garmentDescription"
@@ -32,8 +60,29 @@ const GarmentDetails_Second = () => {
                         rows={4}
                         maxLength={100}
                         required
+                        value={formData.garmentDescription}
+                        onChange={(e) => {
+                            setFormData({
+                                ...formData,
+                                garmentDescription: e.target.value
+                            });
+                            validate("garmentDescription");
+                        }}
                     ></textarea>
                 </div>
+            </div>
+            <div className="container-button-form">
+                {
+                    page > 0 &&
+                    <button type="button" className="button-form" onClick={handleBack}>Back</button>
+                }
+                <button 
+                    className="button-form" 
+                    onClick={validateAndNext}
+                    type={ page+1 < numPages ? "button" : "submit" }
+                >
+                    { page+1 < numPages ? "Next" : "Submit" }
+                </button>
             </div>
         </div>
     );

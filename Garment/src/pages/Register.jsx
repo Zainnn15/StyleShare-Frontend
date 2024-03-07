@@ -11,6 +11,7 @@ export default function Register() {
         username: '',
         email: '',
         password: '',
+        
     })
 
     const handleSubmit = async (e) => {

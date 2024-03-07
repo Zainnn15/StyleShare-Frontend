@@ -6,6 +6,7 @@ import Register from './pages/Register'
 import axios from 'axios'
 import { Toaster} from 'react-hot-toast'
 import { UserContextProvider } from '../context/userContext'
+import { GarmentContextProvider } from '../context/garmentContext'
 import Dashboard from './pages/Dashboard'
 import GarmentMeasure from './pages/GarmentPages/GarmentMeasure'
 import Profile from './pages/Profile'
@@ -19,6 +20,7 @@ axios.defaults.withCredentials = true;
 function App() {
   return (
     <UserContextProvider>
+    <GarmentContextProvider>
     <Toaster position='bottom-right' toastOptions={{duration: 2000}} />
     <Routes>
       <Route path="/" element={<Home />} />
@@ -31,6 +33,7 @@ function App() {
       <Route path='/usersearch' element={<UserSearch />}/>
       <Route path='/garment-details' element={<GarmentDetails />} />
     </Routes>
+    </GarmentContextProvider>
     </UserContextProvider>
   )
 }
