@@ -414,4 +414,12 @@ const weekDays = [
 	{value: 6, label:'Saturday', short:'Sat'},
 ];
 
-export { countryListAllIsoData, genericFibre, careInstructions, measurementTypes, weekDays };
+const colorStatus = {
+	"using":"red",
+	"available":"green",
+	"booked":"yellow",
+	"removed":"gray"
+};
+
+export { countryListAllIsoData, genericFibre, careInstructions, 
+	measurementTypes, weekDays, colorStatus };

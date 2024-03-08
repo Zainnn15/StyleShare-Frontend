@@ -193,6 +193,10 @@ $screen-xl-min: 1200px;
     @include container-col;
 }
 
+.wrap {
+    flex-wrap: wrap;
+}
+
 .container-title {
     @include title;
     font-size: Sizes.$xLarge;
@@ -461,6 +465,9 @@ $screen-xl-min: 1200px;
 .gap {
     gap: 1em;
 }
+.gap-s {
+    gap: 0.5em;
+}
 
 .container-measure-group {
     @include container-row;
@@ -482,4 +489,33 @@ $screen-xl-min: 1200px;
 }
 .clear-box {
     background-color: Colors.$purpleLight;
+}
+
+.container-card {
+    background-color: Colors.$purpleLight;
+    box-shadow: 0.15em 0.2em 0.2em rgba(0,0,0,0.2);
+
+    .container-card-img {
+        @include container-col;
+        background-color: Colors.$primary;
+        cursor: pointer;
+    }
+    
+    .container-card-title {
+        @include container-row;
+        justify-content: space-between;
+        padding: 0.5em;
+        background-color: Colors.$purpleDark;
+        color: Colors.$purpleLight
+    }
+
+    .container-card-description {
+        padding: 0.5em;
+    }   
+
+    .container-card-button {
+        @include container-row;
+        justify-content: end;
+        padding: 0.5em;
+    }
 }
