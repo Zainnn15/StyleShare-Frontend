@@ -146,6 +146,7 @@ export default function Profile() {
                 <p><label className="text-b">Name:<label className="tab"></label></label>{user.name}</p>
                 <p><label className="text-b">Username:<label className="tab"></label></label>{user.username}</p>
                 <p><label className="text-b">Email:<label className="tab"></label></label>{user.email}</p>
+                <p><label className="text-b">Group #:<label className="tab"></label></label></p>
               </div>
               <div className="container-border clear-box">
                 <p className="text-b">Available times in Seneca:</p>
