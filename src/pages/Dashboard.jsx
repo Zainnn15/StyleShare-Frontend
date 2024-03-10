@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { UserContext } from "../../context/userContext"
-import ScreenHeader from "../components/common/ScreenHeader";
+import ScreenHeaderIn from "../components/common/ScreenHeaderIn";
 import { changeTitle } from "../constants/functions/inputHandlers";
 
 export default function Dashboard() {
@@ -8,7 +8,7 @@ export default function Dashboard() {
   changeTitle("Home");
   return (
       <div>
-          <ScreenHeader />
+            <ScreenHeaderIn />
           <div className="container main">
               <h1>Welcome, {user.name}</h1>
           </div>

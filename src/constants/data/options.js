@@ -13,21 +13,21 @@ const GARMENT_TYPES = [
 
 //garment sizes
 const GARMENT_SIZES = [
-    {value: 'xxs', label: 'Double extra small'},
-    {value: 'xs', label: 'Extra small'},
-    {value: 's', label: 'Small'},
-    {value: 'm', label: 'Medium'},
-    {value: 'l', label: 'Large'},
-    {value: 'xl', label: 'Extra large'},
-    {value: 'xxl', label: 'Double extra large'},
-    {value: 'xxxl', label: 'Triple extra large'},
+    {value: 'XXS', label: 'Double extra small'},
+    {value: 'XS', label: 'Extra small'},
+    {value: 'S', label: 'Small'},
+    {value: 'M', label: 'Medium'},
+    {value: 'L', label: 'Large'},
+    {value: 'XL', label: 'Extra large'},
+    {value: 'XXL', label: 'Double extra large'},
+    {value: 'XXXL', label: 'Triple extra large'},
 ];
 
 //garment fits
 const GARMENT_FITS = [
-    {value: 'comfortable', label: 'Comfortable'},
-    {value: 'tight', label: 'Tight'},
-    {value: 'loose', label: 'Loose'},
+    {value: 'Tight', label: 'Tight'},
+    {value: 'Comfortable', label: 'Comfortable'},
+    {value: 'Loose', label: 'Loose'},
 ];
 
 //countries

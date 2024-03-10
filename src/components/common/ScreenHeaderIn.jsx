@@ -9,6 +9,24 @@ import profile from '../../assets/images/profile_default.jpg';
 import CircleBtn from "./CircleBtn.jsx";
 
 const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
+      // logout function
+    const handleLogout = async () => {
+        try {
+        // Make a request to your backend logout endpoint, e.g., using fetch or axios
+        await fetch('http://localhost:8000/logout', {
+            method: 'GET',
+            credentials: 'include', // Include credentials for cookies to be sent
+        });
+
+        // Clear any local state or user information in your frontend
+        // For example, if you're using context, reset the user context
+
+        // Redirect to the home page by changing the window location
+        window.location.href = '/';
+        } catch (error) {
+        console.error('Logout error:', error);
+        }
+    };
 
     function openProfileDropdown() {
         let e_dropdown = document.getElementById("profile_dropdown");
@@ -63,7 +81,7 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
         <div>
             <div className="container-header">
                 <div className="container-row">
-                    <Link className="container-header-button" to="/">
+                    <Link className="container-header-button" to="/dashboard">
                         <CircleBtn iconUrl={logo} className={"button-header"} width={"100%"} />
                     </Link>
                     {  
@@ -99,13 +117,12 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
                             <Link to="/userprofile">Profile</Link>
                             <Link to="/settings">Settings</Link>
                             <Link to="/group">Group</Link>
-                            <Link to ="/login">Login</Link>
-                            <Link to ="/register">Sign up</Link>
-                           
-                         
+                            <div onClick={handleLogout}>
+                                <label>Sign Out</label>
+                            </div>
                         </div>
                         <div className="container-header-menu" id="menu_dropdown">
-                            <Link to="/">Home</Link>
+                            <Link to="/dashboard">Home</Link>
                             <Link to="/garment-details">Add Garment</Link>
                             <Link to="/garment-measure">Add Measurement</Link>
                             <Link to="/garment-wash">Garment Care</Link>
