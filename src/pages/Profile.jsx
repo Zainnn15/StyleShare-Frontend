@@ -5,7 +5,7 @@ import Axios from "axios";
 
 import '../styles/main.scss';
 
-import ScreenHeader from "../components/common/ScreenHeader";
+import ScreenHeaderIn from "../components/common/ScreenHeaderIn";
 import { weekDays } from "../constants/data/lists";
 import { addErrorMessageByID } from "../constants/functions/inputHandlers";
 
@@ -127,7 +127,7 @@ export default function Profile() {
 
   return (
     <div>
-      <ScreenHeader />
+      <ScreenHeaderIn />
       <div className="container main">
           <div>
               <label className="container-title">Profile</label>

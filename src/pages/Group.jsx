@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useContext, useState } from 'react';
 import { UserContext } from "../../context/userContext";
-import ScreenHeader from "../components/common/ScreenHeader";
+import ScreenHeaderIn from "../components/common/ScreenHeaderIn";
 import defaultProfile from "../assets/images/profile_default.jpg"
 import '../styles/main.scss';
 import { changeTitle } from '../constants/functions/inputHandlers';
@@ -135,7 +135,7 @@ export default function Group() {
     changeTitle("Group");
     return(
         <div>
-            <ScreenHeader />
+            <ScreenHeaderIn />
             <div className="container main">
                 <div>
                     <label className="container-title">Group {user.group}</label>

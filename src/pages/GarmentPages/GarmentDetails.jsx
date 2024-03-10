@@ -9,7 +9,7 @@ import { changeTitle } from "../../constants/functions/inputHandlers";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
-import ScreenHeader from "../../components/common/ScreenHeader";
+import ScreenHeaderIn from "../../components/common/ScreenHeaderIn";
 import First from '../../components/garment_details/GarmentDetails_First.jsx';
 import Second from '../../components/garment_details/GarmentDetails_Second.jsx';
 import Third from '../../components/garment_details/GarmentDetails_Third.jsx';
@@ -195,7 +195,7 @@ const GarmentDetails = () => {
     changeTitle("Garment Details")
     return (
         <div>
-            <ScreenHeader />
+            <ScreenHeaderIn />
             <div className="container main">
                 <div>
                     <label className="container-subtitle-2" style={{textAlign: "right"}}>{page+1}/{numPages}</label>

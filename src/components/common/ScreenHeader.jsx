@@ -96,9 +96,9 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
                 isLogin && (
                     <div>
                         <div className="container-header-profile" id="profile_dropdown">
-                            <Link to="/userprofile">Profile</Link>
+                            <Link to="/login">Profile</Link>
                             <Link to="/settings">Settings</Link>
-                            <Link to="/group">Group</Link>
+                            <Link to="/login">Group</Link>
                             <Link to ="/login">Login</Link>
                             <Link to ="/register">Sign up</Link>
                            
@@ -106,10 +106,10 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
                         </div>
                         <div className="container-header-menu" id="menu_dropdown">
                             <Link to="/">Home</Link>
-                            <Link to="/garment-details">Add Garment</Link>
-                            <Link to="/garment-measure">Add Measurement</Link>
-                            <Link to="/garment-wash">Garment Care</Link>
-                            <Link to="/garment-exchange">Exchange Garment</Link>
+                            <Link to="/login">Add Garment</Link>
+                            <Link to="/login">Add Measurement</Link>
+                            <Link to="/login">Garment Care</Link>
+                            <Link to="/login">Exchange Garment</Link>
                         </div>
                     </div>
                 )

@@ -1,6 +1,6 @@
 import Axios from "axios";
 import { useState, useEffect } from "react";
-import ScreenHeader from "../components/common/ScreenHeader";
+import ScreenHeaderIn from "../components/common/ScreenHeaderIn";
 
 export default function UserSearch() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -34,7 +34,7 @@ export default function UserSearch() {
     
     return (
       <div>
-        <ScreenHeader/>
+        <ScreenHeaderIn/>
         <div className="container main">
           <div>
               <label className="container-title">User Search</label>
