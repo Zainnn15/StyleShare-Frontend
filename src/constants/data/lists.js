@@ -4,13 +4,16 @@ import wash from '../../assets/icons/wash.png';
 import washHand from '../../assets/icons/wash_hand.png';
 import washPress from '../../assets/icons/wash_press.png';
 import washDelicate from '../../assets/icons/wash_delicate.png';
-import wash30Min from '../../assets/icons/wash_30_min.png';
-import wash30Med from '../../assets/icons/wash_30_med.png';
-import wash30Max from '../../assets/icons/wash_30_max.png';
+import washAgitationMin from '../../assets/icons/wash_agitation_min.png';
+import washAgitationMed from '../../assets/icons/wash_agitation_med.png';
+import washHeatXX from '../../assets/icons/wash_xx.png';
+import washHeatNo from '../../assets/icons/not_applicable.png';
+// import wash30Min from '../../assets/icons/wash_30_min.png';
+// import wash30Med from '../../assets/icons/wash_30_med.png';
+// import wash30Max from '../../assets/icons/wash_30_max.png';
 import washCold from '../../assets/icons/wash_cold.png';
 import washWarm from '../../assets/icons/wash_warm.png';
 import washHot from '../../assets/icons/wash_hot.png';
-import noDry from '../../assets/icons/dry_no.png';
 import dry from '../../assets/icons/dry.png';
 import dryDrip from '../../assets/icons/dry_drip.png';
 import dryFlat from '../../assets/icons/dry_flat.png';
@@ -32,6 +35,7 @@ import dryC from '../../assets/icons/dryclean.png';
 import dryCA from '../../assets/icons/dryclean_a.png';
 import dryCP from '../../assets/icons/dryclean_p.png';
 import dryCF from '../../assets/icons/dryclean_f.png';
+import dryCRegular from '../../assets/icons/dryclean.png';
 import dryCSort from '../../assets/icons/dryclean_sort.png';
 import dryCRedMoist from '../../assets/icons/dryclean_redmoist.png';
 import dryCSteamNo from '../../assets/icons/dryclean_nosteam.png';
@@ -329,20 +333,23 @@ const careInstructions = {
 	"noWash":{"type":"wash", "name":"Do not wash", "value":"wash0", "img":noWash},
 	"wash":{"type":"wash", "name":"Wash", "value":"wash1", "img":wash},
 	"washHand":{"type":"wash", "name":"Hand wash only", "value":"washHand", "img":washHand},
-	"washMachine":{"type":"wash", "name":"Machine wash normal", "value":"washMachine", "img":wash},
+	"washRegular":{"type":"wash", "name":"Machine wash regular agitation and press", "value":"washRegular", "img":wash},
 	"washPress":{"type":"wash", "name":"Machine wash permanent press", "value":"washPress", "img":washPress},
 	"washDelicate":{"type":"wash", "name":"Machine wash delicate/gentle", "value":"washDelicate", "img":washDelicate},
-	"wash30Min":{"type":"wash", "name":"Max temp 30"+String.fromCharCode(176)+", minimum agitation", 
-		"value":"wash30Min", "img":wash30Min},
-	"wash30Med":{"type":"wash", "name":"Max temp 30"+String.fromCharCode(176)+", medium agitation", 
-		"value":"wash30Med", "img":wash30Med},
-	"wash30Max":{"type":"wash", "name":"Max temp 30"+String.fromCharCode(176)+", max agitation", 
-		"value":"wash30Max", "img":wash30Max},
+	"washAgitationMin":{"type":"wash", "name":"Minimum agitation", "value":"washAgitationMin", "img":washAgitationMin},
+	"washAgitationMed":{"type":"wash", "name":"Medium agitation", "value":"washAgitationMed", "img":washAgitationMed},
+	// "wash30Min":{"type":"wash", "name":"Max temp 30"+String.fromCharCode(176)+", minimum agitation", 
+	// 	"value":"wash30Min", "img":wash30Min},
+	// "wash30Med":{"type":"wash", "name":"Max temp 30"+String.fromCharCode(176)+", medium agitation", 
+	// 	"value":"wash30Med", "img":wash30Med},
+	// "wash30Max":{"type":"wash", "name":"Max temp 30"+String.fromCharCode(176)+", max agitation", 
+	// 	"value":"wash30Max", "img":wash30Max},
 	"washCold":{"type":"wash", "name":"Machine wash cold", "value":"washCold", "img":washCold},
 	"washWarm":{"type":"wash", "name":"Machine wash warm", "value":"washWarm", "img":washWarm},
 	"washHot":{"type":"wash", "name":"Machine wash hot", "value":"washHot", "img":washHot},
-	"noDry":{"type":"dry", "name":"Do not dry", "value":"dry0", "img":noDry},
-	"dry":{"type":"dry", "name":"Dry", "value":"dry1", "img":dry},
+	"washHeatXX":{"type":"wash", "name":"Input temperature by degree", "value":"washHeatXX", "img":washHeatXX},
+	"washHeatNo":{"type":"wash", "name":"No temperature/coldwater wash", "value":"washHeatNo", "img":washHeatNo},
+	"dryRegular":{"type":"dry", "name":"Air Dry", "value":"dryAir", "img":dry},
 	"dryDrip":{"type":"dry", "name":"Drip dry", "value":"dryDrip", "img":dryDrip},
 	"dryFlat":{"type":"dry", "name":"Flat dry", "value":"dryFlat", "img":dryFlat},
 	"dryHang":{"type":"dry", "name":"Hang dry", "value":"dryHang", "img":dryHang},
@@ -352,6 +359,7 @@ const careInstructions = {
 	"dryShadeHang":{"type":"dry", "name":"Hang dry in shade", "value":"dryShadeHang", "img":dryShadeHang},
 	"noTumble":{"type":"tumble", "name":"Do not tumble dry", "value":"tumble0", "img":noTumble},
 	"tumble":{"type":"tumble", "name":"Tumble dry", "value":"tumble1", "img":tumble},
+	"tumbleRegular":{"type":"tumble", "name":"Tumble dry regular", "value":"tumbleRegular", "img":tumble},
 	"tumblePress":{"type":"tumble", "name":"Tumble dry permanent press", 
 		"value":"tumblePress", "img":tumblePress},
 	"tumbleDelicate":{"type":"tumble", "name":"Tumble dry delicate/gentle", 
@@ -370,6 +378,7 @@ const careInstructions = {
 	"dryCP":{"type":"dryC", "name":"Dry cleaning in any solvent except trichloroethylene", 
 		"value":"dryCP", "img":dryCP},
 	"dryCF":{"type":"dryC", "name":"Dry cleaning in petroleum solvent", "value":"dryCF", "img":dryCF},
+	"dryCRegular":{"type":"dryC", "name":"Regular cycle", "value":"dryCRegular", "img":dryCRegular},
 	"dryCSort":{"type":"dryC", "name":"Sort cycle", "value":"dryCSort", "img":dryCSort},
 	"dryCRedMoist":{"type":"dryC", "name":"Reduce moisture", "value":"dryCRedMoist", "img":dryCRedMoist},
 	"dryCSteamNo":{"type":"dryC", "name":"No steam finishing", "value":"dryCSteamNo", "img":dryCSteamNo},
@@ -388,10 +397,8 @@ const careInstructions = {
 		"value":"ironHeatHigh", "img":ironHeatHigh},
 	"noBleach":{"type":"bleach", "name":"Do not bleach", "value":"beach0", "img":noBleach},
 	"bleach":{"type":"bleach", "name":"Bleach", "value":"bleach1", "img":bleach},
-	"bleachChlorideNo":{"type":"bleach", "name":"Only non-chloride bleach", 
-		"value":"bleachChloride0", "img":bleachNonCl},
-	"bleachChloride":{"type":"bleach", "name":"Can use chloride bleach", 
-		"value":"bleachChloride1", "img":bleach},
+	"bleachNonCl":{"type":"bleach", "name":"Only non-chloride bleach", 
+		"value":"bleachNonCl", "img":bleachNonCl},
 };
 
 //garment measurement per category
@@ -417,7 +424,7 @@ const weekDays = [
 const colorStatus = {
 	"using":"red",
 	"available":"green",
-	"booked":"yellow",
+	"booked":"orange",
 	"removed":"gray"
 };
 

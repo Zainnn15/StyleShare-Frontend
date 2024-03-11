@@ -54,5 +54,25 @@ const CARE_DRY_METHODS = [
     {value: 'hangDry', label: 'Hang & Dry'},
 ];
 
+//wash temperatures celsius
+const WASH_TEMP_C = [
+    {value: '30C', label: '30'+String.fromCharCode(176)+'C'},
+    {value: '40C', label: '40'+String.fromCharCode(176)+'C'},
+    {value: '50C', label: '50'+String.fromCharCode(176)+'C'},
+    {value: '60C', label: '60'+String.fromCharCode(176)+'C'},
+    {value: '70C', label: '70'+String.fromCharCode(176)+'C'},
+    {value: '95C', label: '95'+String.fromCharCode(176)+'C'},
+];
+
+//wash temperatures celsius
+const WASH_TEMP_F = [
+    {value: '65-85F', label: '65-85'+String.fromCharCode(176)+'F'},
+    {value: '105F', label: '105'+String.fromCharCode(176)+'F'},
+    {value: '120F', label: '120'+String.fromCharCode(176)+'F'},
+    {value: '140F', label: '140'+String.fromCharCode(176)+'F'},
+    {value: '160F', label: '160'+String.fromCharCode(176)+'F'},
+    {value: '200F', label: '200'+String.fromCharCode(176)+'F'},
+];
+
 export { GARMENT_TYPES, GARMENT_SIZES, GARMENT_FITS, COUNTRIES, FIBRES,
-    CARE_WASH_METHODS, CARE_DRY_METHODS };
+    CARE_WASH_METHODS, CARE_DRY_METHODS, WASH_TEMP_C, WASH_TEMP_F };

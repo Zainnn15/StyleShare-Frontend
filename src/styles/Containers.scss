@@ -94,6 +94,7 @@ $screen-xl-min: 1200px;
 
 @mixin title {
     @include Fonts.bold;
+    font-family: Fonts.$styleFont;
     display: block;
     color: Colors.$purpleScarlet;
     text-align: center;

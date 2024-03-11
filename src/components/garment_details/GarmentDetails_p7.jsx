@@ -9,7 +9,7 @@ import CircleBtn from "../common/CircleBtn";
 import CircleImg from "../common/CircleImg";
 import PopupImg from "../common/PopupImg";
 
-const GarmentDetails_Eighth = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
+const GarmentDetails_p7 = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
     const dryCTree = {
         "DryC": "dryC_yes",
     };
@@ -187,6 +187,26 @@ const GarmentDetails_Eighth = ({formData, setFormData, page, numPages, handleFor
                             </div>
                             <div id={"dryCCare_error"} style={{textAlign:"center"}}></div>
                             <div className="container-care">
+                            <div className="container-care-group">
+                                    <input type="radio" id="dryC_regular" name="dryCCare"
+                                        value={"dryCRegular"} 
+                                        onClick={(e) => {
+                                            const newDryC = formData.instructionDryC;
+                                            newDryC.Care = e.target.id;
+                                            setFormData({
+                                                ...formData,
+                                                instructionDryC: newDryC
+                                            });
+                                            addErrorMessageByID("dryCCare_error", null);
+                                        }}
+                                        defaultChecked={checkOnID("dryC_regular", formData.instructionDryC.Care)}
+                                    />
+                                    <span className="container-care-img" onClick={()=>clickID("dryC_regular")}>
+                                        <CircleImg className="img-care" 
+                                            iconUrl={careInstructions.dryCRegular.img} width="50%"/>
+                                        <label>{careInstructions.dryCRegular.name}</label>
+                                    </span>
+                                </div>
                                 <div className="container-care-group">
                                     <input type="radio" id="dryC_sort" name="dryCCare"
                                         value={"dryCSort"} 
@@ -289,4 +309,4 @@ const GarmentDetails_Eighth = ({formData, setFormData, page, numPages, handleFor
     );
 }
 
-export default GarmentDetails_Eighth;
+export default GarmentDetails_p7;

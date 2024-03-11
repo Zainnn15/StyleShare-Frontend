@@ -161,7 +161,8 @@ export default function Group() {
                             status={
                                 <div className='container-row gap-s'>
                                     <Circle
-                                    color={colorStatus[m.garment.status]}
+                                    colorStart="white"
+                                    colorStop={colorStatus[m.garment.status]}
                                     size="0.5em" 
                                     />
                                     {m.garment.status}

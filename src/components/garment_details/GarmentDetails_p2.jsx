@@ -4,7 +4,7 @@ import '../../styles/main.scss';
 import { GARMENT_TYPES } from "../../constants/data/options";
 import { selectID, validate, validatePage } from "../../constants/functions/inputHandlers";
 
-const GarmentDetails_Second = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
+const GarmentDetails_p2 = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
     const options = GARMENT_TYPES;
 
     //handle next button
@@ -87,4 +87,4 @@ const GarmentDetails_Second = ({formData, setFormData, page, numPages, handleFor
     );
 }
 
-export default GarmentDetails_Second;
+export default GarmentDetails_p2;

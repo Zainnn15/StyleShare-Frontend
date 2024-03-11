@@ -4,7 +4,7 @@ import '../../styles/main.scss';
 import { checkOnID, selectID, addErrorMessageByID, addErrorMessage, validateInpName } from "../../constants/functions/inputHandlers";
 import { COUNTRIES } from "../../constants/data/options";
 
-const GarmentDetails_Third = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
+const GarmentDetails_p3 = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
     const options = COUNTRIES;
 
     //validation
@@ -61,6 +61,7 @@ const GarmentDetails_Third = ({formData, setFormData, page, numPages, handleForw
         isValid = validate("country", "garmentCountry") && isValid;
         isValid = validate("price", "garmentCost") && isValid;
         isValid = validateInpName("garmentDiscount", formData["garmentDiscount"]) && isValid;
+        isValid = validate("price", "garmentOgCost") && isValid;
 
         if(!isValid) {
             return false;
@@ -161,6 +162,36 @@ const GarmentDetails_Third = ({formData, setFormData, page, numPages, handleForw
                     </div>
                 </div>
             </div>
+
+            {
+            formData.garmentDiscount === 'discount_yes' && (
+                <div>
+                    <div className="container-prompt" onClick={()=>selectID("garmentOgCost")}>
+                        <p>What is its original price?</p>
+                    </div>
+                    <div id={"garmentOgCost_error"} style={{textAlign:"center"}}></div>
+                    <div className="container-input">
+                        <label>$</label>
+                        <input type="number" name="garmentOgCost" id="garmentOgCost"
+                            placeholder="0.00" 
+                            value={formData.garmentOgCost} 
+                            onChange={(e) => {
+                                setFormData({
+                                    ...formData,
+                                    garmentOgCost: e.target.value
+                                });
+                                validate("price","garmentOgCost");
+                            }}
+                            min={0}
+                            max={99999}
+                            step={0.01}
+                            required 
+                        />
+                    </div>
+                </div>
+            )
+            }
+
             <div className="container-button-form">
                 {
                     page > 0 &&
@@ -178,4 +209,4 @@ const GarmentDetails_Third = ({formData, setFormData, page, numPages, handleForw
     );
 }
 
-export default GarmentDetails_Third;
+export default GarmentDetails_p3;

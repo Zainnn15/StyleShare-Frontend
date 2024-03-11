@@ -10,7 +10,7 @@ import CircleBtn from "../common/CircleBtn";
 import { FIBRES } from "../../constants/data/options";
 import { addErrorMessage, addErrorMessageByID } from "../../constants/functions/inputHandlers";
 
-const GarmentDetails_Fourth = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
+const GarmentDetails_p4 = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
     const [nextMainKey, setNextMainKey] = useState(formData.compositionMain.length);
     const [nextLiningKey, setNextLiningKey] = useState(formData.compositionLining.length);
     const [nextPaddingKey, setNextPaddingKey] = useState(formData.compositionPadding.length);
@@ -547,4 +547,4 @@ const GarmentDetails_Fourth = ({formData, setFormData, page, numPages, handleFor
     );
 }
 
-export default GarmentDetails_Fourth;
+export default GarmentDetails_p4;

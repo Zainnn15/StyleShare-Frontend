@@ -9,21 +9,10 @@ import CircleBtn from "../common/CircleBtn";
 import CircleImg from "../common/CircleImg";
 import PopupImg from "../common/PopupImg";
 
-const GarmentDetails_Tenth = ({formData, setFormData, page, numPages, handleBack, handleForward}) => {
-    const bleachTree = {
-        "Bleach": "bleach_yes",
-    };
-
+const GarmentDetails_p9 = ({formData, setFormData, page, numPages, handleBack}) => {
     //validation
     function validatePage() {
-        if(!validateInpName("canBleach", formData.instructionBleach.Bleach)) {
-            return false;
-        }
-        if(formData.instructionBleach.Bleach === "bleach_no") {
-            return true;
-        }
-
-        return validateInpName("bleachChloride", formData.instructionBleach.Chloride);
+        return validateInpName("canBleach", formData.instructionBleach.Bleach);
     }
 
     function validateAndNext() {
@@ -34,7 +23,7 @@ const GarmentDetails_Tenth = ({formData, setFormData, page, numPages, handleBack
             ...formData
             // willSubmit: true
         });
-        handleForward();
+        //handleForward();
         return true;
     }
 
@@ -64,7 +53,7 @@ const GarmentDetails_Tenth = ({formData, setFormData, page, numPages, handleBack
                 <div className="container-care">
                     <div className="container-care-group">
                         <input type="radio" id="bleach_no" name="canBleach"
-                            value={0} 
+                            value={"bleachNo"} 
                             onClick={(e) => {
                                 const newBleach = formData.instructionBleach;
                                 newBleach.Bleach = e.target.id;
@@ -83,7 +72,7 @@ const GarmentDetails_Tenth = ({formData, setFormData, page, numPages, handleBack
                     </div>
                     <div className="container-care-group">
                         <input type="radio" id="bleach_yes" name="canBleach"
-                            value={1} 
+                            value={"bleachYes"} 
                             onClick={(e) => {
                                 const newBleach = formData.instructionBleach;
                                 newBleach.Bleach = e.target.id;
@@ -100,61 +89,28 @@ const GarmentDetails_Tenth = ({formData, setFormData, page, numPages, handleBack
                             <label>{careInstructions.bleach.name}</label>
                         </span>
                     </div>
+                    <div className="container-care-group">
+                        <input type="radio" id="bleach_nonCl" name="canBleach"
+                            value={"bleachNonCl"} 
+                            onClick={(e) => {
+                                const newBleach = formData.instructionBleach;
+                                newBleach.Bleach = e.target.id;
+                                setFormData({
+                                    ...formData,
+                                    instructionBleach: newBleach
+                                });
+                                addErrorMessageByID("canBleach_error", null);
+                            }}
+                            defaultChecked={checkOnID("bleach_nonCl", formData.instructionBleach.Bleach)}
+                        />
+                        <span className="container-care-img" onClick={()=>clickID("bleach_nonCl")}>
+                            <CircleImg className="img-care" 
+                                iconUrl={careInstructions.bleachNonCl.img} width="50%"/>
+                            <label>{careInstructions.bleachNonCl.name}</label>
+                        </span>
+                    </div>
                 </div>
 
-                {
-                    //if bleach is selected
-                    formData.instructionBleach.Bleach === bleachTree.Bleach && (
-                        <div>
-                            <div className="container-prompt">
-                                <p>Can use Non-Chloride Bleach?</p>
-                            </div>
-                            <div id={"bleachChloride_error"} style={{textAlign:"center"}}></div>
-                            <div className="container-care">
-                                <div className="container-care-group">
-                                    <input type="radio" id="bleach_chloride_no" name="bleachChloride"
-                                        value={0} 
-                                        onClick={(e) => {
-                                            const newBleach = formData.instructionBleach;
-                                            newBleach.Chloride = e.target.id;
-                                            setFormData({
-                                                ...formData,
-                                                instructionBleach: newBleach
-                                            });
-                                            addErrorMessageByID("bleachChloride_error", null);
-                                        }}
-                                        defaultChecked={checkOnID("bleach_chloride_no", formData.instructionBleach.Chloride)}
-                                    />
-                                    <span className="container-care-img" onClick={()=>clickID("bleach_chloride_no")}>
-                                        <CircleImg className="img-care" 
-                                            iconUrl={careInstructions.bleachChlorideNo.img} width="50%"/>
-                                        <label>{careInstructions.bleachChlorideNo.name}</label>
-                                    </span>
-                                </div>
-                                <div className="container-care-group">
-                                    <input type="radio" id="bleach_chloride_yes" name="bleachChloride"
-                                        value={1} 
-                                        onClick={(e) => {
-                                            const newBleach = formData.instructionBleach;
-                                            newBleach.Chloride = e.target.id;
-                                            setFormData({
-                                                ...formData,
-                                                instructionBleach: newBleach
-                                            });
-                                            addErrorMessageByID("bleachChloride_error", null);
-                                        }}
-                                        defaultChecked={checkOnID("bleach_chloride_yes", formData.instructionBleach.Chloride)}
-                                    />
-                                    <span className="container-care-img" onClick={()=>clickID("bleach_chloride_yes")}>
-                                        <CircleImg className="img-care" 
-                                            iconUrl={careInstructions.bleachChloride.img} width="50%"/>
-                                        <label>{careInstructions.bleachChloride.name}</label>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    )
-                }
             </div>
             <div className="container-button-form">
                 {
@@ -173,4 +129,4 @@ const GarmentDetails_Tenth = ({formData, setFormData, page, numPages, handleBack
     );
 }
 
-export default GarmentDetails_Tenth;
+export default GarmentDetails_p9;
