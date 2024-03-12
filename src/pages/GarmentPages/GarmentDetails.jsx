@@ -10,21 +10,20 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
 import ScreenHeaderIn from "../../components/common/ScreenHeaderIn";
-import First from '../../components/garment_details/GarmentDetails_First.jsx';
-import Second from '../../components/garment_details/GarmentDetails_Second.jsx';
-import Third from '../../components/garment_details/GarmentDetails_Third.jsx';
-import Fourth from '../../components/garment_details/GarmentDetails_Fourth.jsx';
-import Fifth from '../../components/garment_details/GarmentDetails_Fifth.jsx';
-import Sixth from '../../components/garment_details/GarmentDetails_Sixth.jsx';
-import Seventh from '../../components/garment_details/GarmentDetails_Seventh.jsx';
-import Eight from '../../components/garment_details/GarmentDetails_Eighth.jsx';
-import Ninth from '../../components/garment_details/GarmentDetails_Ninth.jsx';
-import Tenth from '../../components/garment_details/GarmentDetails_Tenth.jsx';
+import First from '../../components/garment_details/GarmentDetails_p1.jsx';
+import Second from '../../components/garment_details/GarmentDetails_p2.jsx';
+import Third from '../../components/garment_details/GarmentDetails_p3.jsx';
+import Fourth from '../../components/garment_details/GarmentDetails_p4.jsx';
+import Fifth from '../../components/garment_details/GarmentDetails_p5.jsx';
+import Sixth from '../../components/garment_details/GarmentDetails_p6.jsx';
+import Seventh from '../../components/garment_details/GarmentDetails_p7.jsx';
+import Eight from '../../components/garment_details/GarmentDetails_p8.jsx';
+import Ninth from '../../components/garment_details/GarmentDetails_p9.jsx';
 
 const GarmentDetails = () => {
     const navigate = useNavigate();
     const {user} = useContext(UserContext);
-    const numPages = 10;
+    const numPages = 9;
     const [page, setPage] = useState(0);
     const [formData, setFormData] = useState({
         purchaseLocation: '',
@@ -35,6 +34,7 @@ const GarmentDetails = () => {
         garmentCountry: '',
         garmentCost: '',
         garmentDiscount: '',
+        garmentOgCost: '',
         compositionMain: [{ value: '', percent: '' }],
         compositionLining: [],
         compositionPadding: [],
@@ -43,7 +43,8 @@ const GarmentDetails = () => {
         instructionWash: {
             "Wash": "",
             "Machine": "",
-            "Delicate": "",
+            "Heat": "",
+            "Degree": "",
             "Temp":""
         },
         instructionDry: {
@@ -53,6 +54,8 @@ const GarmentDetails = () => {
         },
         instructionTumble: {
             "Tumble": "",
+            "Air": "",
+            "Shade": "",
             "Delicate": "",
             "Heat": "",
         },
@@ -139,15 +142,6 @@ const GarmentDetails = () => {
                 />;
             case 8:
                 return <Ninth
-                    formData={formData} 
-                    setFormData={setFormData}
-                    page={page} 
-                    numPages={numPages}
-                    handleForward={handleForward}
-                    handleBack={handleBack}
-                />;
-            case 9:
-                return <Tenth
                     formData={formData} 
                     setFormData={setFormData}
                     page={page} 

@@ -3,7 +3,7 @@ import '../../styles/main.scss';
 
 import { addErrorMessageByID, checkOnID, selectID, validate, validatePage } from "../../constants/functions/inputHandlers";
 
-const GarmentDetails_First = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
+const GarmentDetails_p1 = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
     //handle next button
     function validateAndNext() {
         let querySelect = "input[type='text'],input[type='date']";
@@ -111,4 +111,4 @@ const GarmentDetails_First = ({formData, setFormData, page, numPages, handleForw
     );
 }
 
-export default GarmentDetails_First;
+export default GarmentDetails_p1;

@@ -10,7 +10,7 @@ import CircleBtn from "../common/CircleBtn";
 import CircleImg from "../common/CircleImg";
 import PopupImg from "../common/PopupImg";
 
-const GarmentDetails_Ninth = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
+const GarmentDetails_p8 = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
     const ironTree = {
         "Iron": "iron_yes",
     };
@@ -222,4 +222,4 @@ const GarmentDetails_Ninth = ({formData, setFormData, page, numPages, handleForw
     );
 }
 
-export default GarmentDetails_Ninth;
+export default GarmentDetails_p8;

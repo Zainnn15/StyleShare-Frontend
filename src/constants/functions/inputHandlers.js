@@ -113,5 +113,31 @@ function validatePage(querySelect="input", namesToValidate=[]) {
     return isValid;
 }
 
+//options must be an object with "value" property
+function validateSelect(idName, options) {
+    let e_select = document.getElementById(idName);
+    if(!e_select) {
+        return false;
+    }
+    if(e_select.value === "") {
+        addErrorMessage(idName+"_error", "Please select an option");
+        return false;
+    }
+
+    //if there are options
+    if(options) {
+        for(let i=0; i < options.length; i++) {
+            if(e_select.value === options[i].value) {
+                addErrorMessage(idName+"_error", null);
+                return true;
+            }
+        }
+        addErrorMessage(idName+"_error", "Please select an option");
+        return false;
+    }
+    addErrorMessage(idName+"_error", null);
+    return true;
+}
+
 export { checkOnID, selectID, clickID, signOut, changeTitle, addErrorMessage, addErrorMessageByID,
-    validate, validateInpName, validatePage };
+    validate, validateInpName, validatePage, validateSelect };
