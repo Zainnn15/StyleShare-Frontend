@@ -74,9 +74,9 @@ const GarmentMeasurements = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         const { clothingType, garmentSize, garmentFit, fileFront, fileBack } = formData;
-
+    
         // Construct garmentMeasurements array
         const garmentMeasurements = measures.map((measureType, index) => {
             const value = parseFloat(document.getElementById("measure_" + measureType.value + "_" + index).value);
@@ -87,26 +87,28 @@ const GarmentMeasurements = () => {
                 unit,
             };
         });
-
-        // Send form data to the backend
+    
+        // Prepare form data
+        const formDataToSend = new FormData();
+        formDataToSend.append('userId', user.id);
+        formDataToSend.append('clothingType', JSON.stringify(clothingType)); // Ensure clothingType is stringified
+        formDataToSend.append('garmentSize', garmentSize);
+        formDataToSend.append('garmentFit', garmentFit);
+        formDataToSend.append('fileFront', fileFront);
+        formDataToSend.append('fileBack', fileBack);
+        formDataToSend.append('garmentMeasurements', JSON.stringify(garmentMeasurements)); // Ensure garmentMeasurements is stringified
+    
         try {
-          const { data } = await axios.post(
-              '/addgarmentdetails',
-              {
-                  userId: user.id,
-                  clothingType: [clothingType], // Change this line
-                  garmentSize,
-                  garmentFit,
-                  fileFront,
-                  fileBack,
-                  garmentMeasurements,
-              },
-              {
-                  headers: {
-                      'Content-Type': 'multipart/form-data',
-                  },
-              }
-          );
+            const { data } = await axios.post(
+                '/addgarmentdetails',
+                formDataToSend,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+    
             // Handle response as needed
             if (data.error) {
                 toast.error(data.error);
@@ -119,6 +121,7 @@ const GarmentMeasurements = () => {
                     fileBack: null,
                 });
                 toast.success(data.message);
+    
                 navigate('/dashboard');
                 // Add any additional logic or redirection after successful submission
             }
@@ -126,7 +129,6 @@ const GarmentMeasurements = () => {
             console.error('Error submitting form:', error);
         }
     };
-
     return (
         <div>
             <div className='container-prompt' onClick={selectID("clothingType")}>

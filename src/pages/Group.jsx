@@ -1,229 +1,191 @@
-/* eslint-disable react/prop-types */
-import { useContext, useState } from 'react';
-import { UserContext } from "../../context/userContext";
-import ScreenHeaderIn from "../components/common/ScreenHeaderIn";
-import defaultProfile from "../assets/images/profile_default.jpg"
+import { useContext, useState, useEffect } from 'react';
+import { UserContext } from '../../context/userContext';
+import { GroupContext } from '../../context/groupContext';
+import { GarmentContext } from '../../context/garmentContext';
+import ScreenHeaderIn from '../components/common/ScreenHeaderIn';
 import '../styles/main.scss';
 import { changeTitle } from '../constants/functions/inputHandlers';
-import Card from '../components/common/Card';
-import CircleBtn from '../components/common/CircleBtn';
-// const mongoose = require('mongoose'); 
-
-//delete
-import front from '../assets/images/front.png';
-import back from '../assets/images/back.png';
-import Circle from '../components/common/Circle';
-import { colorStatus } from '../constants/data/lists';
+import { toast } from 'react-hot-toast';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function Group() {
-    // get members from group number
-    // get profile pic or default, name, and garment
+    const navigate = useNavigate();
+    const { user, setUser } = useContext(UserContext);
+    const { garment, setGarment } = useContext(GarmentContext);
+    const { userGroups, setUserGroups, setOpenGroups, openGroups, joinedGroup, setJoinedGroup} = useContext(GroupContext);
+    const [data, setData] = useState({
+        groupId: '',
+    });
+    const [responseData, setResponseData] = useState(null); // State to hold response data
 
-    //get user info
-    const {user} = useContext(UserContext);
-
-    ////dummy values////
-    user.group = 3;
-
-    //get users in the group
-    let members = [
-        {
-            id: 100,
-            username: "aHaley",
-            garment: {id:1000, status:"available", 
-                location:"StoreA", numWear:5, numWash:5, img:front,
-                front:front, back:back
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+    
+        try {
+            const response = await axios.post('/joinGroup', { userId: user.id, groupId: data.groupId });
+            console.log('Join Group Response:', response.data); // Log the entire response for debugging
+    
+            if (response.data.error) {
+                toast.error(response.data.error);
+            } else {
+                setData({}); // Reset the form
+                toast.success(response.data.message);
+    
+                console.log('Joined Group Data:', response.data.joinedGroup);
+    
+                // Check if the group has reached its maximum capacity
+                if (response.data.joinedGroup.members.length >= response.data.joinedGroup.max_members) {
+                    // If the group is full, update openGroups state to remove the joined group
+                    setOpenGroups(openGroups.filter(group => group._id !== response.data.joinedGroup._id));
+                } else {
+                    // If the group is not full, update userGroups state with the joined group
+                    setUserGroups([...userGroups, response.data.joinedGroup]);
+                }
+    
+                // Update joinedGroup state
+                setJoinedGroup(response.data.joinedGroup);
+    
+                // Update user state with the joined user details
+                setUser(response.data.user);
+    
+                // Update garmentDetails state with the joined garment details
+                setGarment(response.data.garment);
+    
+                // Optionally navigate to another page after joining the group
+                navigate('/dashboard'); // Change the route as needed
+    
+                // Set response data to be displayed in the UI
+                setResponseData(response.data);
             }
-        },
-        {
-            id: 101,
-            username: "bobaboy",
-            garment: {id:1001, status:"removed", 
-                location:"StoreB", numWear:8, numWash:4, img:front,
-                front:front, back:back
-            }
-        },
-        {
-            id: 102,
-            username: "mysteria",
-            garment: {id:1002, status:"booked", 
-                location:"StoreC", numWear:10, numWash:8, img:front,
-                front:front, back:back
-            }
-        },
-        {
-            id:103,
-            username: "TxabcxZ",
-            garment: {id:1003, status:"using", 
-                location:"StoreD", numWear:2, numWash:2, img:front,
-                front:front, back:back
-            }
-        },
-        {
-            id: 104,
-            username: "goldenPotato",
-            garment: {id:1004, status:"available", 
-                location:"StoreA", numWear:3, numWash:3, img:front,
-                front:front, back:back
-            }
-        },
-        {
-            id:105,
-            username: "johnsmith",
-            garment: {id:1005, status:"available", 
-                location:"StoreC", numWear:4, numWash:2, img:front,
-                front:front, back:back
-            }
+        } catch (error) {
+            console.error(error);
         }
-    ]
-    const [mem, setMem] = useState(members);
-    const testWidth = "18em";
-    const testHeight = "22em";
-    ///////////////////////////
+    };
 
-    function getMember(idNum) {
-        let member = null;
-        for(let i=0; i < members.length; i++) {
-            if(members[i].id === idNum) {
-                member = members[i].garment;
-                break;
+    useEffect(() => {
+        const fetchGroups = async () => {
+          try {
+            const response = await axios.get(`/getGroups/${user.id}`);
+            console.log('User Groups:', response.data.userGroups); // Log user groups data
+            setUserGroups(response.data.userGroups);
+          } catch (error) {
+            console.error('Error fetching groups:', error);
+          }
+        };
+      
+        const fetchOpenGroups = async () => {
+          try {
+            const response = await axios.get('/getOpenGroups');
+            setOpenGroups(response.data.openGroups);
+          } catch (error) {
+            console.error('Error fetching open groups:', error);
+          }
+        };
+      
+        // Call the functions to fetch data when the component mounts
+        fetchGroups();
+        fetchOpenGroups();
+      }, [user.id, setUserGroups, setOpenGroups]);
+
+    useEffect(() => {
+        console.log('Joined Group:', joinedGroup);
+    }, [joinedGroup]);
+
+    changeTitle('Group');
+
+    // Add this function in your Group component
+    const handleLeaveGroup = async () => {
+        try {
+            const response = await axios.post('/leaveGroup', { userId: user.id });
+
+            if (response.data.error) {
+                toast.error(response.data.error);
+            } else {
+                // Handle success, e.g., show a success message, update state, etc.
+                toast.success(response.data.message);
+
+                // You may want to update the component state or navigate to another page
             }
+        } catch (error) {
+            console.error(error);
         }
-        return member;
-    }
+    };
 
-    function showGarmentSummary(idNum) {
-        let member = getMember(idNum);
-        return (
-            <div>
-                <div>
-                    <label className='text-b'>Store: </label>
-                    <label className='tab'></label>
-                    <label>{member.location}</label>
-                </div>
-                <div>
-                    <label className='text-b'>Times worn: </label>
-                    <label className='tab'></label>
-                    <label>{member.numWear}</label>
-                </div>
-                <div>
-                    <label className='text-b'>Times washed: </label>
-                    <label className='tab'></label>
-                    <label>{member.numWash}</label>
-                </div>
-            </div>
-        )
-    }
-
-    function handleClickImg(idNum, index) {
-        let member = getMember(idNum);
-        if(!member) {
-            return;
-        }
-        let temp = mem;
-        if(temp[index].garment.img === temp[index].garment.front) {
-            temp[index].garment.img = temp[index].garment.back;
-        }
-        else {
-            temp[index].garment.img = temp[index].garment.front;
-        }
-        setMem([
-            ...temp
-        ]);
-    }
-
-    changeTitle("Group");
-    return(
+    return (
         <div>
             <ScreenHeaderIn />
             <div className="container main">
-                <div>
-                    <label className="container-title">Group {user.group}</label>
-                    <hr/>
-                </div>
-                <div className='container-measure-group'>
-                {
-                    mem.map((m, index)=>{
-                    return(
-                    <div key={"card_"+index}>
-                        <Card 
-                            imgUrl={m.garment.img}
-                            title={
-                                <div className='container-row gap-s'>
-                                    <CircleBtn
-                                    iconUrl={defaultProfile} 
-                                    className="button-info" 
-                                    width="2em" 
-                                    />
-                                    {m.username}
-                                </div>
-                            }
-                            status={
-                                <div className='container-row gap-s'>
-                                    <Circle
-                                    color={colorStatus[m.garment.status]}
-                                    size="0.5em" 
-                                    />
-                                    {m.garment.status}
-                                </div>
-                            }
-                            description={showGarmentSummary(m.id)}
-                            btnText={"View"}
-                            width={testWidth}
-                            height={testHeight}
-                            handleImgPress={()=>handleClickImg(m.id, index)}
-                        />
+                <form onSubmit={handleSubmit}>
+                    <div className="container-small">
+                        <div>
+                            <label className="container-title">Join Open Group</label>
+                            <hr />
+                        </div>
+                        <br />
+
+                        <div>
+                            <input type="hidden" id="userId" value={user.id} onChange={(e) => setData({ ...data, userId: e.target.value })} />
+                            <label htmlFor="groupId">Select Open Group</label>
+                            <select id="groupId" value={data.groupId || ""} onChange={(e) => setData({ ...data, groupId: e.target.value })}>
+                                <option value="" disabled>
+                                    Select an open group
+                                </option>
+                                {openGroups.map((group) => (
+                                    <option key={group._id} value={group._id}>
+                                        {`Open Group: ${group.group_name} - Members: ${group.members.length}/${group.max_members}`}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <br />
+
+                        <button className="button-form" type="submit" style={{ width: '100%' }}>
+                            Join Group
+                        </button>
                     </div>
-                    )})
-                }    
-                
-                    
-                    {/* {number && (
-                        <>
-                            <label className="container-title">Group {number || "#"}</label>
-                            <printUsers users={users}/>
-                            <hr/>
-                        </>
+                </form>
+
+                {userGroups && userGroups.members && (
+                 <div className="container-content">
+                    <p>
+                    <label className="text-b">Joined Group: </label>
+                    {`${userGroups.group_name} - Members: ${userGroups.members.length}/${userGroups.max_members}`}
+                    </p>
+                    </div>
                     )}
 
-                    {!number && (
-                        <>
-                            <label className="container-title">You must join a group before viewing this page</label>
-                        </>                        
-                    )} */}
-                </div>
+                {user && joinedGroup && (
+                    <div className="container-content">
+                        <p>
+                            <label className="text-b">Joined User: </label>
+                            {`${user.name} - Username: ${user.username} - Email: ${user.email}`}
+                        </p>
+                    </div>
+                )}
+
+        {userGroups && userGroups.members && (
+            <div className="container-content">
+            <p>
+            <label className="text-b">Other Joined Persons: </label>
+            {userGroups.members.map(member => member.username).filter(username => username !== user.username).join(', ')}
+                </p>
+            </div>
+            )}
+                {garment && joinedGroup && (
+                    <div className="container-content">
+                        <p>
+                            <label className="text-b">Joined Garment: </label>
+                            {`Type: ${garment.garmentType}, Description: ${garment.garmentDescription}, Country: ${garment.garmentCountry}`}
+                        </p>
+                    </div>
+                )}
+
+                 <button onClick={handleLeaveGroup}>Leave Group</button>
+
+
+    
             </div>
         </div>
-    )
+    );
 }
-
-// function PrintUsers({users}) {
-//     return(
-//         <div className='container'>
-//             {users.map((user, index) => (
-//                 <div key={"member_"+index} className='container-row'> 
-//                 <>
-//                     <div className='container-col'>
-//                         {user.name}
-//                     </div>
-//                     <div className='container-col'>
-//                         <img src={user.profilePicture || defaultProfile} height={50} alt={`${user.name} profile`} />
-//                     </div>
-//                     <div className='container-col'>
-//                         {user.garmentPhoto && (
-//                         <>
-//                             <img src={user.garmentPhoto} alt={`Garment owned by ${user.name}`}></img>
-//                         </>
-//                         )}
-//                         {!user.garmentPhoto && (
-//                             <p>
-//                                 {user.name} has not entered garment details yet
-//                             </p>
-//                         )}
-//                     </div>
-//                 </>
-//                 </div>        
-//             ))}
-//         </div>
-//     )
-// }
