@@ -24,6 +24,7 @@ const GarmentDetails_p9 = ({formData, setFormData, page, numPages, handleBack}) 
             // willSubmit: true
         });
         //handleForward();
+        console.log("submit");
         return true;
     }
 

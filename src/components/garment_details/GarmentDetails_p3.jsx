@@ -61,7 +61,9 @@ const GarmentDetails_p3 = ({formData, setFormData, page, numPages, handleForward
         isValid = validate("country", "garmentCountry") && isValid;
         isValid = validate("price", "garmentCost") && isValid;
         isValid = validateInpName("garmentDiscount", formData["garmentDiscount"]) && isValid;
-        isValid = validate("price", "garmentOgCost") && isValid;
+        if(formData.garmentDiscount === "discount_yes") {
+            isValid = validate("price", "garmentOgCost") && isValid;
+        }
 
         if(!isValid) {
             return false;

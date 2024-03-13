@@ -428,5 +428,26 @@ const colorStatus = {
 	"removed":"gray"
 };
 
+const wearTears = [
+	{value:'colorFade', label:'The color is getting pale'},
+	{value:'pilling', label:'The garment shows signs of pilling'},
+	{value:'shapeLoss', label:'Garment loses its shape'},
+	{value:'twisting', label:'The garment starts twisting'},
+	{value:'washShrink', label:'Garment shrinks after washing'},
+	{value:'washDiscolor', label:'The garment is discolored after washing'},
+	{value:'spandexShrink', label:'The Elastane or Spandex starts shrinking or curling'},
+	{value:'printFade', label:'The print is washing out'},
+	{value:'hole', label:'Garment get holes'},
+	{value:'labelItching', label:'The label is itching'},
+	{value:'stain', label:'Garment got stains'},
+	{value:'other', label:'Other'},
+];
+
+const repairRequests = [
+	{value:'looseButton', label:'The button is falling off'},
+	{value:'lostString', label:'Lost strings (i.e Hoodie string missing'},
+	{value:'looseHem', label:'Hem is coming down'},
+];
+
 export { countryListAllIsoData, genericFibre, careInstructions, 
-	measurementTypes, weekDays, colorStatus };
+	measurementTypes, weekDays, colorStatus, wearTears, repairRequests };
