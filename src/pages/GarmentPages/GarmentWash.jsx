@@ -13,6 +13,9 @@ export default function GarmentWash() {
   const [dryerMethod, setDryerMethod] = useState('');
   const [useIron, setUseIron] = useState(false);
   const [ventilatedTime, setVentilatedTime] = useState('');
+  const [wearTime, setWearTime] = useState('');
+  const [wearTear, setWearTear] = useState(false);
+  const [wearFixed, setWearFixed] = useState(false);
 
   const handleDateChange = (event) => {
     setWashDate(event.target.value);
@@ -33,6 +36,18 @@ export default function GarmentWash() {
   const handleVentilatedTimeChange = (event) => {
     setVentilatedTime(event.target.value);
   };
+
+  const handleWearTimeChange = (event) => {
+    setWearTime(event.target.value);
+  };
+
+  const handleWearTearChange = (event) => {
+    setWearTear(event.target.checked);
+  }
+
+  const handleWearFixedChange = (event) => {
+    setWearFixed(event.target.checked);
+  }
 
   // function InfoPopup({ text }) {
   //   return (
@@ -135,6 +150,79 @@ export default function GarmentWash() {
             )}
           </div>
           
+          <div>
+            <div className='container-grid-1-md'>
+              <div className='container-prompt'>
+                <p>How long was the garment worn?</p>
+                <InfoPopup text='How many hours was the garment worn? If not known, use your best estimate'/>
+              </div>
+              <div className='container-input'>
+                <input
+                  type='number'
+                  value={wearTime}
+                  onChange={handleWearTimeChange}
+                  placeholder='Enter number of hours worn'
+                  min={0}
+                  step={0.01}
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className='container-content'>
+            <label className='text-b'>Any wear and tear issues on the garment?</label>
+            <label className='tab'></label>
+            <input type='checkbox' checked={wearTear} onChange={handleWearTearChange} />
+            <InfoPopup text='Is/was there any discoloration, tears, rips, stains, missing pieces, or any other signs of wear and tear on the garment?'/>
+          </div>
+
+          {wearTear && (
+            <div>
+              <div className='container-prompt'>
+                <p>Describe the signs of wear and tear</p>
+                <InfoPopup text='How is the garment different from when it was purchased?'/>
+              </div>
+              <div className='container-input'>
+                  <textarea
+                    name='wearTearDescription'
+                    id='wearTearDescription'
+                    placeholder='Describe the wear and tear (max 200 chars)'
+                    rows={4}
+                    maxLength={200}
+                  >
+                  </textarea>             
+              </div>
+
+              <div className='container-content'>
+                <label className='text-b'>Were the wear and tear issues fixed?</label>
+                <label className='tab'></label>
+                <input type='checkbox' checked={wearFixed} onChange={handleWearFixedChange} />
+                <InfoPopup text='Did you fix or attempt to fix the previously described wear and tear issues?'/>
+              </div>
+
+              {wearFixed && (
+                <div>
+                  <div className='container-prompt'>
+                    <p>Describe how the wear and tear was fixed</p>
+                    <InfoPopup text='Did the wash fix the issue, was the garment sewn, or professionally fixed, etc.'/>
+                  </div>
+                  <div className='container-input'>
+                      <textarea
+                        name='wearTearFixDescription'
+                        id='wearTearFixDescription'
+                        placeholder='Describe how the wear and tear was fixed (max 200 chars)'
+                        rows={4}
+                        maxLength={200}
+                      >
+                      </textarea>             
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          
+
           <div>
             <div className='container-prompt'>
                 <p>Select a photo of you wearing the garment</p>
