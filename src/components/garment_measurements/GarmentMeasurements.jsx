@@ -129,6 +129,7 @@ const GarmentMeasurements = () => {
             console.error('Error submitting form:', error);
         }
     };
+    
     return (
         <div>
             <div className='container-prompt' onClick={selectID("clothingType")}>

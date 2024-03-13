@@ -171,9 +171,9 @@ const GarmentDetails = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const {purchaseLocation, purchaseMethod, purchaseDate, garmentType, garmentDescription, garmentCountry, garmentCost, garmentDiscount, compositionMain, compositionLining, compositionPadding, hasLining, hasPadding, instructionWash, instructionDry, instructionTumble, instructionDryC, instructionIron, instructionBleach, willSubmit} = formData;
+        const {purchaseLocation, purchaseMethod, purchaseDate, garmentType, garmentDescription, garmentCountry, garmentCost, garmentDiscount, garmentOgCost, compositionMain, compositionLining, compositionPadding, hasLining, hasPadding, instructionWash, instructionDry, instructionTumble, instructionDryC, instructionIron, instructionBleach, willSubmit} = formData;
         try {
-            const {data} = await axios.post('/addgarmentdetails', {userId: user.id, purchaseLocation, purchaseMethod, purchaseDate, garmentType, garmentDescription, garmentCountry, garmentCost, garmentDiscount, compositionMain, compositionLining, compositionPadding, hasLining, hasPadding, instructionWash, instructionDry, instructionTumble, instructionDryC, instructionIron, instructionBleach, willSubmit})
+            const {data} = await axios.post('/addgarmentdetails', {userId: user.id, purchaseLocation, purchaseMethod, purchaseDate, garmentType, garmentDescription, garmentCountry, garmentCost, garmentDiscount, garmentOgCost, compositionMain, compositionLining, compositionPadding, hasLining, hasPadding, instructionWash, instructionDry, instructionTumble, instructionDryC, instructionIron, instructionBleach, willSubmit})
             if (data.error) {
                 toast.error(data.error);
             } else {
