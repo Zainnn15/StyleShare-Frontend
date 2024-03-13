@@ -69,42 +69,45 @@ const GarmentMeasurements = () => {
 
     const handleFileChange = (event, type) => {
         const file = event.target.files[0];
-        setFormData({ ...formData, [type]: file });
+        console.log("Selected file:", file); // Check if the file is correctly selected
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [type]: file,
+        }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
         const { clothingType, garmentSize, garmentFit, fileFront, fileBack } = formData;
     
-        // Construct garmentMeasurements array
-        const garmentMeasurements = measures.map((measureType, index) => {
-            const value = parseFloat(document.getElementById("measure_" + measureType.value + "_" + index).value);
-            const unit = document.getElementById("unit_" + measureType.value + "_" + index).value;
-            return {
-                measureType: measureType.label,
-                value,
-                unit,
-            };
-        });
-    
-        // Prepare form data
-        const formDataToSend = new FormData();
-        formDataToSend.append('userId', user.id);
-        formDataToSend.append('clothingType', JSON.stringify(clothingType)); // Ensure clothingType is stringified
-        formDataToSend.append('garmentSize', garmentSize);
-        formDataToSend.append('garmentFit', garmentFit);
-        formDataToSend.append('fileFront', fileFront);
-        formDataToSend.append('fileBack', fileBack);
-        formDataToSend.append('garmentMeasurements', JSON.stringify(garmentMeasurements)); // Ensure garmentMeasurements is stringified
+        // Stringify the garmentMeasurements array
+        const garmentMeasurementsString = JSON.stringify(
+            measures.map((measureType, index) => {
+                const value = parseFloat(document.getElementById("measure_" + measureType.value + "_" + index).value);
+                const unit = document.getElementById("unit_" + measureType.value + "_" + index).value;
+                return {
+                    measureType: measureType.label,
+                    value,
+                    unit
+                };
+            })
+        );
     
         try {
             const { data } = await axios.post(
                 '/addgarmentdetails',
-                formDataToSend,
+                {
+                    userId: user.id,
+                    clothingType: clothingType.value,
+                    garmentSize,
+                    garmentFit,
+                    fileFront,
+                    fileBack,
+                    garmentMeasurements: garmentMeasurementsString  // Send garmentMeasurements as a JSON string
+                },
                 {
                     headers: {
-                        'Content-Type': 'multipart/form-data',
+                        'Content-Type': 'application/json',
                     },
                 }
             );
@@ -129,6 +132,10 @@ const GarmentMeasurements = () => {
             console.error('Error submitting form:', error);
         }
     };
+    
+    
+    
+    
     
     return (
         <div>

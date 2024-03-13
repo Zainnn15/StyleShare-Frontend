@@ -1,73 +1,101 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react';
-
+import { useContext, useState } from "react";
+import { UserContext } from "../../../context/userContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import axios from "axios";
 import '../../styles/main.scss';
 
-import ScreenHeader from "../../components/common/ScreenHeader";
+import ScreenHeaderIn from "../../components/common/ScreenHeaderIn";
 import { CARE_DRY_METHODS, CARE_WASH_METHODS } from '../../constants/data/options';
 import InfoPopup from '../../components/common/InfoPopup';
 
 export default function GarmentWash() {
-  const [washDate, setWashDate] = useState('');
-  const [washMethod, setWashMethod] = useState('');
-  const [dryerMethod, setDryerMethod] = useState('');
-  const [useIron, setUseIron] = useState(false);
-  const [ventilatedTime, setVentilatedTime] = useState('');
-  const [wearTime, setWearTime] = useState('');
-  const [wearTear, setWearTear] = useState(false);
-  const [wearFixed, setWearFixed] = useState(false);
+  const navigate = useNavigate();
+  const {user} = useContext(UserContext);
+  const [formData, setFormData] = useState({
+    washDate: '',
+    washMethod: '',
+    dryerMethod: '',
+    useIron: false,
+    ventilatedTime: '',
+    wearTime: '',
+    wearTear: false,
+    wearFixed: false,
+    fileWear: '',
+  });
 
-  const handleDateChange = (event) => {
-    setWashDate(event.target.value);
+  const { washDate, washMethod, dryerMethod, useIron, ventilatedTime, wearTime, wearTear, wearFixed, fileWear } = formData;
+
+  const handleDateChange = (e) => {
+    setFormData({ ...formData, washDate: e.target.value });
   };
 
-  const handleWashMethodChange = (event) => {
-    setWashMethod(event.target.value);
+  const handleWashMethodChange = (e) => {
+    setFormData({ ...formData, washMethod: e.target.value });
   };
 
-  const handleDryerMethodChange = (event) => {
-    setDryerMethod(event.target.value);
+  const handleDryerMethodChange = (e) => {
+    setFormData({ ...formData, dryerMethod: e.target.value });
   };
 
-  const handleUseIronChange = (event) => {
-    setUseIron(event.target.checked);
+  const handleUseIronChange = (e) => {
+    setFormData({ ...formData, useIron: e.target.checked });
   };
 
-  const handleVentilatedTimeChange = (event) => {
-    setVentilatedTime(event.target.value);
+  const handleVentilatedTimeChange = (e) => {
+    setFormData({ ...formData, ventilatedTime: e.target.value });
   };
 
-  const handleWearTimeChange = (event) => {
-    setWearTime(event.target.value);
+  const handleWearTimeChange = (e) => {
+    setFormData({ ...formData, wearTime: e.target.value });
   };
 
-  const handleWearTearChange = (event) => {
-    setWearTear(event.target.checked);
-  }
+  const handleWearTearChange = (e) => {
+    setFormData({ ...formData, wearTear: e.target.checked });
+  };
 
-  const handleWearFixedChange = (event) => {
-    setWearFixed(event.target.checked);
-  }
+  const handleWearFixedChange = (e) => {
+    setFormData({ ...formData, wearFixed: e.target.checked });
+  };
 
-  // function InfoPopup({ text }) {
-  //   return (
-  //     <Popup trigger={<button type='button'>Info</button>} position='right center'>
-  //       <div>
-  //         {text}
-  //       </div>
-  //     </Popup>
-  //   );
-  // }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await axios.post('/addgarmentdetails', {
+        userID: user.id,
+        washDate,
+        washMethod,
+        dryerMethod,
+        useIron,
+        ventilatedTime,
+        wearTime,
+        wearTear,
+        wearFixed,
+        fileWear
+      });
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        setFormData({});
+        toast.success(data.message);
+        navigate('/dashboard');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to save garment details. Please try again later.');
+    }
+  };
 
   return (
     <div>
-      <ScreenHeader />
+      <ScreenHeaderIn />
       <div className='container main'>
         <div>
-            <label className="container-title">Garment Care</label>
-            <hr/>
+          <label className="container-title">Garment Care</label>
+          <hr/>
         </div>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className='container-content'>
             <label className='text-b'>Wash Date:</label>
             <label className='tab'></label>
@@ -75,6 +103,7 @@ export default function GarmentWash() {
           </div>
 
           <div className='container-grid-2-md'>
+            {/* Wash Method */}
             <div>
               <div className='container-prompt'>
                 <p>Wash Method</p>
@@ -88,17 +117,16 @@ export default function GarmentWash() {
                   required
                 >
                   <option key='wash_null' value=''>Select a wash method...</option>
-                  {CARE_WASH_METHODS.map((opt) => {
-                      return (
-                          <option key={"wash_" + opt.value} value={opt.value}>
-                              {opt.label}
-                          </option>
-                      )
-                  })}
+                  {CARE_WASH_METHODS.map((opt) => (
+                    <option key={"wash_" + opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
                 </select> 
               </div>
             </div>
 
+            {/* Dryer Method */}
             <div>
               <div className='container-prompt'>
                 <p>Dryer Method</p>
@@ -112,17 +140,16 @@ export default function GarmentWash() {
                   required
                 >
                   <option key='dry_null' value=''>Select a dryer method...</option>
-                  {CARE_DRY_METHODS.map((opt) => {
-                      return (
-                          <option key={"dry_" + opt.value} value={opt.value}>
-                              {opt.label}
-                          </option>
-                      )
-                  })}
+                  {CARE_DRY_METHODS.map((opt) => (
+                    <option key={"dry_" + opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
                 </select> 
               </div>
             </div>
 
+            {/* Use Iron */}
             <div className='container-content'>
               <label className='text-b'>Use Iron:</label>
               <label className='tab'></label>
@@ -130,6 +157,7 @@ export default function GarmentWash() {
               <InfoPopup text='Check if an iron was used on the garment after washing'/>
             </div>
 
+            {/* Ventilated Time */}
             {useIron && (
               <div>
                 <div className='container-prompt'>
@@ -149,27 +177,27 @@ export default function GarmentWash() {
               </div>
             )}
           </div>
-          
-          <div>
-            <div className='container-grid-1-md'>
-              <div className='container-prompt'>
-                <p>How long was the garment worn?</p>
-                <InfoPopup text='How many hours was the garment worn? If not known, use your best estimate'/>
-              </div>
-              <div className='container-input'>
-                <input
-                  type='number'
-                  value={wearTime}
-                  onChange={handleWearTimeChange}
-                  placeholder='Enter number of hours worn'
-                  min={0}
-                  step={0.01}
-                  required
-                />
-              </div>
+
+          {/* Wear Time */}
+          <div className='container-grid-1-md'>
+            <div className='container-prompt'>
+              <p>How long was the garment worn?</p>
+              <InfoPopup text='How many hours was the garment worn? If not known, use your best estimate'/>
+            </div>
+            <div className='container-input'>
+              <input
+                type='number'
+                value={wearTime}
+                onChange={handleWearTimeChange}
+                placeholder='Enter number of hours worn'
+                min={0}
+                step={0.01}
+                required
+              />
             </div>
           </div>
 
+          {/* Wear and Tear */}
           <div className='container-content'>
             <label className='text-b'>Any wear and tear issues on the garment?</label>
             <label className='tab'></label>
@@ -177,6 +205,7 @@ export default function GarmentWash() {
             <InfoPopup text='Is/was there any discoloration, tears, rips, stains, missing pieces, or any other signs of wear and tear on the garment?'/>
           </div>
 
+          {/* Wear Fixed */}
           {wearTear && (
             <div>
               <div className='container-prompt'>
@@ -201,6 +230,7 @@ export default function GarmentWash() {
                 <InfoPopup text='Did you fix or attempt to fix the previously described wear and tear issues?'/>
               </div>
 
+              {/* Wear Tear Fix Description */}
               {wearFixed && (
                 <div>
                   <div className='container-prompt'>
@@ -221,8 +251,8 @@ export default function GarmentWash() {
               )}
             </div>
           )}
-          
 
+          {/* File Upload */}
           <div>
             <div className='container-prompt'>
                 <p>Select a photo of you wearing the garment</p>
