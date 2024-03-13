@@ -21,6 +21,18 @@ const GARMENT_SIZES = [
     {value: 'XL', label: 'Extra large'},
     {value: 'XXL', label: 'Double extra large'},
     {value: 'XXXL', label: 'Triple extra large'},
+    {value: '0', label: 'US Size 0'},
+    {value: '2', label: 'US Size 2'},
+    {value: '4', label: 'US Size 4'},
+    {value: '6', label: 'US Size 6'},
+    {value: '8', label: 'US Size 8'},
+    {value: '10', label: 'US Size 10'},
+    {value: '12', label: 'US Size 12'},
+    {value: '14', label: 'US Size 14'},
+    {value: '16', label: 'US Size 16'},
+    {value: '18', label: 'US Size 18'},
+    {value: '20', label: 'US Size 20'},
+    {value: '22', label: 'US Size 22'},
 ];
 
 //garment fits
