@@ -70,7 +70,7 @@ const GarmentDetails = () => {
         },
         instructionBleach: {
             "Bleach": "",
-            "Chloride": "",
+            //"Chloride": "",
         },
         willSubmit: false
     });

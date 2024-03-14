@@ -85,6 +85,20 @@ $screen-xl-min: 1200px;
         grid-template-columns: 1fr 1fr;
     }
 }
+@mixin grid-3-md {
+    @include grid;
+    // large devices
+    @include md {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+@mixin grid-3-lg {
+    @include grid;
+    // large devices
+    @include lg {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
 
 @mixin input {
     flex-wrap: wrap;
@@ -462,6 +476,12 @@ $screen-xl-min: 1200px;
 }
 .container-grid-2-lg {
     @include grid-2-lg;
+}
+.container-grid-3-md {
+    @include grid-3-md;
+}
+.container-grid-3-lg {
+    @include grid-3-lg;
 }
 .gap {
     gap: 1em;

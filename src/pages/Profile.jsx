@@ -6,8 +6,12 @@ import Axios from "axios";
 import '../styles/main.scss';
 
 import ScreenHeaderIn from "../components/common/ScreenHeaderIn";
-import { weekDays } from "../constants/data/lists";
+import { careInstructions, weekDays } from "../constants/data/lists";
 import { addErrorMessageByID } from "../constants/functions/inputHandlers";
+import { findAttribute, formatDate, formatStr, formatTemp, parseID } from "../constants/functions/valueHandlers";
+import { GARMENT_TYPES } from "../constants/data/options";
+import { id_instructionBleach, id_instructionDry, id_instructionDryC, id_instructionIron, id_instructionTumble, id_instructionWash, id_purchaseMethod } from "../constants/data/inputID";
+import CircleImg from "../components/common/CircleImg";
 
 
 export default function Profile() {
@@ -255,10 +259,352 @@ export default function Profile() {
         )}
 
         <br/>
-        <hr/>
-        <div>
-          {garment && garment.purchaseLocation}
-        </div>
+        {
+          garment && (
+            <div>
+              <hr/>
+              <div className="container-content popup">
+                <h3>Garment Details</h3>
+                <hr/>
+              </div>
+              <div className="container-grid-2-md gap container-border clear-box">
+                <div>
+                  <p>
+                    <label className="text-b">Type:<label className="tab"></label></label>
+                    {findAttribute(GARMENT_TYPES, garment.garmentType)}
+                  </p>
+                  <p>
+                    <label className="text-b">Description:<label className="tab"></label></label>
+                    <div className="container-border m1-v">
+                      <label>{garment.garmentDescription}</label>
+                    </div>
+                  </p>
+                  <p>
+                    <label className="text-b">Country of Origin:<label className="tab"></label></label>
+                    {garment.garmentCountry}
+                  </p>
+                </div>
+
+                <div>
+                  <p>
+                    <label className="text-b">Store:<label className="tab"></label></label>
+                    {garment.purchaseLocation}
+                  </p>
+                  <p>
+                    <label className="text-b">Purchase Date:<label className="tab"></label></label>
+                    {
+                      formatDate(garment.purchaseDate)
+                    }
+                  </p>
+                  <p>
+                    <label className="text-b">Purchase Method:<label className="tab"></label></label>
+                    {id_purchaseMethod[garment.purchaseMethod]}
+                  </p>
+                  <p>
+                    <label className="text-b">Cost:<label className="tab"></label></label>
+                    $ {garment.garmentCost}
+                    {garment.garmentDiscount === "discount_yes" && (<label> (Discounted)</label>)}
+                  </p>
+                  {
+                    garment.garmentDiscount === "discount_yes" &&
+                    (
+                      <p>
+                        <label className="tab"></label>
+                        <label className="text-b">Original Price:<label className="tab"></label></label>
+                        $ {garment.garmentOgCost}
+                      </p>
+                    )
+                  }
+                </div>
+              </div>
+              <br/>
+                  
+              <label className="container-subtitle-2">Garment Composition</label>
+              <div className="container-border clear-box">
+                <div className="container-grid-3-md center gap m1-v">
+                  <div>
+                    <label className="text-b text-u">Main</label>
+                    <ul>
+                    {
+                      garment.compositionMain.map((comp, index)=>{
+                        return (
+                          <li key={"main_"+index}>
+                              <label>{comp.value}:</label>
+                              <label className="tab"></label>
+                              <label>{comp.percent}%</label>
+                          </li>
+                        )
+                      })
+                    }
+                    </ul>
+                  </div>
+
+                  <div>
+                    <label className="text-b text-u">Lining</label>
+                    {!garment.hasLining && <p>N/A</p>}
+                    <ul>
+                    {
+                      garment.hasLining &&
+                      garment.compositionLining.map((comp, index)=>{
+                        return (
+                          <li key={"lining_"+index}>
+                              <label>{comp.value}:</label>
+                              <label className="tab"></label>
+                              <label>{comp.percent}%</label>
+                          </li>
+                        )
+                      })
+                    }
+                    </ul>
+                  </div>
+
+                  <div>
+                    <label className="text-b text-u">Padding/Stuffing</label>
+                    {!garment.hasPadding && <p>N/A</p>}
+                    <ul>
+                    {
+                      garment.hasPadding &&
+                      garment.compositionPadding.map((comp, index)=>{
+                        return (
+                          <li key={"padding_"+index}>
+                              <label>{comp.value}:</label>
+                              <label className="tab"></label>
+                              <label>{comp.percent}%</label>
+                          </li>
+                        )
+                      })
+                    }
+                    </ul>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          )
+        }
+
+        <br/><br/>
+        {
+          garment && (
+            <div>
+              <hr/>
+              <div className="container-content popup">
+                <h3>Care Instructions</h3>
+                <hr/>
+              </div>
+
+              <label className="container-subtitle-2">Washing Instructions</label>
+              <div className="container-border">
+                <div className="container-care">
+                    <div className="container-care-group">
+                      <span className="container-care-img">
+                        <CircleImg className="img-care" 
+                            iconUrl={careInstructions[id_instructionWash[garment.instructionWash["Wash"]]].img} 
+                            width="50%"/>
+                        <label>{careInstructions[id_instructionWash[garment.instructionWash["Wash"]]].name}</label>
+                      </span>
+                    </div>
+
+                    {
+                      garment.instructionWash["Wash"] === "wash_yes" &&
+                      <div className="container-care-group">
+                        <span className="container-care-img">
+                          <CircleImg className="img-care" 
+                              iconUrl={careInstructions[id_instructionWash[garment.instructionWash["Machine"]]].img} 
+                              width="50%"/>
+                          <label>{careInstructions[id_instructionWash[garment.instructionWash["Machine"]]].name}</label>
+                        </span>
+                      </div>
+                    }
+
+                    {
+                      garment.instructionWash["Wash"] === "wash_yes" &&
+                      garment.instructionWash["Heat"] !== "wash_heat_xx" &&
+                      garment.instructionWash["Heat"] &&
+                      <div className="container-care-group">
+                      <span className="container-care-img">
+                        <CircleImg className="img-care" 
+                            iconUrl={careInstructions[id_instructionWash[garment.instructionWash["Heat"]]].img} 
+                            width="50%"/>
+                        <label>{careInstructions[id_instructionWash[garment.instructionWash["Heat"]]].name}</label>
+                      </span>
+                    </div>
+                    }
+
+                    {
+                      garment.instructionWash["Wash"] === "wash_yes" &&
+                      //garment.instructionWash["Temp"] === "wash_heat_xx" &&
+                      garment.instructionWash["Temp"] &&
+                      <div className="container-care-group">
+                        <span className="container-care-img">
+                          <CircleImg className="img-care" 
+                              iconUrl={careInstructions["washHeatXX"].img} 
+                              width="50%"/>
+                          <label>
+                            {
+                              formatTemp(garment.instructionWash["Temp"])
+                            }
+                          </label>
+                        </span>
+                      </div>
+                    }
+
+                </div>
+              </div>
+              <br/>
+          
+              <label className="container-subtitle-2">Tumble Drying Instructions</label>
+              <div className="container-border">
+                <div className="container-care">
+                    <div className="container-care-group">
+                      <span className="container-care-img">
+                        <CircleImg className="img-care" 
+                            iconUrl={careInstructions[id_instructionTumble[garment.instructionTumble["Tumble"]]].img} 
+                            width="50%"/>
+                        <label>{careInstructions[id_instructionTumble[garment.instructionTumble["Tumble"]]].name}</label>
+                      </span>
+                    </div>
+
+                    {
+                      garment.instructionTumble["Tumble"] === "tumble_no" &&
+                        <div className="container-care-group">
+                          <span className="container-care-img">
+                            <CircleImg className="img-care" 
+                                iconUrl={careInstructions[id_instructionDry[garment.instructionTumble["Air"]]].img} 
+                                width="50%"/>
+                            <label>{careInstructions[id_instructionDry[garment.instructionTumble["Air"]]].name}</label>
+                          </span>
+                        </div>
+                    }
+  
+                    {
+                      garment.instructionTumble["Tumble"] === "tumble_no" &&
+                      garment.instructionTumble["Air"] === "dry_shade" &&
+                        <div className="container-care-group">
+                          <span className="container-care-img">
+                            <CircleImg className="img-care" 
+                                iconUrl={careInstructions[id_instructionDry[garment.instructionTumble["Shade"]]].img} 
+                                width="50%"/>
+                            <label>{careInstructions[id_instructionDry[garment.instructionTumble["Shade"]]].name}</label>
+                          </span>
+                        </div>
+                    }
+
+                    {
+                      garment.instructionTumble["Tumble"] === "tumble_yes" &&
+                        <div className="container-care-group">
+                          <span className="container-care-img">
+                            <CircleImg className="img-care" 
+                                iconUrl={careInstructions[id_instructionTumble[garment.instructionTumble["Delicate"]]].img} 
+                                width="50%"/>
+                            <label>{careInstructions[id_instructionTumble[garment.instructionTumble["Delicate"]]].name}</label>
+                          </span>
+                        </div>    
+                    }
+
+                    {
+                      garment.instructionTumble["Tumble"] === "tumble_yes" &&
+                      <div className="container-care-group">
+                        <span className="container-care-img">
+                          <CircleImg className="img-care" 
+                              iconUrl={careInstructions[id_instructionTumble[garment.instructionTumble["Heat"]]].img} 
+                              width="50%"/>
+                          <label>{careInstructions[id_instructionTumble[garment.instructionTumble["Heat"]]].name}</label>
+                        </span>
+                      </div>
+                    }
+
+                </div>
+              </div>
+              <br/>
+
+              <label className="container-subtitle-2">Dry Cleaning Instructions</label>
+              <div className="container-border">
+                <div className="container-care">
+                  <div className="container-care-group">
+                    <span className="container-care-img">
+                      <CircleImg className="img-care" 
+                          iconUrl={careInstructions[id_instructionDryC[garment.instructionDryC["DryC"]]].img} 
+                          width="50%"/>
+                      <label>{careInstructions[id_instructionDryC[garment.instructionDryC["DryC"]]].name}</label>
+                    </span>
+                  </div>
+
+                  {
+                    garment.instructionDryC["DryC"] === "dryC_yes" &&
+                    <div className="container-care-group">
+                    <span className="container-care-img">
+                      <CircleImg className="img-care" 
+                          iconUrl={careInstructions[id_instructionDryC[garment.instructionDryC["Solvent"]]].img} 
+                          width="50%"/>
+                      <label>{careInstructions[id_instructionDryC[garment.instructionDryC["Solvent"]]].name}</label>
+                    </span>
+                  </div>
+                  }
+
+                  {
+                    garment.instructionDryC["DryC"] === "dryC_yes" &&
+                    <div className="container-care-group">
+                    <span className="container-care-img">
+                      <CircleImg className="img-care" 
+                          iconUrl={careInstructions[id_instructionDryC[garment.instructionDryC["Care"]]].img} 
+                          width="50%"/>
+                      <label>{careInstructions[id_instructionDryC[garment.instructionDryC["Care"]]].name}</label>
+                    </span>
+                  </div>
+                  }
+
+                </div>
+              </div>
+              <br/>
+
+              <label className="container-subtitle-2">Ironing Instructions</label>
+              <div className="container-border">
+                <div className="container-care">
+                    <div className="container-care-group">
+                      <span className="container-care-img">
+                        <CircleImg className="img-care" 
+                            iconUrl={careInstructions[id_instructionIron[garment.instructionIron["Iron"]]].img} 
+                            width="50%"/>
+                        <label>{careInstructions[id_instructionIron[garment.instructionIron["Iron"]]].name}</label>
+                      </span>
+                    </div>
+
+                    {
+                      garment.instructionIron["Iron"] === "iron_yes" &&
+                      <div className="container-care-group">
+                        <span className="container-care-img">
+                          <CircleImg className="img-care" 
+                              iconUrl={careInstructions[id_instructionIron[garment.instructionIron["Heat"]]].img} 
+                              width="50%"/>
+                          <label>{careInstructions[id_instructionIron[garment.instructionIron["Heat"]]].name}</label>
+                        </span>
+                      </div>
+                    }
+
+                </div>
+              </div>
+              <br/>
+
+              {console.log(careInstructions[id_instructionBleach[garment.instructionBleach["Bleach"]]])}
+              <label className="container-subtitle-2">Bleaching Instructions</label>
+              <div className="container-border">
+                <div className="container-care">
+                  <div className="container-care-group">
+                    <span className="container-care-img">
+                      <CircleImg className="img-care" 
+                          iconUrl={careInstructions[id_instructionBleach[garment.instructionBleach["Bleach"]]].img} 
+                          width="50%"/>
+                      <label>{careInstructions[id_instructionBleach[garment.instructionBleach["Bleach"]]].name}</label>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+        )}
+
       </div>
     </div>
   )
