@@ -11,29 +11,52 @@ const GARMENT_TYPES = [
     { cat: 3, value: 'dress', label: 'Dress' },
 ];
 
-//garment sizes
-const GARMENT_SIZES = [
-    {value: 'XXS', label: 'Double extra small'},
-    {value: 'XS', label: 'Extra small'},
-    {value: 'S', label: 'Small'},
-    {value: 'M', label: 'Medium'},
-    {value: 'L', label: 'Large'},
-    {value: 'XL', label: 'Extra large'},
-    {value: 'XXL', label: 'Double extra large'},
-    {value: 'XXXL', label: 'Triple extra large'},
-    {value: '0', label: 'US Size 0'},
-    {value: '2', label: 'US Size 2'},
-    {value: '4', label: 'US Size 4'},
-    {value: '6', label: 'US Size 6'},
-    {value: '8', label: 'US Size 8'},
-    {value: '10', label: 'US Size 10'},
-    {value: '12', label: 'US Size 12'},
-    {value: '14', label: 'US Size 14'},
-    {value: '16', label: 'US Size 16'},
-    {value: '18', label: 'US Size 18'},
-    {value: '20', label: 'US Size 20'},
-    {value: '22', label: 'US Size 22'},
+//measurement size types
+const GARMENT_SIZE_TYPES = [
+    {value: 'general', label: 'General Size'},
+    {value: 'us', label: 'US Clothing Size'},
+    {value: 'eu', label: 'European Clothing Size'},
+    {value: 'uk', label: 'UK Size'},
+    {value: 'denim', label: 'Denim Pants (waist)'},
+    {value: 'dressShirt', label: 'Dress-shirt Size (collar size)'},
 ];
+
+//garment sizes
+const GARMENT_SIZES = {
+    "general": 
+    [    
+        {value: 'XXS', label: 'Double extra small (XXS)'},
+        {value: 'XS', label: 'Extra small (XS)'},
+        {value: 'S', label: 'Small (S)'},
+        {value: 'M', label: 'Medium (M)'},
+        {value: 'L', label: 'Large (L)'},
+        {value: 'XL', label: 'Extra large (XL)'},
+        {value: 'XXL', label: 'Double extra large (XXL)'},
+    ],
+    "us": [],
+    "eu": [],
+    "uk": [],
+    "denim": [],
+    "dressShirt": [],
+};
+//populate sizes
+let size = 2;
+while(size <= 20) {
+    GARMENT_SIZES["us"].push({value:size, label:size});
+    GARMENT_SIZES["eu"].push({value:size+30, label:size+30});
+    GARMENT_SIZES["uk"].push({value:size+2, label:size+2});
+    size += 2;
+}
+size = 24;
+while(size <= 42) {
+    GARMENT_SIZES["denim"].push({value:size, label:size});
+    size++;
+}
+size = 14;
+while(size <= 18.5) {
+    GARMENT_SIZES["dressShirt"].push({value:size, label:size});
+    size+=0.5;
+}
 
 //garment fits
 const GARMENT_FITS = [
@@ -86,5 +109,5 @@ const WASH_TEMP_F = [
     {value: '200F', label: '200'+String.fromCharCode(176)+'F'},
 ];
 
-export { GARMENT_TYPES, GARMENT_SIZES, GARMENT_FITS, COUNTRIES, FIBRES,
+export { GARMENT_TYPES, GARMENT_SIZE_TYPES, GARMENT_SIZES, GARMENT_FITS, COUNTRIES, FIBRES,
     CARE_WASH_METHODS, CARE_DRY_METHODS, WASH_TEMP_C, WASH_TEMP_F };
