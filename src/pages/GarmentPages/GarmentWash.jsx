@@ -420,7 +420,7 @@ export default function GarmentWash() {
                             />                
                           </div>
                           <div className='container-prompt'>
-                            <p>Strength of peeling</p>
+                            <p>Strength of pilling</p>
                           </div>
                           <div className="container-input">
                             <select 
