@@ -109,5 +109,13 @@ const WASH_TEMP_F = [
     {value: '200F', label: '200'+String.fromCharCode(176)+'F'},
 ];
 
+//on campus pickup locations
+const PICKUP_LOCS = [
+    {value: 'Fashion Boutique', label: 'Outside the building B fashion boutique'},
+    {value: 'Cafeteria', label: 'Inside the building D Cafeteria'},
+    {value: 'Library', label: 'Outside the building B Library'},
+    {value: 'Starbucks', label: 'By the building A Starbucks'},
+];
+
 export { GARMENT_TYPES, GARMENT_SIZE_TYPES, GARMENT_SIZES, GARMENT_FITS, COUNTRIES, FIBRES,
-    CARE_WASH_METHODS, CARE_DRY_METHODS, WASH_TEMP_C, WASH_TEMP_F };
+    CARE_WASH_METHODS, CARE_DRY_METHODS, WASH_TEMP_C, WASH_TEMP_F, PICKUP_LOCS };
