@@ -9,18 +9,22 @@ import '../../styles/main.scss';
 
 import info from '../../assets/icons/info.png';
 import { selectID } from "../../constants/functions/inputHandlers";
-import { GARMENT_TYPES, GARMENT_SIZES, GARMENT_FITS } from "../../constants/data/options";
+import { GARMENT_TYPES, GARMENT_SIZES, GARMENT_FITS, GARMENT_SIZE_TYPES } from "../../constants/data/options";
 import { measurementTypes } from "../../constants/data/lists";
 import PopupImg from "../common/PopupImg";
 import CircleBtn from "../common/CircleBtn";
 import { useNavigate } from "react-router-dom";
+//comment out to enable selecting of garment
+import { GarmentContext } from "../../../context/garmentContext";
 
 const GarmentMeasurements = () => {
     const { navigate } = useNavigate();
     const { user } = useContext(UserContext);
+    const {garment} = useContext(GarmentContext);
     const [measures, setMeasures] = useState([]);
     const [formData, setFormData] = useState({
       clothingType: {},
+        garmentSizeType: '',
         garmentSize: '',
         garmentFit: '',
         fileFront: null,
@@ -136,10 +140,18 @@ const GarmentMeasurements = () => {
                 <p>Select clothing type</p>
             </div>
             <div className='container-input'>
+                {//comment out to enable selecting of garment
+                    measures.length === 0 && setMeasures(getSetByCategory(getCategory(garment.garmentType)))
+                }
                 <select
                     name='clothingType'
                     id='clothingType'
                     onChange={selectType}
+                    //comment out to enable selecting of garment
+                    value={garment.garmentType}
+                    disabled
+                    //uncomment to enable selecting of garment
+                    //value={formData.clothingType.value}
                 >
                     <option key='type_null' value=''>
                         Select a garment...
@@ -205,31 +217,66 @@ const GarmentMeasurements = () => {
                 <div>
                     <div className="container-grid-2-md">
                         <div>
-                            <div className='container-prompt'>
-                                <p>Enter the size of the garment</p>
-                            </div>
-                            <div className="container-input">
-                                <select
-                                    id='garmentSize'
-                                    name='garmentSize'
-                                    required
-                                    onChange={(e) =>
-                                        setFormData({ ...formData, garmentSize: e.target.value })
-                                    }
-                                >
-                                    <option key='size_null' value=''>
-                                        Select a size...
-                                    </option>
-                                    {GARMENT_SIZES.map((opt) => {
-                                        return (
-                                            <option key={"size_" + opt.value} value={opt.value}>
-                                                {`${opt.label} (${opt.value.toUpperCase()})`}
-                                            </option>
-                                        );
-                                    })}
-                                </select>
+                            <div>
+                                <div className='container-prompt'>
+                                    <p>Select a measurement size type</p>
+                                </div>
+                                <div className="container-input">
+                                    <select
+                                        id='garmentSizeType'
+                                        name='garmentSizeType'
+                                        required
+                                        onChange={(e) =>
+                                            setFormData({ ...formData, garmentSizeType: e.target.value })
+                                        }
+                                    >
+                                        <option key='size_null' value=''>
+                                            Select a size type...
+                                        </option>
+                                        {GARMENT_SIZE_TYPES.map((opt) => {
+                                            return (
+                                                <option key={"size_type_" + opt.value} value={opt.value}>
+                                                    {opt.label}
+                                                </option>
+                                            );
+                                        })}
+                                    </select>
+                                </div>
                             </div>
                         </div>
+                        {formData.garmentSizeType === "" && <div></div>}
+                        {
+                            formData.garmentSizeType !== "" &&
+                            (
+                                <div>
+                                    <div className='container-prompt'>
+                                        <p>Enter the size of the garment</p>
+                                    </div>
+                                    <div className="container-input">
+                                        <select
+                                            id='garmentSize'
+                                            name='garmentSize'
+                                            required
+                                            onChange={(e) =>
+                                                setFormData({ ...formData, garmentSize: e.target.value })
+                                            }
+                                        >
+                                            <option key='size_null' value=''>
+                                                Select a size...
+                                            </option>
+                                            {GARMENT_SIZES[formData.garmentSizeType].map((opt) => {
+                                                return (
+                                                    <option key={"size_" + opt.value} value={opt.value}>
+                                                        {opt.label}
+                                                    </option>
+                                                );
+                                            })}
+                                        </select>
+                                    </div>
+                                </div>
+                            )
+                        }
+                        
                         <div>
                             <div className='container-prompt'>
                                 <p>How well does it fit?</p>
