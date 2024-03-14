@@ -1,15 +1,18 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
-
 import '../../styles/main.scss';
-
-import ScreenHeader from "../../components/common/ScreenHeader";
+import { toast } from 'react-hot-toast';
+import ScreenHeaderIn from "../../components/common/ScreenHeaderIn";
 import { CARE_DRY_METHODS, CARE_WASH_METHODS } from '../../constants/data/options';
 import { wearTears, repairRequests } from '../../constants/data/lists';
 import InfoPopup from '../../components/common/InfoPopup';
 import { addErrorMessageByID, checkOnID } from '../../constants/functions/inputHandlers';
+import axios from 'axios';
+import { useContext } from 'react';
+import { UserContext } from '../../../context/userContext';
 
 export default function GarmentWash() {
+  const {user} = useContext(UserContext);
   const [washDate, setWashDate] = useState('');
   const [washMethod, setWashMethod] = useState('');
   const [dryerMethod, setDryerMethod] = useState('');
@@ -73,15 +76,57 @@ export default function GarmentWash() {
   });
   const [repairOther, setRepairOther] = useState('');
 
+  // Function to send the garment details to the backend
+  const sendGarmentDetails = async () => {
+    try {
+      const garmentData = {
+        washDate,
+        washMethod,
+        dryerMethod,
+        useIron,
+        ironDuration,
+        ironDegree,
+        ironTemp,
+        isVentilated,
+        ventilatedTime,
+        wearTime,
+        hasTear,
+        wantRepair,
+        wearTear,
+        tearExtra,
+        repairRequest,
+        repairOther,
+      };
+
+      // Spread garmentData at the same level as userId
+      const {data} = await axios.post('/addgarmentdetails', {...garmentData, userId: user.id});
+
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        toast.success(data.message);
+      }
+    } catch (error) {
+      console.log('Error sending garment details to the backend:', error);
+    }
+  };
+
+  // Call the sendGarmentDetails function when the form is submitted
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    sendGarmentDetails();
+  };
+
+
   return (
     <div>
-      <ScreenHeader />
+      <ScreenHeaderIn />
       <div className='container main'>
         <div>
             <label className="container-title">Garment Care</label>
             <hr/>
         </div>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className='container-content'>
             <label className='text-b'>Wash Date:</label>
             <label className='tab'></label>
@@ -1141,7 +1186,7 @@ export default function GarmentWash() {
 
           <br/>
           <div className='container-input'>
-              <button className="button-form full" type="submit">
+              <button className="button-form full" type="submit" onClick={handleSubmit}>
                   Save
               </button>
           </div>
