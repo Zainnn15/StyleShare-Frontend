@@ -2,7 +2,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../../../context/userContext";
 
 import '../../styles/main.scss';
@@ -133,6 +133,16 @@ const GarmentMeasurements = () => {
             console.error('Error submitting form:', error);
         }
     };
+
+    useEffect(() => {
+        if (measures.length === 0) {
+          const category = getCategory(garment.garmentType);
+          const newMeasures = getSetByCategory(category);
+          setMeasures(newMeasures);
+        }
+        // This effect should run only when `garment.garmentType` changes,
+        // hence it's included in the dependency array.
+      }, [garment.garmentType]);
     
     return (
         <div>
