@@ -34,28 +34,17 @@ export default function Group() {
     
                 console.log('Joined Group Data:', response.data.joinedGroup);
     
-                // Check if the group has reached its maximum capacity
                 if (response.data.joinedGroup.members.length >= response.data.joinedGroup.max_members) {
-                    // If the group is full, update openGroups state to remove the joined group
                     setOpenGroups(openGroups.filter(group => group._id !== response.data.joinedGroup._id));
                 } else {
-                    // If the group is not full, update userGroups state with the joined group
                     setUserGroups([...userGroups, response.data.joinedGroup]);
                 }
     
-                // Update joinedGroup state
                 setJoinedGroup(response.data.joinedGroup);
-    
-                // Update user state with the joined user details
                 setUser(response.data.user);
-    
-                // Update garmentDetails state with the joined garment details
                 setGarment(response.data.garment);
     
-                // Optionally navigate to another page after joining the group
-                navigate('/dashboard'); // Change the route as needed
-    
-                // Set response data to be displayed in the UI
+                navigate('/dashboard');
                 setResponseData(response.data);
             }
         } catch (error) {
@@ -94,7 +83,6 @@ export default function Group() {
 
     changeTitle('Group');
 
-    // Add this function in your Group component
     const handleLeaveGroup = async () => {
         try {
             const response = await axios.post('/leaveGroup', { userId: user.id });
@@ -102,10 +90,7 @@ export default function Group() {
             if (response.data.error) {
                 toast.error(response.data.error);
             } else {
-                // Handle success, e.g., show a success message, update state, etc.
                 toast.success(response.data.message);
-
-                // You may want to update the component state or navigate to another page
             }
         } catch (error) {
             console.error(error);
@@ -147,13 +132,39 @@ export default function Group() {
                 </form>
 
                 {userGroups && userGroups.members && (
-                 <div className="container-content">
-                    <p>
-                    <label className="text-b">Joined Group: </label>
-                    {`${userGroups.group_name} - Members: ${userGroups.members.length}/${userGroups.max_members}`}
-                    </p>
+    <div className="container-content">
+        <h2>Group Members and Their Garments</h2>
+        {userGroups.members.map((member) => (
+            <div key={member._id} className="member-garments">
+                <p>
+                    <label className="text-b">Member: </label>
+                    {`${member.username} - Email: ${member.email}`}
+                </p>
+                {member.garments && member.garments.length > 0 ? (  // Ensure this matches the new structure
+                    member.garments.map((garment) => (  // This should iterate over 'garments', not 'garmentDetails'
+                        <div key={garment._id} className="garment-details">
+                            <p>Type: {garment.garmentType}</p>
+                            <p>Description: {garment.garmentDescription}</p>
+                            <p>Country: {garment.garmentCountry}</p>
+                            {/* Add more garment details as needed */}
+                        </div>
+                    ))
+                ) : (
+                    <p>No garments listed.</p>
+                )}
+            </div>
+        ))}
+    </div>
+)}
+
+                {userGroups && userGroups.members && (
+                    <div className="container-content">
+                        <p>
+                            <label className="text-b">Joined Group: </label>
+                            {`${userGroups.group_name} - Members: ${userGroups.members.length}/${userGroups.max_members}`}
+                        </p>
                     </div>
-                    )}
+                )}
 
                 {user && joinedGroup && (
                     <div className="container-content">
@@ -164,14 +175,15 @@ export default function Group() {
                     </div>
                 )}
 
-        {userGroups && userGroups.members && (
-            <div className="container-content">
-            <p>
-            <label className="text-b">Other Joined Persons: </label>
-            {userGroups.members.map(member => member.username).filter(username => username !== user.username).join(', ')}
-                </p>
-            </div>
-            )}
+                {userGroups && userGroups.members && (
+                    <div className="container-content">
+                        <p>
+                            <label className="text-b">Other Joined Persons: </label>
+                            {userGroups.members.map(member => member.username).filter(username => username !== user.username).join(', ')}
+                        </p>
+                    </div>
+                )}
+
                 {garment && joinedGroup && (
                     <div className="container-content">
                         <p>
@@ -181,10 +193,7 @@ export default function Group() {
                     </div>
                 )}
 
-                 <button onClick={handleLeaveGroup}>Leave Group</button>
-
-
-    
+                <button onClick={handleLeaveGroup}>Leave Group</button>
             </div>
         </div>
     );

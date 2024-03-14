@@ -386,7 +386,7 @@ export default function Profile() {
 
         <br/><br/>
         {
-          garment && (
+          garment &&  (
             <div>
               <hr/>
               <div className="container-content popup">
@@ -468,14 +468,14 @@ export default function Profile() {
 
                     {
                       garment.instructionTumble["Tumble"] === "tumble_no" &&
-                        <div className="container-care-group">
-                          <span className="container-care-img">
-                            <CircleImg className="img-care" 
-                                iconUrl={careInstructions[id_instructionDry[garment.instructionTumble["Air"]]].img} 
-                                width="50%"/>
-                            <label>{careInstructions[id_instructionDry[garment.instructionTumble["Air"]]].name}</label>
-                          </span>
-                        </div>
+                      <div className="container-care-group">
+                      <span className="container-care-img">
+                        <CircleImg className="img-care" 
+                            iconUrl={careInstructions[id_instructionDry[garment.instructionTumble?.["Air"]] ?? "defaultKey"]?.img ?? "path/to/default/image.png"} 
+                            width="50%"/>
+                        <label>{careInstructions[id_instructionDry[garment.instructionTumble?.["Air"]] ?? "defaultKey"]?.name ?? "Default Name"}</label>
+                      </span>
+                    </div>
                     }
   
                     {
