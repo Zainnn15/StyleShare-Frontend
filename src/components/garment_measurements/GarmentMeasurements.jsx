@@ -16,22 +16,26 @@ import CircleBtn from "../common/CircleBtn";
 import { useNavigate } from "react-router-dom";
 //comment out to enable selecting of garment
 import { GarmentContext } from "../../../context/garmentContext";
+import { findAttribute } from "../../constants/functions/valueHandlers";
 
 const GarmentMeasurements = () => {
     const { navigate } = useNavigate();
     const { user } = useContext(UserContext);
     const {garment} = useContext(GarmentContext);
-    const [measures, setMeasures] = useState([]);
     const [formData, setFormData] = useState({
-      clothingType: {},
+      clothingType: {value:garment.garmentType, label: findAttribute(GARMENT_TYPES, garment.garmentType)},
         garmentSizeType: '',
         garmentSize: '',
         garmentFit: '',
         fileFront: null,
         fileBack: null,
     });
-
     const options = GARMENT_TYPES;
+    const measureTypes = getSetByCategory(getCategory(garment.garmentType));
+    const [measures, setMeasures] = useState([
+        ...measureTypes
+    ]);
+
 
     const selectType = (event) => {
         // clear previous
@@ -140,18 +144,12 @@ const GarmentMeasurements = () => {
                 <p>Select clothing type</p>
             </div>
             <div className='container-input'>
-                {//comment out to enable selecting of garment
-                    measures.length === 0 && setMeasures(getSetByCategory(getCategory(garment.garmentType)))
-                }
                 <select
                     name='clothingType'
                     id='clothingType'
                     onChange={selectType}
-                    //comment out to enable selecting of garment
-                    value={garment.garmentType}
+                    value={formData.clothingType.value}
                     disabled
-                    //uncomment to enable selecting of garment
-                    //value={formData.clothingType.value}
                 >
                     <option key='type_null' value=''>
                         Select a garment...

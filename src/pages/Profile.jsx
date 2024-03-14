@@ -8,6 +8,8 @@ import '../styles/main.scss';
 import ScreenHeaderIn from "../components/common/ScreenHeaderIn";
 import { weekDays } from "../constants/data/lists";
 import { addErrorMessageByID } from "../constants/functions/inputHandlers";
+import { findAttribute, formatStr, parseID } from "../constants/functions/valueHandlers";
+import { GARMENT_TYPES } from "../constants/data/options";
 
 
 export default function Profile() {
@@ -255,10 +257,60 @@ export default function Profile() {
         )}
 
         <br/>
-        <hr/>
-        <div>
-          {garment && garment.purchaseLocation}
-        </div>
+        {
+          garment && (
+            <div>
+              <hr/>
+              <div className="container-content popup">
+                <h3>Garment Details</h3>
+                <hr/>
+                <br/>
+              </div>
+              <div className="container-grid-2-md gap">
+                <div className="container-border clear-box">
+                  <p>
+                    <label className="text-b">Type:<label className="tab"></label></label>
+                    {findAttribute(GARMENT_TYPES, garment.garmentType)}
+                  </p>
+                  <p>
+                    <label className="text-b">Description:<label className="tab"></label></label>
+                    <div className="container-border m1-v">
+                      <label>{garment.garmentDescription}</label>
+                    </div>
+                  </p>
+                  <p>
+                    <label className="text-b">Country of Origin:<label className="tab"></label></label>
+                    {garment.garmentCountry}
+                  </p>
+                  <p>
+                    <label className="text-b">Store:<label className="tab"></label></label>
+                    {garment.purchaseLocation}
+                  </p>
+                  <p>
+                    <label className="text-b">Purchase Method:<label className="tab"></label></label>
+                    {formatStr(parseID(garment.purchaseMethod))}
+                  </p>
+                  <p>
+                    <label className="text-b">Cost:<label className="tab"></label></label>
+                    $ {garment.garmentCost}
+                    {garment.garmentDiscount === "discount_yes" && (<label> (Discounted)</label>)}
+                  </p>
+                  {
+                    garment.garmentDiscount === "discount_yes" &&
+                    (
+                      <p>
+                        <label className="tab"></label>
+                        <label className="text-b">Original Price:<label className="tab"></label></label>
+                        $ {garment.garmentOgCost}
+                      </p>
+                    )
+                  }
+
+                </div>
+              </div>
+            </div>
+          )
+        }
       </div>
     </div>
   )
