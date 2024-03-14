@@ -439,14 +439,17 @@ const wearTears = [
 	{value:'printFade', label:'The print is washing out'},
 	{value:'hole', label:'Garment get holes'},
 	{value:'labelItching', label:'The label is itching'},
+	{value:'looseButton', label:'Loose buttons'},
 	{value:'stain', label:'Garment got stains'},
 	{value:'other', label:'Other'},
 ];
 
 const repairRequests = [
 	{value:'looseButton', label:'The button is falling off'},
+	{value:'brokenZipper', label:'The zipper is broken'},
 	{value:'lostString', label:'Lost strings (i.e Hoodie string missing'},
 	{value:'looseHem', label:'Hem is coming down'},
+	{value:'other', label:'Other'},
 ];
 
 export { countryListAllIsoData, genericFibre, careInstructions, 
