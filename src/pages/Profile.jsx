@@ -400,9 +400,9 @@ export default function Profile() {
                     <div className="container-care-group">
                       <span className="container-care-img">
                         <CircleImg className="img-care" 
-                            iconUrl={careInstructions[id_instructionWash[garment.instructionWash["Wash"]]].img} 
+                            iconUrl={careInstructions[id_instructionWash[garment?.instructionWash?.["Wash"]] ?? "defaultKey"]?.img ?? "path/to/default/image.png"}
                             width="50%"/>
-                        <label>{careInstructions[id_instructionWash[garment.instructionWash["Wash"]]].name}</label>
+                        <label>{careInstructions[id_instructionWash[garment?.instructionWash?.["Wash"]] ?? "defaultKey"]?.name ?? "Default Name"}</label>
                       </span>
                     </div>
 

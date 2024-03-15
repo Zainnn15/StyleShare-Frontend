@@ -83,8 +83,7 @@ const GarmentMeasurements = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
     
-        const { clothingType, garmentSize, garmentFit, fileFront, fileBack } = formData;
-    
+        const { clothingType, garmentSize, garmentFit } = formData;
         // Construct garmentMeasurements array
         const garmentMeasurements = measures.map((measureType, index) => {
             const value = parseFloat(document.getElementById("measure_" + measureType.value + "_" + index).value);
@@ -96,15 +95,15 @@ const GarmentMeasurements = () => {
             };
         });
     
-        // Prepare form data
+        // Prepare form data to include measurement details
         const formDataToSend = new FormData();
         formDataToSend.append('userId', user.id);
-        formDataToSend.append('clothingType', JSON.stringify(clothingType)); // Ensure clothingType is stringified
+        formDataToSend.append('clothingType', clothingType.value); // Adjusted to send the value directly
         formDataToSend.append('garmentSize', garmentSize);
         formDataToSend.append('garmentFit', garmentFit);
-        formDataToSend.append('fileFront', fileFront);
-        formDataToSend.append('fileBack', fileBack);
-        formDataToSend.append('garmentMeasurements', JSON.stringify(garmentMeasurements)); // Ensure garmentMeasurements is stringified
+        if (formData.fileFront) formDataToSend.append('fileFront', formData.fileFront);
+        if (formData.fileBack) formDataToSend.append('fileBack', formData.fileBack);
+        formDataToSend.append('garmentMeasurements', JSON.stringify(garmentMeasurements));
     
         try {
             const { data } = await axios.post(
@@ -117,26 +116,19 @@ const GarmentMeasurements = () => {
                 }
             );
     
-            // Handle response as needed
+            // Handle response
             if (data.error) {
                 toast.error(data.error);
             } else {
-                setFormData({
-                    clothingType: '',
-                    garmentSize: '',
-                    garmentFit: '',
-                    fileFront: null,
-                    fileBack: null,
-                });
-                toast.success(data.message);
-    
+                toast.success('Garment details updated successfully.');
                 navigate('/dashboard');
-                // Add any additional logic or redirection after successful submission
             }
         } catch (error) {
             console.error('Error submitting form:', error);
+            toast.error('An error occurred while updating garment details.');
         }
     };
+    
 
     useEffect(() => {
         if (measures.length === 0) {
@@ -149,207 +141,7 @@ const GarmentMeasurements = () => {
       }, [garment.garmentType]);
     
     return (
-        <div>
-            <div className='container-prompt' onClick={selectID("clothingType")}>
-                <p>Select clothing type</p>
-            </div>
-            <div className='container-input'>
-                <select
-                    name='clothingType'
-                    id='clothingType'
-                    onChange={selectType}
-                    value={formData.clothingType.value}
-                    disabled
-                >
-                    <option key='type_null' value=''>
-                        Select a garment...
-                    </option>
-                    {options.map((opt) => {
-                        return (
-                            <option key={"type_" + opt.value} value={opt.value}>
-                                {opt.label}
-                            </option>
-                        );
-                    })}
-                </select>
-            </div>
-
-            <div className="container-grid-2-md">
-                {measures.map((measureType, index) => {
-                    return (
-                        <div key={"measureSet_" + measureType.value + "_" + index}>
-                            <PopupImg
-                                id="info_temp"
-                                className="container-popup"
-                                iconUrl={measureType.img}
-                                height="75%"
-                                width="75%"
-                            />
-                            <div className="container-prompt">
-                                <p>{measureType.label}</p>
-                                <CircleBtn
-                                    iconUrl={info}
-                                    className="button-info"
-                                    width="1em"
-                                    handlePress={() => {
-                                        let e = document.getElementById("info_temp");
-                                        if (e) {
-                                            e.classList.toggle("hide", false);
-                                        }
-                                    }}
-                                />
-                            </div>
-                            <div className="container-measure-group">
-                                <input
-                                    id={"measure_" + measureType.value + "_" + index}
-                                    name={"measure_" + measureType.value}
-                                    type='number'
-                                    min={0}
-                                    step={0.01}
-                                    required
-                                />
-                                <select
-                                    id={"unit_" + measureType.value + "_" + index}
-                                    name={"unit_" + measureType.value}
-                                >
-                                    <option value='cm'> cm </option>
-                                    <option value='inches'> in </option>
-                                </select>
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
-
-            {measures.length > 0 && (
-                <div>
-                    <div className="container-grid-2-md">
-                        <div>
-                            <div>
-                                <div className='container-prompt'>
-                                    <p>Select a measurement size type</p>
-                                </div>
-                                <div className="container-input">
-                                    <select
-                                        id='garmentSizeType'
-                                        name='garmentSizeType'
-                                        required
-                                        onChange={(e) =>
-                                            setFormData({ ...formData, garmentSizeType: e.target.value })
-                                        }
-                                    >
-                                        <option key='size_null' value=''>
-                                            Select a size type...
-                                        </option>
-                                        {GARMENT_SIZE_TYPES.map((opt) => {
-                                            return (
-                                                <option key={"size_type_" + opt.value} value={opt.value}>
-                                                    {opt.label}
-                                                </option>
-                                            );
-                                        })}
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        {formData.garmentSizeType === "" && <div></div>}
-                        {
-                            formData.garmentSizeType !== "" &&
-                            (
-                                <div>
-                                    <div className='container-prompt'>
-                                        <p>Enter the size of the garment</p>
-                                    </div>
-                                    <div className="container-input">
-                                        <select
-                                            id='garmentSize'
-                                            name='garmentSize'
-                                            required
-                                            onChange={(e) =>
-                                                setFormData({ ...formData, garmentSize: e.target.value })
-                                            }
-                                        >
-                                            <option key='size_null' value=''>
-                                                Select a size...
-                                            </option>
-                                            {GARMENT_SIZES[formData.garmentSizeType].map((opt) => {
-                                                return (
-                                                    <option key={"size_" + opt.value} value={opt.value}>
-                                                        {opt.label}
-                                                    </option>
-                                                );
-                                            })}
-                                        </select>
-                                    </div>
-                                </div>
-                            )
-                        }
-                        
-                        <div>
-                            <div className='container-prompt'>
-                                <p>How well does it fit?</p>
-                            </div>
-                            <div className='container-input'>
-                                <select
-                                    id='garmentFit'
-                                    name='garmentFit'
-                                    required
-                                    onChange={(e) =>
-                                        setFormData({ ...formData, garmentFit: e.target.value })
-                                    }
-                                >
-                                    <option key='fit_null' value=''>
-                                        Select a fit...
-                                    </option>
-                                    {GARMENT_FITS.map((opt) => {
-                                        return (
-                                            <option key={"fit_" + opt.value} value={opt.value}>
-                                                {opt.label}
-                                            </option>
-                                        );
-                                    })}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="container-grid-2-md">
-                        <div>
-                            <div className='container-prompt'>
-                                <p>Select a photo of the garment (Front)</p>
-                            </div>
-                            <div className="container-input">
-                                <input
-                                    id="fileFront"
-                                    name="fileFront"
-                                    type="file"
-                                    required
-                                    onChange={(e) => handleFileChange(e, "fileFront")}
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <div className='container-prompt'>
-                                <p>Select a photo of the garment (Back)</p>
-                            </div>
-                            <div className='container-input'>
-                                <input
-                                    id="fileBack"
-                                    name="fileBack"
-                                    type='file'
-                                    required
-                                    onChange={(e) => handleFileChange(e, "fileBack")}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className='container-input'>
-                        <button className="button-form" type="submit" onClick={handleSubmit}>
-                            Save
-                        </button>
-                    </div>
-                </div>
-            )}
-        </div>
+        <h1></h1>
     );
 }
 

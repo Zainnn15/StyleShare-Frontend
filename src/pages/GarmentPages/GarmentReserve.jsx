@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ScreenHeaderIn from "../../components/common/ScreenHeaderIn";
 import { PICKUP_LOCS } from "../../constants/data/options";
 
