@@ -6,9 +6,9 @@ import Axios from "axios";
 import '../styles/main.scss';
 
 import ScreenHeaderIn from "../components/common/ScreenHeaderIn";
-import { careInstructions, weekDays } from "../constants/data/lists";
+import { careInstructions} from "../constants/data/lists";
 import { addErrorMessageByID } from "../constants/functions/inputHandlers";
-import { findAttribute, formatDate, formatStr, formatTemp, parseID } from "../constants/functions/valueHandlers";
+import { findAttribute, formatDate, formatTemp} from "../constants/functions/valueHandlers";
 import { GARMENT_TYPES } from "../constants/data/options";
 import { id_instructionBleach, id_instructionDry, id_instructionDryC, id_instructionIron, id_instructionTumble, id_instructionWash, id_purchaseMethod } from "../constants/data/inputID";
 import CircleImg from "../components/common/CircleImg";
@@ -19,33 +19,39 @@ export default function Profile() {
     const [profile, setProfile] = useState(null);
     const [selectedDays, setSelectedDays] = useState([]);
     const [selectedTimes, setSelectedTimes] = useState([
-      {"day":0, "start":"", "end":""},
-      {"day":1, "start":"", "end":""},
-      {"day":2, "start":"", "end":""},
-      {"day":3, "start":"", "end":""},
-      {"day":4, "start":"", "end":""},
-      {"day":5, "start":"", "end":""},
-      {"day":6, "start":"", "end":""},
-    ]); //change default to value gotten from database
+      { day: 0, start: "", end: "" },
+      { day: 1, start: "", end: "" },
+      { day: 2, start: "", end: "" },
+      { day: 3, start: "", end: "" },
+      { day: 4, start: "", end: "" },
+      { day: 5, start: "", end: "" },
+      { day: 6, start: "", end: "" },
+    ]);
     const [editMode, setEditMode] = useState(false);
     const {garment} = useContext(GarmentContext);
     const [garmentDetails, setGarmentDetails] = useState(null);
 
-    //only show Monday-Friday
-    const weeks = [];
-    weekDays.forEach((day) => {
-      if(day.value > 0 && day.value < 6) {
-        weeks.push(day);
-      }
-    });
-
-    // const handleCheckboxChange = (day) => {
-    //   if (selectedDays.includes(day)) {
-    //     setSelectedDays(selectedDays.filter((selectedDay) => selectedDay !== day));
-    //   } else {
-    //     setSelectedDays([...selectedDays, day]);
-    //   }
-    // };
+    const weekDays = [
+      { value: 0, label: "Sunday", short: "Sun" },
+      { value: 1, label: "Monday", short: "Mon" },
+      { value: 2, label: "Tuesday", short: "Tue" },
+      { value: 3, label: "Wednesday", short: "Wed" },
+      { value: 4, label: "Thursday", short: "Thu" },
+      { value: 5, label: "Friday", short: "Fri" },
+      { value: 6, label: "Saturday", short: "Sat" },
+    ];
+  
+    const dayMapping = {
+      0: 'Sunday',
+      1: 'Monday',
+      2: 'Tuesday',
+      3: 'Wednesday',
+      4: 'Thursday',
+      5: 'Friday',
+      6: 'Saturday',
+    };
+  
+    const weeks = weekDays.filter((day) => day.value > 0 && day.value < 6);
 
     const handleUpdateProfile = () => {
       //validate time
@@ -63,6 +69,7 @@ export default function Profile() {
       Axios.post('/updateProfile', {
         userId: user.id,
         selectedDays: selectedDays,
+        selectedTimes: selectedTimes.filter(time => time.start && time.end), // Filter out times without start/end
       })
         .then((response) => {
           // Handle the response from the server, if needed
@@ -77,13 +84,13 @@ export default function Profile() {
       if (!profile && garmentDetails === null) {
         // Fetch user profile
         fetch('/profile', { cache: 'no-store' })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log('User Profile:', data); // Log user profile to console
-            setProfile(data);
-            setSelectedDays(data?.SenecaDays || []); // Load the existing SenecaDays
-          })
-          .catch((error) => console.error('Error fetching user profile:', error));
+        .then((res) => res.json())
+        .then((data) => {
+          setProfile(data);
+          setSelectedDays(data?.SenecaDays || []);
+          setSelectedTimes(data?.SenecaTimes.filter(time => time.start && time.end) || []); // Correct filtering logic
+        })
+        .catch((error) => console.error('Error fetching user profile:', error));
     
         // Fetch garment details based on the user ID
         fetch(`/getGarmentDetails/${user.id}`, { cache: 'no-store' })
@@ -100,14 +107,14 @@ export default function Profile() {
       if(editMode === true) {
         setSelectedDays([]);
         setSelectedTimes([
-          {"day":0, "start":"", "end":""},
-          {"day":1, "start":"", "end":""},
-          {"day":2, "start":"", "end":""},
-          {"day":3, "start":"", "end":""},
-          {"day":4, "start":"", "end":""},
-          {"day":5, "start":"", "end":""},
-          {"day":6, "start":"", "end":""},
-        ]); //change default to value gotten from database
+          { day: 0, start: "", end: "" },
+          { day: 1, start: "", end: "" },
+          { day: 2, start: "", end: "" },
+          { day: 3, start: "", end: "" },
+          { day: 4, start: "", end: "" },
+          { day: 5, start: "", end: "" },
+          { day: 6, start: "", end: "" },
+        ]);
       }
       setEditMode(!editMode);
     }
@@ -128,6 +135,13 @@ export default function Profile() {
       }
       setSelectedDays([...temp]);
     }
+
+    const handleTimeChange = (day, field, value) => {
+      const temp = [...selectedTimes];
+      const index = temp.findIndex((time) => time.day === day);
+      temp[index][field] = value;
+      setSelectedTimes(temp);
+    };
 
   return (
     <div>
@@ -153,26 +167,30 @@ export default function Profile() {
                 <p><label className="text-b">Group #:<label className="tab"></label></label></p>
               </div>
               <div className="container-border clear-box">
-                <p className="text-b">Available times in Seneca:</p>
-                <div id="user_schedule">
-                  <ul>
-                  {
-                    selectedTimes.length > 0 &&
-                    selectedTimes.map((schedule, index) => {
-                      return(
-                        schedule.start && schedule.end && (
-                        <li key={"sched_"+index}>
-                          <label>
-                            {weekDays[schedule.day].label}:
-                            <label className="tab"></label>
-                            <label>{`${schedule.start} - ${schedule.end}`}</label>
-                          </label>
-                        </li>)
-                      )
-                    })
-                  }
-                  </ul>
-                </div>
+              <p>Days going to Seneca: {selectedDays.map(dayNum => dayMapping[dayNum]).join(", ")}</p>
+        <div id="user_schedule">
+          <ul>
+            {selectedTimes.length > 0 &&
+              selectedTimes.map((schedule, index) => {
+                // Display information for a specific day (e.g., Thursday)
+                if (schedule.day === 4) {
+                  return (
+                    schedule.start &&
+                    schedule.end && (
+                      <li key={"sched_" + index}>
+                        <label>
+                          {dayMapping[schedule.day]}:
+                          <label className="tab"></label>
+                          <label>{`${schedule.start} - ${schedule.end}`}</label>
+                        </label>
+                      </li>
+                    )
+                  );
+                }
+                return null; // Don't render if it's not the specified day
+              })}
+          </ul>
+        </div>
               </div>
             </div>
           </div>
@@ -214,36 +232,41 @@ export default function Profile() {
 
             <div className="container-grid-2-md">
             {selectedDays.map((dayNum, index) => {
-                  return(
-                    <div key={"chooseTime_"+index}>
-                      <div className="container-prompt">
-                        <p>{weekDays[dayNum].label} Available Time</p>
-                      </div>
-                      <div className="container-content">
-                        <div className="container-grid-2-md center">
-                          <div>
-                            <p>Start Time</p>
-                            <input type="time" value={selectedTimes[dayNum].start}
-                              onChange={(e)=>{
-                                let temp = selectedTimes;
-                                temp[dayNum].start = e.target.value;
-                                setSelectedTimes(temp);
-                                
-                              }}
-                              onBlur={(e)=>{
-                                e.target.value = selectedTimes[dayNum].start;
-                              }}
+              return (
+                <div key={"chooseTime_" + index}>
+                  <div className="container-prompt">
+                    <p>{weekDays[dayNum].label} Available Time</p>
+                  </div>
+                  <div className="container-content">
+                    <div className="container-grid-2-md center">
+                      <div>
+                        <p>Start Time</p>
+                        <input
+                          type="time"
+                          value={selectedTimes[dayNum]?.start || ""}
+                          onChange={(e) =>
+                            handleTimeChange(
+                              weekDays[dayNum].value,
+                              "start",
+                              e.target.value
+                            )
+                          }
+                          onBlur={(e) => {
+                            e.target.value = selectedTimes[dayNum]?.start || "";
+                          }}
                             />
                           </div>
                           <div>
                             <p>End Time</p>
                             <input type="time" value={selectedTimes[dayNum].end}
-                              onChange={(e)=>{
-                                let temp = selectedTimes;
-                                temp[dayNum].end = e.target.value;
-                                setSelectedTimes(temp);
-                              }}
-                              onBlur={(e)=>{
+                            onChange={(e) =>
+                              handleTimeChange(
+                                weekDays[dayNum].value,
+                                "end",
+                                e.target.value
+                              )
+                            }
+                            onBlur={(e) => {
                                 e.target.value = selectedTimes[dayNum].end;
                               }}
                             />
@@ -460,9 +483,11 @@ export default function Profile() {
                     <div className="container-care-group">
                       <span className="container-care-img">
                         <CircleImg className="img-care" 
-                            iconUrl={careInstructions[id_instructionTumble[garment.instructionTumble["Tumble"]]].img} 
+                            iconUrl={careInstructions[id_instructionWash[garment?.instructionWash?.["Wash"]] ?? "defaultKey"]?.img ?? "path/to/default/image.png"}
                             width="50%"/>
-                        <label>{careInstructions[id_instructionTumble[garment.instructionTumble["Tumble"]]].name}</label>
+                       <label>{
+  careInstructions[id_instructionTumble[garment?.instructionTumble?.["Tumble"]] ?? "defaultKey"]?.name ?? "Default Name"
+}</label>
                       </span>
                     </div>
 
@@ -523,12 +548,12 @@ export default function Profile() {
               <div className="container-border">
                 <div className="container-care">
                   <div className="container-care-group">
-                    <span className="container-care-img">
-                      <CircleImg className="img-care" 
-                          iconUrl={careInstructions[id_instructionDryC[garment.instructionDryC["DryC"]]].img} 
-                          width="50%"/>
-                      <label>{careInstructions[id_instructionDryC[garment.instructionDryC["DryC"]]].name}</label>
-                    </span>
+                  <span className="container-care-img">
+  <CircleImg className="img-care" 
+      iconUrl={careInstructions[id_instructionDryC[garment?.instructionDryC?.["DryC"]] ?? "defaultKey"]?.img ?? "path/to/default/image.png"} 
+      width="50%"/>
+  <label>{careInstructions[id_instructionDryC[garment?.instructionDryC?.["DryC"]] ?? "defaultKey"]?.name ?? "Default Name"}</label>
+</span>
                   </div>
 
                   {
@@ -563,12 +588,12 @@ export default function Profile() {
               <div className="container-border">
                 <div className="container-care">
                     <div className="container-care-group">
-                      <span className="container-care-img">
-                        <CircleImg className="img-care" 
-                            iconUrl={careInstructions[id_instructionIron[garment.instructionIron["Iron"]]].img} 
-                            width="50%"/>
-                        <label>{careInstructions[id_instructionIron[garment.instructionIron["Iron"]]].name}</label>
-                      </span>
+                    <span className="container-care-img">
+  <CircleImg className="img-care" 
+      iconUrl={careInstructions[id_instructionIron[garment?.instructionIron?.["Iron"]] ?? "defaultKey"]?.img ?? "path/to/default/image.png"} 
+      width="50%"/>
+  <label>{careInstructions[id_instructionIron[garment?.instructionIron?.["Iron"]] ?? "defaultKey"]?.name ?? "Default Name"}</label>
+</span>
                     </div>
 
                     {
@@ -592,12 +617,12 @@ export default function Profile() {
               <div className="container-border">
                 <div className="container-care">
                   <div className="container-care-group">
-                    <span className="container-care-img">
-                      <CircleImg className="img-care" 
-                          iconUrl={careInstructions[id_instructionBleach[garment.instructionBleach["Bleach"]]].img} 
-                          width="50%"/>
-                      <label>{careInstructions[id_instructionBleach[garment.instructionBleach["Bleach"]]].name}</label>
-                    </span>
+                  <span className="container-care-img">
+  <CircleImg className="img-care" 
+      iconUrl={careInstructions[id_instructionBleach[garment?.instructionBleach?.["Bleach"]] ?? "defaultKey"]?.img ?? "path/to/default/image.png"} 
+      width="50%"/>
+  <label>{careInstructions[id_instructionBleach[garment?.instructionBleach?.["Bleach"]] ?? "defaultKey"]?.name ?? "Default Name"}</label>
+</span>
                   </div>
                 </div>
               </div>

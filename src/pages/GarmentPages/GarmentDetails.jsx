@@ -171,20 +171,67 @@ const GarmentDetails = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const {purchaseLocation, purchaseMethod, purchaseDate, garmentType, garmentDescription, garmentCountry, garmentCost, garmentDiscount, garmentOgCost, compositionMain, compositionLining, compositionPadding, hasLining, hasPadding, instructionWash, instructionDry, instructionTumble, instructionDryC, instructionIron, instructionBleach, willSubmit} = formData;
+    
+        const uploadFormData = new FormData();
+        // Append files if they exist
+        if (formData.fileFront) {
+            uploadFormData.append('fileFront', formData.fileFront);
+        }
+        if (formData.fileBack) {
+            uploadFormData.append('fileBack', formData.fileBack);
+        }
+    
+        // Append other form data
+        uploadFormData.append('purchaseLocation', formData.purchaseLocation);
+        uploadFormData.append('purchaseMethod', formData.purchaseMethod);
+        uploadFormData.append('purchaseDate', formData.purchaseDate);
+        uploadFormData.append('garmentType', formData.garmentType);
+        uploadFormData.append('garmentDescription', formData.garmentDescription);
+        uploadFormData.append('garmentCountry', formData.garmentCountry);
+        uploadFormData.append('garmentCost', formData.garmentCost);
+        uploadFormData.append('garmentDiscount', formData.garmentDiscount);
+        uploadFormData.append('garmentOgCost', formData.garmentOgCost);
+        uploadFormData.append('compositionMain', JSON.stringify(formData.compositionMain));
+        uploadFormData.append('compositionLining', JSON.stringify(formData.compositionLining));
+        uploadFormData.append('compositionPadding', JSON.stringify(formData.compositionPadding));
+        uploadFormData.append('instructionWash', JSON.stringify(formData.instructionWash));
+        uploadFormData.append('instructionDry', JSON.stringify(formData.instructionDry));
+        uploadFormData.append('instructionTumble', JSON.stringify(formData.instructionTumble));
+        uploadFormData.append('instructionDryC', JSON.stringify(formData.instructionDryC));
+        uploadFormData.append('instructionIron', JSON.stringify(formData.instructionIron));
+        uploadFormData.append('instructionBleach', JSON.stringify(formData.instructionBleach));
+        uploadFormData.append('hasLining', formData.hasLining ? "true" : "false");
+        uploadFormData.append('hasPadding', formData.hasPadding ? 'true' : 'false');
+        // Serialize and append other complex objects similarly...
+        uploadFormData.append('userId', user.id);
+        uploadFormData.append('willSubmit', formData.willSubmit ? 'true' : 'false');
+
+        Object.keys(formData).forEach(key => {
+            if (!['compositionMain', 'compositionLining', 'compositionPadding', 'fileFront', 'fileBack'].includes(key)) {
+                uploadFormData.append(key, formData[key]);
+            }
+        });
+    
         try {
-            const {data} = await axios.post('/addgarmentdetails', {userId: user.id, purchaseLocation, purchaseMethod, purchaseDate, garmentType, garmentDescription, garmentCountry, garmentCost, garmentDiscount, garmentOgCost, compositionMain, compositionLining, compositionPadding, hasLining, hasPadding, instructionWash, instructionDry, instructionTumble, instructionDryC, instructionIron, instructionBleach, willSubmit})
+            const {data} = await axios.post('/addgarmentdetails', uploadFormData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+    
             if (data.error) {
                 toast.error(data.error);
             } else {
-                setFormData({})
+                // Reset form data or perform other actions on success
+                setFormData({}); // Reset form state if needed
                 toast.success(data.message);
                 navigate('/dashboard');
             }
         } catch (error) {
-            console.log(error);
+            console.error('Submission error:', error);
+            toast.error('An error occurred while submitting the form.');
         }
-    }
+    };
 
     changeTitle("Garment Details")
     return (

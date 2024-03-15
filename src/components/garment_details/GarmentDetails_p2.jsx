@@ -70,6 +70,14 @@ const GarmentDetails_p2 = ({formData, setFormData, page, numPages, handleForward
                     ></textarea>
                 </div>
             </div>
+
+            <div>
+
+            <input  type="file" name="fileFront" onChange={(e) => setFormData({ ...formData, fileFront: e.target.files[0] })}/>
+            <input  type="file" name="fileBack"  onChange={(e) => setFormData({ ...formData, fileBack: e.target.files[0] })}/>
+
+            </div>
+
             <div className="container-button-form">
                 {
                     page > 0 &&

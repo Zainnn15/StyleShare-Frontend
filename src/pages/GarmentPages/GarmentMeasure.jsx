@@ -103,9 +103,6 @@ const GarmentMeasurement = () => {
             garmentSize: formData.garmentSize,
             garmentFit: formData.garmentFit,
             garmentMeasurements,
-            // If you're handling files separately, include file references instead of the files themselves
-            // Example: fileFrontUrl: 'https://example.com/path/to/uploaded/fileFront.jpg',
-            // Example: fileBackUrl: 'https://example.com/path/to/uploaded/fileBack.jpg',
         };
     
         try {
