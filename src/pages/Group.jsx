@@ -146,6 +146,7 @@ export default function Group() {
                             <p>Type: {garment.garmentType}</p>
                             <p>Description: {garment.garmentDescription}</p>
                             <p>Country: {garment.garmentCountry}</p>
+                            <img src={garment.fileFront} alt="Garment" style={{ width: '100px', height: '100px' }} />
                             {/* Add more garment details as needed */}
                         </div>
                     ))
