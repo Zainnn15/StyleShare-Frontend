@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Group() {
     const navigate = useNavigate();
+    const [joinCode, setJoinCode] = useState('');
     const { user, setUser } = useContext(UserContext);
     const { garment, setGarment } = useContext(GarmentContext);
     const { userGroups, setUserGroups, setOpenGroups, openGroups, joinedGroup, setJoinedGroup} = useContext(GroupContext);
@@ -18,6 +19,22 @@ export default function Group() {
         groupId: '',
     });
     const [responseData, setResponseData] = useState(null); // State to hold response data
+
+    const handleJoinByCode = async (event) => {
+        event.preventDefault();
+        try {
+          const response = await axios.post('/joinGroupByCode', {
+            userId: user.id,
+            joinCode: joinCode,
+          });
+          // Handle response: update state, show messages, etc.
+          toast.success(response.data.message);
+          // ... (other success handling)
+        } catch (error) {
+          // Handle error: show error message, etc.
+          toast.error(error.response.data.error);
+        }
+      };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -99,37 +116,33 @@ export default function Group() {
 
     return (
         <div>
-            <ScreenHeaderIn />
-            <div className="container main">
-                <form onSubmit={handleSubmit}>
-                    <div className="container-small">
-                        <div>
-                            <label className="container-title">Join Open Group</label>
-                            <hr />
-                        </div>
-                        <br />
-
-                        <div>
-                            <input type="hidden" id="userId" value={user.id} onChange={(e) => setData({ ...data, userId: e.target.value })} />
-                            <label htmlFor="groupId">Select Open Group</label>
-                            <select id="groupId" value={data.groupId || ""} onChange={(e) => setData({ ...data, groupId: e.target.value })}>
-                                <option value="" disabled>
-                                    Select an open group
-                                </option>
-                                {openGroups.map((group) => (
-                                    <option key={group._id} value={group._id}>
-                                        {`Open Group: ${group.group_name} - Members: ${group.members.length}/${group.max_members}`}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <br />
-
-                        <button className="button-form" type="submit" style={{ width: '100%' }}>
-                            Join Group
-                        </button>
-                    </div>
-                </form>
+        <ScreenHeaderIn />
+        <div className="container main">
+          <form onSubmit={handleJoinByCode}>
+            <div className="container-small">
+              <div>
+                <label className="container-title">Enter Group Code to Join</label>
+                <hr />
+              </div>
+              <br />
+  
+              <div>
+                <label htmlFor="groupCode">Group Code:</label>
+                <input
+                  id="joinCode"
+                  type="text"
+                  value={joinCode}
+                  onChange={(e) => setJoinCode(e.target.value)}
+                  required
+                />
+              </div>
+              <br />
+  
+              <button className="button-form" type="submit" style={{ width: '100%' }}>
+                Join Group
+              </button>
+            </div>
+          </form>
 
                 {userGroups && userGroups.members && (
     <div className="container-content">
@@ -146,7 +159,7 @@ export default function Group() {
                             <p>Type: {garment.garmentType}</p>
                             <p>Description: {garment.garmentDescription}</p>
                             <p>Country: {garment.garmentCountry}</p>
-                            <img src={garment.fileFront} alt="Garment" style={{ width: '100px', height: '100px' }} />
+                            <img src={`http://localhost:8000/${garment.fileFront.replace(/\\/g, '/')}`} alt="Garment" style={{ width: '100px', height: '100px' }} />
                             {/* Add more garment details as needed */}
                         </div>
                     ))
