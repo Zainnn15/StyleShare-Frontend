@@ -2,9 +2,15 @@
 $xSmall: 12px;
 $small: 14px;
 $medium: 16px;
-$large: 22px;
+$mdLg: 20px;
+$large: 24px;
 $xLarge: 26px;
 $xxLarge: 32px;
+
+/*Size*/
+.text-midLg {
+    font-size: $mdLg;
+}
 
 /*Alignments*/
 .right {

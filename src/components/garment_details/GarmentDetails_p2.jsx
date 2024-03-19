@@ -74,7 +74,7 @@ const GarmentDetails_p2 = ({formData, setFormData, page, numPages, handleForward
 
             <div className="container-grid-2-md gap">
                 <div>
-                    <div className="container-prompt" onClick={()=>selectID("garmentType")}>
+                    <div className="container-prompt" onClick={()=>selectID("fileFront")}>
                         <p>Front photo of the garment</p>
                     </div>
                     <div id={"fileFront_error"} style={{textAlign:"center"}}></div>
@@ -94,7 +94,7 @@ const GarmentDetails_p2 = ({formData, setFormData, page, numPages, handleForward
                     </div>
                 </div>
                 <div>
-                    <div className="container-prompt" onClick={()=>selectID("garmentType")}>
+                    <div className="container-prompt" onClick={()=>selectID("fileBack")}>
                         <p>Back photo of the garment</p>
                     </div>
                     <div id={"fileBack_error"} style={{textAlign:"center"}}></div>

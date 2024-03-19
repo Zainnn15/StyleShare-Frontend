@@ -31,6 +31,8 @@ const GarmentDetails = () => {
         purchaseDate: moment(new Date()).format('YYYY-MM-DD'),
         garmentType: '',
         garmentDescription: '',
+        fileFront: '',
+        fileBack: '',
         garmentCountry: '',
         garmentCost: '',
         garmentDiscount: '',

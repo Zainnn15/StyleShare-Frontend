@@ -12,7 +12,10 @@ import Dashboard from './pages/Dashboard';
 import GarmentMeasure from './pages/GarmentPages/GarmentMeasure';
 import Profile from './pages/Profile';
 import Group from './pages/Group';
-import GarmentWash from './pages/GarmentPages/GarmentWash';
+import GarmentCare from './pages/GarmentPages/GarmentCare';
+import GarmentWear from './components/garment_care/GarmentCare_wear';
+import GarmentWash from './components/garment_care/GarmentCare_wash';
+import GarmentTear from './components/garment_care/GarmentCare_tear';
 import UserSearch from './pages/UserSearch';
 import GarmentDetails from './pages/GarmentPages/GarmentDetails';
 import GarmentReserve from './pages/GarmentPages/GarmentReserve';
@@ -34,7 +37,10 @@ function App() {
             <Route path='/userprofile' element={<Profile />} />
             <Route path='/group' element={<Group />} />
             <Route path='/garment-measure' element={<GarmentMeasure />} />
+            <Route path='/garment-care' element={<GarmentCare />} />
+            <Route path='/garment-wear' element={<GarmentWear />} />
             <Route path='/garment-wash' element={<GarmentWash />} />
+            <Route path='/garment-tear' element={<GarmentTear />} />
             <Route path='/usersearch' element={<UserSearch />} />
             <Route path='/garment-details' element={<GarmentDetails />} />
             <Route path='/garment-reserve' element={<GarmentReserve />} />
