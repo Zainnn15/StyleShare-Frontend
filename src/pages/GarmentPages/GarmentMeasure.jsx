@@ -308,7 +308,7 @@ const GarmentMeasurement = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="container-grid-2-md">
+                    {/* <div className="container-grid-2-md">
                         <div>
                             <div className='container-prompt'>
                                 <p>Select a photo of the garment (Front)</p>
@@ -337,7 +337,7 @@ const GarmentMeasurement = () => {
                                 />
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                     <div className='container-input'>
                         <button className="button-form" type="submit">
                             Save

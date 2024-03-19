@@ -2,14 +2,15 @@
 import '../../styles/main.scss';
 
 import { GARMENT_TYPES } from "../../constants/data/options";
-import { selectID, validate, validatePage } from "../../constants/functions/inputHandlers";
+import { clickID, readURL, selectID, validate, validatePage } from "../../constants/functions/inputHandlers";
+import selectImg from '../../assets/icons/select_img.png';
 
 const GarmentDetails_p2 = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
     const options = GARMENT_TYPES;
 
     //handle next button
     function validateAndNext() {
-        let querySelect = "select,textarea";
+        let querySelect = "select,textarea,input";
         if(!validatePage(querySelect)) {
             return false;
         }
@@ -71,11 +72,47 @@ const GarmentDetails_p2 = ({formData, setFormData, page, numPages, handleForward
                 </div>
             </div>
 
-            <div>
-
-            <input  type="file" name="fileFront" onChange={(e) => setFormData({ ...formData, fileFront: e.target.files[0] })}/>
-            <input  type="file" name="fileBack"  onChange={(e) => setFormData({ ...formData, fileBack: e.target.files[0] })}/>
-
+            <div className="container-grid-2-md gap">
+                <div>
+                    <div className="container-prompt" onClick={()=>selectID("garmentType")}>
+                        <p>Front photo of the garment</p>
+                    </div>
+                    <div id={"fileFront_error"} style={{textAlign:"center"}}></div>
+                    <div className='container-input-img clickable' onClick={()=>clickID("fileFront")}>
+                        <img className='clickable' id='fileFront_img' src={selectImg} alt='front photo'/>
+                    </div>
+                    <div className="container-input">
+                        <input  type="file" id="fileFront" name="fileFront" 
+                            onChange={(e) => {
+                                setFormData({ ...formData, fileFront: e.target.files[0] });
+                                if(e.target.files[0]) {
+                                    readURL("fileFront", "fileFront_img");
+                                    validate("fileFront");
+                                }
+                            }}
+                        />
+                    </div>
+                </div>
+                <div>
+                    <div className="container-prompt" onClick={()=>selectID("garmentType")}>
+                        <p>Back photo of the garment</p>
+                    </div>
+                    <div id={"fileBack_error"} style={{textAlign:"center"}}></div>
+                    <div className='container-input-img clickable' onClick={()=>clickID("fileBack")}>
+                        <img id='fileBack_img' src={selectImg} alt='back photo'/>
+                    </div>
+                    <div className="container-input">       
+                        <input  type="file" id="fileBack" name="fileBack"  
+                            onChange={(e) => {
+                                setFormData({ ...formData, fileBack: e.target.files[0] });
+                                if(e.target.files[0]) {
+                                    readURL("fileBack", "fileBack_img");
+                                    validate("fileBack");
+                                }
+                            }}
+                        />    
+                    </div>
+                </div>
             </div>
 
             <div className="container-button-form">

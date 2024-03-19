@@ -13,7 +13,7 @@ const GARMENT_TYPES = [
 
 //measurement size types
 const GARMENT_SIZE_TYPES = [
-    {value: 'general', label: 'General Size'},
+    {value: 'general', label: 'General Size (XXS - XXL)'},
     {value: 'us', label: 'US Clothing Size'},
     {value: 'eu', label: 'European Clothing Size'},
     {value: 'uk', label: 'UK Size'},

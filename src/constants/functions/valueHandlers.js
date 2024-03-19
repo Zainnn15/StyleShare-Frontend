@@ -1,3 +1,5 @@
+import { careInstructions } from "../data/lists";
+
 function findAttribute(objArr, val, attrCheck="value", attrReturn="label") {
     try {
         for(let i=0; i<objArr.length; i++) {
@@ -27,9 +29,20 @@ function formatStr(str) {
     return str.length > 0 ? finalStr[0].toUpperCase()+finalStr.substr(1) : finalStr;
 } 
 
-function formatDate(dateStr, options={ weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }) {
+function formatDate(dateStr) {
+    let fmtStr = "";
     let date = new Date(dateStr);
-    return date.toLocaleDateString('en-us', options);
+
+    if(date.getMonth()+1 < 10) {
+        fmtStr += "0";
+    }
+    fmtStr += date.getMonth()+1 + "/";
+    if(date.getUTCDate() < 10) {
+        fmtStr += "0";
+    }
+    fmtStr += date.getUTCDate()+"/"+date.getFullYear();
+
+    return fmtStr;
 }
 
 function formatTemp(tempCode) {
@@ -38,4 +51,17 @@ function formatTemp(tempCode) {
     return str;
 }
 
-export { findAttribute, parseID, formatStr, formatDate, formatTemp }
+function getAttrByInpID(dataID, mapObj, listAttr="img", listObj=careInstructions) {
+    if(!dataID || !mapObj) {
+        return;
+    }
+    if(!mapObj[dataID]) {
+        return;
+    }
+    if(!listObj[mapObj[dataID]]) {
+        return;
+    }
+    return listObj[mapObj[dataID]][listAttr];
+}
+
+export { findAttribute, parseID, formatStr, formatDate, formatTemp, getAttrByInpID }
