@@ -370,26 +370,6 @@ const GarmentDetails_p5 = ({formData, setFormData, page, numPages, handleForward
                                         <label>{careInstructions.washHeatXX.name}</label>
                                     </span>
                                 </div>
-                                <div className="container-care-group">
-                                    <input type="radio" id="wash_heat_no" name="washHeat"
-                                        value={"washHeatNo"} 
-                                        onClick={(e) => {
-                                            const newWash = formData.instructionWash;
-                                            newWash.Heat = e.target.id;
-                                            setFormData({
-                                                ...formData,
-                                                instructionWash: newWash
-                                            });
-                                            addErrorMessageByID("washHeat_error", null);
-                                        }}
-                                        defaultChecked={checkOnID("wash_heat_no", formData.instructionWash.Heat)}
-                                    />
-                                    <span className="container-care-img" onClick={()=>clickID("wash_heat_no")}>
-                                        <CircleImg className="img-care" 
-                                            iconUrl={careInstructions.washHeatNo.img} width="50%"/>
-                                        <label>{careInstructions.washHeatNo.name}</label>
-                                    </span>
-                                </div>
                             </div>
                         </div>
                     )

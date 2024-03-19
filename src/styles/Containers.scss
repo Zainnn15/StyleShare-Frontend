@@ -87,13 +87,21 @@ $screen-xl-min: 1200px;
 }
 @mixin grid-3-md {
     @include grid;
-    // large devices
+    // small devices
+    @include sm {
+        grid-template-columns: 1fr 1fr;
+    }
+    // medium devices
     @include md {
         grid-template-columns: 1fr 1fr 1fr;
     }
 }
 @mixin grid-3-lg {
     @include grid;
+    // medium devices
+    @include md {
+        grid-template-columns: 1fr 1fr;
+    }
     // large devices
     @include lg {
         grid-template-columns: 1fr 1fr 1fr;
@@ -418,10 +426,15 @@ $screen-xl-min: 1200px;
 .container-care {
     @include container-row;
     @include input;
+    align-items: flex-start;
 }
 .container-care-group {
     @include container-row;
     padding-bottom: 0.5em;
+
+    label {
+        text-align: center
+    }
 }
 .container-care-img {
     @include container-col;
@@ -538,5 +551,39 @@ $screen-xl-min: 1200px;
         @include container-row;
         justify-content: end;
         padding: 0.5em;
+    }
+}
+
+.container-input-img {
+    @include container-row;
+    @include input;
+    width: 12em;
+    height: 12em;
+    background-color: Colors.$purpleLight;
+    margin: auto;
+    
+    img {
+        max-width: 12em;
+        max-height: 12em;
+    }
+
+    // Small devices
+    @include sm {
+        width: 18em;
+        height: 18em;
+        img {
+            max-width: 18em;
+            max-height: 18em;
+        }
+    }
+
+    // Medium devices
+    @include md {
+        width: 20em;
+        height: 20em;
+        img {
+            max-width: 20em;
+            max-height: 20em;
+        }
     }
 }

@@ -19,12 +19,12 @@ const GarmentDetails_p1 = ({formData, setFormData, page, numPages, handleForward
         <div>
             <div>
                 <div className="container-prompt" onClick={()=>selectID("purchaseLocation")}>
-                    <p>Where was the garment purchased?</p>
+                    <p>Name of retailer</p>
                 </div>
                 <div id={"purchaseLocation_error"} style={{textAlign:"center"}}></div>
                 <div className="container-input">
                     <input type="text" id="purchaseLocation" name="purchaseLocation" 
-                        placeholder="Enter garment store location" 
+                        placeholder="Enter store name" 
                         value={formData.purchaseLocation} 
                         onChange={(e) => {
                             setFormData({

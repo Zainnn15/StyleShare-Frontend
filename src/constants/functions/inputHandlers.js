@@ -139,5 +139,25 @@ function validateSelect(idName, options) {
     return true;
 }
 
+function readURL(idName, imgName) {
+    let input = document.getElementById(idName);
+    if (input && input.files && input.files[0]) {
+        loadImg(imgName, input.files[0]);
+    }
+}
+
+function loadImg(imgName, file) {
+    let img = document.getElementById(imgName);
+    if (img && file) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            img.setAttribute('src', e.target.result);
+        }
+
+        reader.readAsDataURL(file);
+    }
+}
+
 export { checkOnID, selectID, clickID, signOut, changeTitle, addErrorMessage, addErrorMessageByID,
-    validate, validateInpName, validatePage, validateSelect };
+    validate, validateInpName, validatePage, validateSelect, readURL, loadImg };

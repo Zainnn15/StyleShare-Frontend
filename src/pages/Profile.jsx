@@ -1,14 +1,14 @@
 import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../context/userContext";
 import { GarmentContext } from "../../context/garmentContext";
+import { GroupContext } from "../../context/groupContext";
 import Axios from "axios";
 
 import '../styles/main.scss';
 
 import ScreenHeaderIn from "../components/common/ScreenHeaderIn";
-import { careInstructions} from "../constants/data/lists";
 import { addErrorMessageByID } from "../constants/functions/inputHandlers";
-import { findAttribute, formatDate, formatTemp} from "../constants/functions/valueHandlers";
+import { findAttribute, formatDate, formatTemp, getAttrByInpID} from "../constants/functions/valueHandlers";
 import { GARMENT_TYPES } from "../constants/data/options";
 import { id_instructionBleach, id_instructionDry, id_instructionDryC, id_instructionIron, id_instructionTumble, id_instructionWash, id_purchaseMethod } from "../constants/data/inputID";
 import CircleImg from "../components/common/CircleImg";
@@ -16,6 +16,8 @@ import CircleImg from "../components/common/CircleImg";
 
 export default function Profile() {
     const {user} = useContext(UserContext);
+    const {userGroups} = useContext(GroupContext);
+    const {garment} = useContext(GarmentContext);
     const [profile, setProfile] = useState(null);
     const [selectedDays, setSelectedDays] = useState([]);
     const [selectedTimes, setSelectedTimes] = useState([
@@ -28,8 +30,14 @@ export default function Profile() {
       { day: 6, start: "", end: "" },
     ]);
     const [editMode, setEditMode] = useState(false);
-    const {garment} = useContext(GarmentContext);
-    const [garmentDetails, setGarmentDetails] = useState(null);
+    const [garmentDetails, setGarmentDetails] = useState(null); //used for?
+    const [instructions, setInstructions] = useState({
+      "Wash": "",
+      "Tumble":"",
+      "DryC":"",
+      "Iron":"",
+      "Bleach":""
+    })
 
     const weekDays = [
       { value: 0, label: "Sunday", short: "Sun" },
@@ -101,6 +109,17 @@ export default function Profile() {
         })
         .catch((error) => console.error('Error fetching garment details:', error));
       }
+
+      if(garment) {
+        setInstructions({
+          ...instructions, 
+          "Wash": JSON.parse(garment.instructionWash[0]),
+          "Tumble": JSON.parse(garment.instructionTumble[0]),
+          "DryC": JSON.parse(garment.instructionDryC[0]),
+          "Iron": JSON.parse(garment.instructionIron[0]),
+          "Bleach": JSON.parse(garment.instructionBleach[0]),
+        });
+      }
     }, []);
     
     function handleChangeSchedule() {
@@ -143,6 +162,8 @@ export default function Profile() {
       setSelectedTimes(temp);
     };
 
+    console.log()
+
   return (
     <div>
       <ScreenHeaderIn />
@@ -164,7 +185,16 @@ export default function Profile() {
                 <p><label className="text-b">Name:<label className="tab"></label></label>{user.name}</p>
                 <p><label className="text-b">Username:<label className="tab"></label></label>{user.username}</p>
                 <p><label className="text-b">Email:<label className="tab"></label></label>{user.email}</p>
-                <p><label className="text-b">Group #:<label className="tab"></label></label></p>
+                <p><label className="text-b">Group:<label className="tab"></label></label>
+                  {
+                    userGroups &&
+                    <label>{userGroups.group_name}</label>
+                  }
+                  {
+                    !userGroups &&
+                    <label>N/A</label>
+                  }
+                </p>
               </div>
               <div className="container-border clear-box">
               <p>Days going to Seneca: {selectedDays.map(dayNum => dayMapping[dayNum]).join(", ")}</p>
@@ -173,7 +203,7 @@ export default function Profile() {
             {selectedTimes.length > 0 &&
               selectedTimes.map((schedule, index) => {
                 // Display information for a specific day (e.g., Thursday)
-                if (schedule.day === 4) {
+                //if (schedule.day === 4) {
                   return (
                     schedule.start &&
                     schedule.end && (
@@ -186,8 +216,8 @@ export default function Profile() {
                       </li>
                     )
                   );
-                }
-                return null; // Don't render if it's not the specified day
+                //}
+               // return null; // Don't render if it's not the specified day
               })}
           </ul>
         </div>
@@ -344,9 +374,9 @@ export default function Profile() {
                   
               <label className="container-subtitle-2">Garment Composition</label>
               <div className="container-border clear-box">
-                <div className="container-grid-3-md center gap m1-v">
+                <div className="container-grid-3-md gap m1-v">
                   <div>
-                    <label className="text-b text-u">Main</label>
+                    <p className="text-b text-u center m0">Main</p>
                     <ul>
                     {
                       garment.compositionMain.map((comp, index)=>{
@@ -363,11 +393,11 @@ export default function Profile() {
                   </div>
 
                   <div>
-                    <label className="text-b text-u">Lining</label>
-                    {!garment.hasLining && <p>N/A</p>}
+                    <p className="text-b text-u center m0">Lining</p>
+                    {!garment.compositionLining.length > 0 && <p>N/A</p>}
                     <ul>
                     {
-                      garment.hasLining &&
+                      garment.compositionLining.length > 0 &&
                       garment.compositionLining.map((comp, index)=>{
                         return (
                           <li key={"lining_"+index}>
@@ -382,11 +412,11 @@ export default function Profile() {
                   </div>
 
                   <div>
-                    <label className="text-b text-u">Padding/Stuffing</label>
-                    {!garment.hasPadding && <p>N/A</p>}
+                    <p className="text-b text-u center m0">Padding/Stuffing</p>
+                    {!garment.compositionPadding.length > 0 && <p>N/A</p>}
                     <ul>
                     {
-                      garment.hasPadding &&
+                      garment.compositionPadding.length > 0 &&
                       garment.compositionPadding.map((comp, index)=>{
                         return (
                           <li key={"padding_"+index}>
@@ -423,50 +453,56 @@ export default function Profile() {
                     <div className="container-care-group">
                       <span className="container-care-img">
                         <CircleImg className="img-care" 
-                            iconUrl={careInstructions[id_instructionWash[garment?.instructionWash?.["Wash"]] ?? "defaultKey"]?.img ?? "path/to/default/image.png"}
+                            iconUrl={getAttrByInpID(instructions.Wash["Wash"], id_instructionWash)}
                             width="50%"/>
-                        <label>{careInstructions[id_instructionWash[garment?.instructionWash?.["Wash"]] ?? "defaultKey"]?.name ?? "Default Name"}</label>
+                        <label>
+                          {getAttrByInpID(instructions.Wash["Wash"], id_instructionWash, "name")}
+                        </label>
                       </span>
                     </div>
 
                     {
-                      garment.instructionWash["Wash"] === "wash_yes" &&
+                      instructions.Wash["Wash"] === "wash_yes" &&
                       <div className="container-care-group">
                         <span className="container-care-img">
                           <CircleImg className="img-care" 
-                              iconUrl={careInstructions[id_instructionWash[garment.instructionWash["Machine"]]].img} 
+                              iconUrl={getAttrByInpID(instructions.Wash["Machine"], id_instructionWash)}
                               width="50%"/>
-                          <label>{careInstructions[id_instructionWash[garment.instructionWash["Machine"]]].name}</label>
+                          <label>
+                            {getAttrByInpID(instructions.Wash["Machine"], id_instructionWash, "name")}
+                          </label>
                         </span>
                       </div>
                     }
 
                     {
-                      garment.instructionWash["Wash"] === "wash_yes" &&
-                      garment.instructionWash["Heat"] !== "wash_heat_xx" &&
-                      garment.instructionWash["Heat"] &&
+                      instructions.Wash["Wash"] === "wash_yes" &&
+                      instructions.Wash["Heat"] !== "wash_heat_xx" &&
+                      instructions.Wash["Heat"] !== "" &&
                       <div className="container-care-group">
                       <span className="container-care-img">
                         <CircleImg className="img-care" 
-                            iconUrl={careInstructions[id_instructionWash[garment.instructionWash["Heat"]]].img} 
+                            iconUrl={getAttrByInpID(instructions.Wash["Heat"], id_instructionWash)} 
                             width="50%"/>
-                        <label>{careInstructions[id_instructionWash[garment.instructionWash["Heat"]]].name}</label>
+                        <label>
+                          {getAttrByInpID(instructions.Wash["Heat"], id_instructionWash, "name")}
+                        </label>
                       </span>
                     </div>
                     }
 
                     {
-                      garment.instructionWash["Wash"] === "wash_yes" &&
-                      //garment.instructionWash["Temp"] === "wash_heat_xx" &&
-                      garment.instructionWash["Temp"] &&
+                      instructions.Wash["Wash"] === "wash_yes" &&
+                      instructions.Wash["Heat"] === "wash_heat_xx" &&
+                      instructions.Wash["Temp"] !== "" &&
                       <div className="container-care-group">
                         <span className="container-care-img">
                           <CircleImg className="img-care" 
-                              iconUrl={careInstructions["washHeatXX"].img} 
+                              iconUrl={getAttrByInpID(instructions.Wash["Temp"], id_instructionWash)} 
                               width="50%"/>
                           <label>
                             {
-                              formatTemp(garment.instructionWash["Temp"])
+                              formatTemp(getAttrByInpID(instructions.Wash["Temp"], id_instructionWash, "name"))
                             }
                           </label>
                         </span>
@@ -483,59 +519,67 @@ export default function Profile() {
                     <div className="container-care-group">
                       <span className="container-care-img">
                         <CircleImg className="img-care" 
-                            iconUrl={careInstructions[id_instructionWash[garment?.instructionWash?.["Wash"]] ?? "defaultKey"]?.img ?? "path/to/default/image.png"}
+                            iconUrl={getAttrByInpID(instructions.Tumble["Tumble"], id_instructionTumble)}
                             width="50%"/>
-                       <label>{
-  careInstructions[id_instructionTumble[garment?.instructionTumble?.["Tumble"]] ?? "defaultKey"]?.name ?? "Default Name"
-}</label>
+                        <label>
+                          {getAttrByInpID(instructions.Tumble["Tumble"], id_instructionTumble, "name")}
+                        </label>
                       </span>
                     </div>
 
                     {
-                      garment.instructionTumble["Tumble"] === "tumble_no" &&
+                      instructions.Tumble["Tumble"] === "tumble_no" &&
                       <div className="container-care-group">
                       <span className="container-care-img">
                         <CircleImg className="img-care" 
-                            iconUrl={careInstructions[id_instructionDry[garment.instructionTumble?.["Air"]] ?? "defaultKey"]?.img ?? "path/to/default/image.png"} 
+                            iconUrl={getAttrByInpID(instructions.Tumble["Air"], id_instructionDry)} 
                             width="50%"/>
-                        <label>{careInstructions[id_instructionDry[garment.instructionTumble?.["Air"]] ?? "defaultKey"]?.name ?? "Default Name"}</label>
+                        <label>
+                          {getAttrByInpID(instructions.Tumble["Air"], id_instructionDry, "name")}
+                        </label>
                       </span>
                     </div>
                     }
   
                     {
-                      garment.instructionTumble["Tumble"] === "tumble_no" &&
-                      garment.instructionTumble["Air"] === "dry_shade" &&
+                      instructions.Tumble["Tumble"] === "tumble_no" &&
+                      instructions.Tumble["Air"] === "dry_shade" &&
                         <div className="container-care-group">
                           <span className="container-care-img">
                             <CircleImg className="img-care" 
-                                iconUrl={careInstructions[id_instructionDry[garment.instructionTumble["Shade"]]].img} 
+                                iconUrl={getAttrByInpID(instructions.Tumble["Shade"], id_instructionDry)} 
                                 width="50%"/>
-                            <label>{careInstructions[id_instructionDry[garment.instructionTumble["Shade"]]].name}</label>
+                            <label>
+                              {getAttrByInpID(instructions.Tumble["Shade"], id_instructionDry, "name")}
+                            </label>
                           </span>
                         </div>
                     }
 
                     {
-                      garment.instructionTumble["Tumble"] === "tumble_yes" &&
+                      instructions.Tumble["Tumble"] === "tumble_yes" &&
                         <div className="container-care-group">
                           <span className="container-care-img">
                             <CircleImg className="img-care" 
-                                iconUrl={careInstructions[id_instructionTumble[garment.instructionTumble["Delicate"]]].img} 
+                                iconUrl={getAttrByInpID(instructions.Tumble["Delicate"], id_instructionTumble)} 
                                 width="50%"/>
-                            <label>{careInstructions[id_instructionTumble[garment.instructionTumble["Delicate"]]].name}</label>
+                            <label>
+                              {getAttrByInpID(instructions.Tumble["Delicate"], id_instructionTumble, "name")}
+                            </label>
                           </span>
                         </div>    
                     }
 
                     {
-                      garment.instructionTumble["Tumble"] === "tumble_yes" &&
+                      instructions.Tumble["Tumble"] === "tumble_yes" &&
                       <div className="container-care-group">
                         <span className="container-care-img">
                           <CircleImg className="img-care" 
-                              iconUrl={careInstructions[id_instructionTumble[garment.instructionTumble["Heat"]]].img} 
+                              iconUrl={getAttrByInpID(instructions.Tumble["Heat"], id_instructionTumble)} 
                               width="50%"/>
-                          <label>{careInstructions[id_instructionTumble[garment.instructionTumble["Heat"]]].name}</label>
+                          <label>
+                            {getAttrByInpID(instructions.Tumble["Heat"], id_instructionTumble, "name")}
+                          </label>
                         </span>
                       </div>
                     }
@@ -548,34 +592,41 @@ export default function Profile() {
               <div className="container-border">
                 <div className="container-care">
                   <div className="container-care-group">
-                  <span className="container-care-img">
-  <CircleImg className="img-care" 
-      iconUrl={careInstructions[id_instructionDryC[garment?.instructionDryC?.["DryC"]] ?? "defaultKey"]?.img ?? "path/to/default/image.png"} 
-      width="50%"/>
-  <label>{careInstructions[id_instructionDryC[garment?.instructionDryC?.["DryC"]] ?? "defaultKey"]?.name ?? "Default Name"}</label>
-</span>
+                    <span className="container-care-img">
+                      <CircleImg className="img-care" 
+                        iconUrl={getAttrByInpID(instructions.DryC["DryC"], id_instructionDryC)} 
+                        width="50%"
+                      />
+                      <label>
+                        {getAttrByInpID(instructions.DryC["DryC"], id_instructionDryC, "name")}
+                      </label>
+                    </span>
                   </div>
 
                   {
-                    garment.instructionDryC["DryC"] === "dryC_yes" &&
+                    instructions.DryC["DryC"] === "dryC_yes" &&
                     <div className="container-care-group">
                     <span className="container-care-img">
                       <CircleImg className="img-care" 
-                          iconUrl={careInstructions[id_instructionDryC[garment.instructionDryC["Solvent"]]].img} 
+                          iconUrl={getAttrByInpID(instructions.DryC["Solvent"], id_instructionDryC)} 
                           width="50%"/>
-                      <label>{careInstructions[id_instructionDryC[garment.instructionDryC["Solvent"]]].name}</label>
+                      <label>
+                        {getAttrByInpID(instructions.DryC["Solvent"], id_instructionDryC, "name")}
+                      </label>
                     </span>
                   </div>
                   }
 
                   {
-                    garment.instructionDryC["DryC"] === "dryC_yes" &&
+                    instructions.DryC["DryC"] === "dryC_yes" &&
                     <div className="container-care-group">
                     <span className="container-care-img">
                       <CircleImg className="img-care" 
-                          iconUrl={careInstructions[id_instructionDryC[garment.instructionDryC["Care"]]].img} 
+                          iconUrl={getAttrByInpID(instructions.DryC["Care"], id_instructionDryC)} 
                           width="50%"/>
-                      <label>{careInstructions[id_instructionDryC[garment.instructionDryC["Care"]]].name}</label>
+                      <label>
+                        {getAttrByInpID(instructions.DryC["Care"], id_instructionDryC, "name")}
+                      </label>
                     </span>
                   </div>
                   }
@@ -588,22 +639,27 @@ export default function Profile() {
               <div className="container-border">
                 <div className="container-care">
                     <div className="container-care-group">
-                    <span className="container-care-img">
-  <CircleImg className="img-care" 
-      iconUrl={careInstructions[id_instructionIron[garment?.instructionIron?.["Iron"]] ?? "defaultKey"]?.img ?? "path/to/default/image.png"} 
-      width="50%"/>
-  <label>{careInstructions[id_instructionIron[garment?.instructionIron?.["Iron"]] ?? "defaultKey"]?.name ?? "Default Name"}</label>
-</span>
+                      <span className="container-care-img">
+                        <CircleImg className="img-care" 
+                          iconUrl={getAttrByInpID(instructions.Iron["Iron"], id_instructionIron)} 
+                          width="50%"
+                        />
+                        <label>
+                          {getAttrByInpID(instructions.Iron["Iron"], id_instructionIron, "name")}
+                        </label>
+                      </span>
                     </div>
 
                     {
-                      garment.instructionIron["Iron"] === "iron_yes" &&
+                      instructions.Iron["Iron"] === "iron_yes" &&
                       <div className="container-care-group">
                         <span className="container-care-img">
                           <CircleImg className="img-care" 
-                              iconUrl={careInstructions[id_instructionIron[garment.instructionIron["Heat"]]].img} 
+                              iconUrl={getAttrByInpID(instructions.Iron["Heat"], id_instructionIron)} 
                               width="50%"/>
-                          <label>{careInstructions[id_instructionIron[garment.instructionIron["Heat"]]].name}</label>
+                          <label>
+                            {getAttrByInpID(instructions.Iron["Heat"], id_instructionIron, "name")}
+                          </label>
                         </span>
                       </div>
                     }
@@ -612,17 +668,19 @@ export default function Profile() {
               </div>
               <br/>
 
-              {console.log(careInstructions[id_instructionBleach[garment.instructionBleach["Bleach"]]])}
               <label className="container-subtitle-2">Bleaching Instructions</label>
               <div className="container-border">
                 <div className="container-care">
                   <div className="container-care-group">
-                  <span className="container-care-img">
-  <CircleImg className="img-care" 
-      iconUrl={careInstructions[id_instructionBleach[garment?.instructionBleach?.["Bleach"]] ?? "defaultKey"]?.img ?? "path/to/default/image.png"} 
-      width="50%"/>
-  <label>{careInstructions[id_instructionBleach[garment?.instructionBleach?.["Bleach"]] ?? "defaultKey"]?.name ?? "Default Name"}</label>
-</span>
+                    <span className="container-care-img">
+                      <CircleImg className="img-care" 
+                        iconUrl={getAttrByInpID(instructions.Bleach["Bleach"], id_instructionBleach)} 
+                        width="50%"
+                      />
+                      <label>
+                        {getAttrByInpID(instructions.Bleach["Bleach"], id_instructionBleach, "name")}
+                      </label>
+                    </span>
                   </div>
                 </div>
               </div>
