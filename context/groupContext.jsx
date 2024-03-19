@@ -36,21 +36,10 @@ export function GroupContextProvider({ children }) {
       }
     };
 
-    const fetchJoinedGroup = async () => {
-      try {
-        if (user && user.id) {
-          const response = await axios.get(`/getJoinedGroup/${user.id}`);
-          setJoinedGroup(response.data.joinedGroup);
-        }
-      } catch (error) {
-        console.error('Error fetching joined group:', error);
-      }
-    };
 
     // Call the functions to fetch data when the component mounts
     fetchUserGroups();
     fetchOpenGroups();
-    fetchJoinedGroup();
   }, [user]);
 
   const groupContextValue = {

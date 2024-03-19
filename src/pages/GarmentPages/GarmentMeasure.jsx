@@ -29,8 +29,6 @@ const GarmentMeasurement = () => {
         garmentSizeType: '',
         garmentSize: '',
         garmentFit: '',
-        fileFront: null,
-        fileBack: null,
     });
     const options = GARMENT_TYPES;
     const measureTypes = getSetByCategory(getCategory(garment.garmentType));
@@ -76,11 +74,6 @@ const GarmentMeasurement = () => {
         });
         return objArr;
     }
-
-    const handleFileChange = (event, type) => {
-        const file = event.target.files[0];
-        setFormData({ ...formData, [type]: file });
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -308,36 +301,6 @@ const GarmentMeasurement = () => {
                             </div>
                         </div>
                     </div>
-                    {/* <div className="container-grid-2-md">
-                        <div>
-                            <div className='container-prompt'>
-                                <p>Select a photo of the garment (Front)</p>
-                            </div>
-                            <div className="container-input">
-                                <input
-                                    id="fileFront"
-                                    name="fileFront"
-                                    type="file"
-                                    required
-                                    onChange={(e) => handleFileChange(e, "fileFront")}
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <div className='container-prompt'>
-                                <p>Select a photo of the garment (Back)</p>
-                            </div>
-                            <div className='container-input'>
-                                <input
-                                    id="fileBack"
-                                    name="fileBack"
-                                    type='file'
-                                    required
-                                    onChange={(e) => handleFileChange(e, "fileBack")}
-                                />
-                            </div>
-                        </div>
-                    </div> */}
                     <div className='container-input'>
                         <button className="button-form" type="submit">
                             Save

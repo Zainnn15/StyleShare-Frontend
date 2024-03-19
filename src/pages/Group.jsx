@@ -2,115 +2,72 @@ import { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../../context/userContext';
 import { GroupContext } from '../../context/groupContext';
 import { GarmentContext } from '../../context/garmentContext';
+import { ChatContext } from '../../context/chatContext'; // Import the ChatContext
 import ScreenHeaderIn from '../components/common/ScreenHeaderIn';
 import '../styles/main.scss';
 import { changeTitle } from '../constants/functions/inputHandlers';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 export default function Group() {
-    const navigate = useNavigate();
     const [joinCode, setJoinCode] = useState('');
-    const { user, setUser } = useContext(UserContext);
-    const { garment, setGarment } = useContext(GarmentContext);
-    const { userGroups, setUserGroups, setOpenGroups, openGroups, joinedGroup, setJoinedGroup} = useContext(GroupContext);
-    const [data, setData] = useState({
-        groupId: '',
-    });
-    const [responseData, setResponseData] = useState(null); // State to hold response data
-
-    const handleJoinByCode = async (event) => {
-        event.preventDefault();
-        try {
-          const response = await axios.post('/joinGroupByCode', {
-            userId: user.id,
-            joinCode: joinCode,
-          });
-          // Handle response: update state, show messages, etc.
-          toast.success(response.data.message);
-          // ... (other success handling)
-        } catch (error) {
-          // Handle error: show error message, etc.
-          toast.error(error.response.data.error);
-        }
-      };
-
-    const handleSubmit = async (e) => {
+    const { user } = useContext(UserContext);
+    const { garment } = useContext(GarmentContext);
+    const { userGroups, setJoinedGroup, joinedGroup} = useContext(GroupContext);
+    const { chatHistory, sendChatMessage} = useContext(ChatContext); // Use ChatContext
+    const [chatInput, setChatInput] = useState('');
+    
+    // Handle joining a group by code
+    const handleJoinByCode = async (e) => {
         e.preventDefault();
-    
         try {
-            const response = await axios.post('/joinGroup', { userId: user.id, groupId: data.groupId });
-            console.log('Join Group Response:', response.data); // Log the entire response for debugging
-    
-            if (response.data.error) {
-                toast.error(response.data.error);
-            } else {
-                setData({}); // Reset the form
-                toast.success(response.data.message);
-    
-                console.log('Joined Group Data:', response.data.joinedGroup);
-    
-                if (response.data.joinedGroup.members.length >= response.data.joinedGroup.max_members) {
-                    setOpenGroups(openGroups.filter(group => group._id !== response.data.joinedGroup._id));
-                } else {
-                    setUserGroups([...userGroups, response.data.joinedGroup]);
-                }
-    
-                setJoinedGroup(response.data.joinedGroup);
-                setUser(response.data.user);
-                setGarment(response.data.garment);
-    
-                navigate('/dashboard');
-                setResponseData(response.data);
-            }
+            const response = await axios.post('/joinGroupByCode', {
+                userId: user.id,
+                joinCode
+            });
+            toast.success("Joined group successfully!");
+            setJoinedGroup(response.data.group);
         } catch (error) {
-            console.error(error);
+            toast.error(error.response?.data?.error || "Failed to join group.");
         }
     };
 
-    useEffect(() => {
-        const fetchGroups = async () => {
-          try {
-            const response = await axios.get(`/getGroups/${user.id}`);
-            console.log('User Groups:', response.data.userGroups); // Log user groups data
-            setUserGroups(response.data.userGroups);
-          } catch (error) {
-            console.error('Error fetching groups:', error);
-          }
-        };
+    const handleSendChat = async (e) => {
+        e.preventDefault();
       
-        const fetchOpenGroups = async () => {
-          try {
-            const response = await axios.get('/getOpenGroups');
-            setOpenGroups(response.data.openGroups);
-          } catch (error) {
-            console.error('Error fetching open groups:', error);
-          }
-        };
-      
-        // Call the functions to fetch data when the component mounts
-        fetchGroups();
-        fetchOpenGroups();
-      }, [user.id, setUserGroups, setOpenGroups]);
+        if (chatInput.trim() && joinedGroup?._id) {
+          await sendChatMessage(chatInput);
+          setChatInput('');
+        } else if (!joinedGroup) {
+          toast.error('Please join a group to send messages.');
+        }
+      };
 
     useEffect(() => {
-        console.log('Joined Group:', joinedGroup);
-    }, [joinedGroup]);
-
-    changeTitle('Group');
+        changeTitle('Group Chat');
+    }, []);
 
     const handleLeaveGroup = async () => {
         try {
-            const response = await axios.post('/leaveGroup', { userId: user.id });
-
-            if (response.data.error) {
-                toast.error(response.data.error);
+            // Assuming you have an API endpoint to remove a user from a group
+            const response = await axios.post('/leaveGroup', {
+                userId: user.id, // User ID
+                groupId: joinedGroup?._id // Group ID to leave
+            });
+    
+            // Check response for success/failure
+            if (response.data.success) {
+                toast.success("Left group successfully!");
+                
+                // Update state or context to reflect the change
+                setJoinedGroup(null); // Assuming you want to clear the current group context
+                // Fetch updated groups or perform other UI updates as needed
             } else {
-                toast.success(response.data.message);
+                toast.error("Failed to leave group.");
             }
         } catch (error) {
-            console.error(error);
+            console.error("Error leaving group:", error);
+            toast.error("Failed to leave group.");
         }
     };
 
@@ -208,6 +165,25 @@ export default function Group() {
                 )}
 
                 <button onClick={handleLeaveGroup}>Leave Group</button>
+            </div>
+            <div className="chat-container">
+                <h3>Group Chat</h3>
+                <div className="chat-history">
+                    {chatHistory.map((msg, index) => (
+                        <div key={index} className="chat-message">
+                            <strong>{msg.username || "Anonymous"}:</strong> {msg.message}
+                        </div>
+                    ))}
+                </div>
+                <form onSubmit={handleSendChat}>
+                    <input
+                        type="text"
+                        value={chatInput}
+                        onChange={(e) => setChatInput(e.target.value)}
+                        placeholder="Type a message..."
+                    />
+                    <button type="submit">Send</button>
+                </form>
             </div>
         </div>
     );

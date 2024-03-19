@@ -8,6 +8,7 @@ import { Toaster } from 'react-hot-toast';
 import { UserContextProvider } from '../context/userContext';
 import { GarmentContextProvider } from '../context/garmentContext';
 import { GroupContextProvider } from '../context/groupContext'; // Add this line
+import { ChatProvider } from '../context/chatContext'; // Add this line
 import Dashboard from './pages/Dashboard';
 import GarmentMeasure from './pages/GarmentPages/GarmentMeasure';
 import Profile from './pages/Profile';
@@ -27,7 +28,8 @@ function App() {
   return (
     <UserContextProvider>
       <GarmentContextProvider>
-        <GroupContextProvider> {/* Add this line */}
+        <GroupContextProvider> 
+          <ChatProvider>
           <Toaster position='bottom-right' toastOptions={{ duration: 2000 }} />
           <Routes>
             <Route path="/" element={<Home />} />
@@ -45,6 +47,7 @@ function App() {
             <Route path='/garment-details' element={<GarmentDetails />} />
             <Route path='/garment-reserve' element={<GarmentReserve />} />
           </Routes>
+          </ChatProvider>
         </GroupContextProvider>
       </GarmentContextProvider>
     </UserContextProvider>
