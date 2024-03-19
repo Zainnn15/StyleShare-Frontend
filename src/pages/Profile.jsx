@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../context/userContext";
 import { GarmentContext } from "../../context/garmentContext";
+import { GroupContext } from "../../context/groupContext";
 import Axios from "axios";
 
 import '../styles/main.scss';
@@ -15,6 +16,8 @@ import CircleImg from "../components/common/CircleImg";
 
 export default function Profile() {
     const {user} = useContext(UserContext);
+    const {userGroups} = useContext(GroupContext);
+    const {garment} = useContext(GarmentContext);
     const [profile, setProfile] = useState(null);
     const [selectedDays, setSelectedDays] = useState([]);
     const [selectedTimes, setSelectedTimes] = useState([
@@ -27,7 +30,6 @@ export default function Profile() {
       { day: 6, start: "", end: "" },
     ]);
     const [editMode, setEditMode] = useState(false);
-    const {garment} = useContext(GarmentContext);
     const [garmentDetails, setGarmentDetails] = useState(null); //used for?
     const [instructions, setInstructions] = useState({
       "Wash": "",
@@ -160,6 +162,8 @@ export default function Profile() {
       setSelectedTimes(temp);
     };
 
+    console.log()
+
   return (
     <div>
       <ScreenHeaderIn />
@@ -181,7 +185,16 @@ export default function Profile() {
                 <p><label className="text-b">Name:<label className="tab"></label></label>{user.name}</p>
                 <p><label className="text-b">Username:<label className="tab"></label></label>{user.username}</p>
                 <p><label className="text-b">Email:<label className="tab"></label></label>{user.email}</p>
-                <p><label className="text-b">Group #:<label className="tab"></label></label></p>
+                <p><label className="text-b">Group:<label className="tab"></label></label>
+                  {
+                    userGroups &&
+                    <label>{userGroups.group_name}</label>
+                  }
+                  {
+                    !userGroups &&
+                    <label>N/A</label>
+                  }
+                </p>
               </div>
               <div className="container-border clear-box">
               <p>Days going to Seneca: {selectedDays.map(dayNum => dayMapping[dayNum]).join(", ")}</p>
