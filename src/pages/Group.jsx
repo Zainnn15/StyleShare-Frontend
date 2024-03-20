@@ -2,10 +2,8 @@ import { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../../context/userContext';
 import { GroupContext } from '../../context/groupContext';
 import { GarmentContext } from '../../context/garmentContext';
-import { ChatContext } from '../../context/chatContext'; // Import the ChatContext
 import ScreenHeaderIn from '../components/common/ScreenHeaderIn';
 import '../styles/main.scss';
-import { changeTitle } from '../constants/functions/inputHandlers';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
 
@@ -14,8 +12,37 @@ export default function Group() {
     const { user } = useContext(UserContext);
     const { garment } = useContext(GarmentContext);
     const { userGroups, setJoinedGroup, joinedGroup} = useContext(GroupContext);
-    const { chatHistory, sendChatMessage} = useContext(ChatContext); // Use ChatContext
     const [chatInput, setChatInput] = useState('');
+    const [chatHistory, setChatHistory] = useState([]);
+
+    const fetchChatHistory = async (groupId) => {
+        if (joinedGroup && joinedGroup._id) {
+            try {
+                console.log('Fetching chat history from server');
+                const response = await axios.get(`http://localhost:8000/getChatHistory/${groupId}`);
+                console.log('Received chat history from server:', response.data);
+                setChatHistory(response.data);
+            } catch (error) {
+                console.error("Failed to fetch chat history", error);
+            }
+        } else {
+            console.log('joinedGroup is not available for fetching chat history');
+        }
+    };
+
+    useEffect(() => {
+        const fetchChatHistoryIfNeeded = async () => {
+            if (joinedGroup && joinedGroup._id) {
+                console.log('Fetching chat history on joinedGroup change');
+                fetchChatHistory(joinedGroup._id);
+            } else {
+                console.log('joinedGroup is not available on state change');
+                setChatHistory([]); // Clear the chat history if joinedGroup is not available
+            }
+        };
+    
+        fetchChatHistoryIfNeeded();
+    }, [joinedGroup]);
     
     // Handle joining a group by code
     const handleJoinByCode = async (e) => {
@@ -32,20 +59,24 @@ export default function Group() {
         }
     };
 
-    const handleSendChat = async (e) => {
-        e.preventDefault();
-      
-        if (chatInput.trim() && joinedGroup?._id) {
-          await sendChatMessage(chatInput);
-          setChatInput('');
-        } else if (!joinedGroup) {
-          toast.error('Please join a group to send messages.');
-        }
-      };
+   // Function to send a new chat message
+   const handleSendChat = async (e) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return; // Prevent sending empty messages
+    try {
+        const response = await axios.post('http://localhost:8000/postMessage', {
+            groupId: joinedGroup._id,
+            userId: user.id,
+            message: chatInput
+        });
+        setChatHistory([...chatHistory, response.data]); // Add the new message to the chat history
+        setChatInput(''); // Clear the chat input field
+    } catch (error) {
+        console.error("Failed to send chat message", error);
+    }
+};
 
-    useEffect(() => {
-        changeTitle('Group Chat');
-    }, []);
+
 
     const handleLeaveGroup = async () => {
         try {
@@ -70,6 +101,8 @@ export default function Group() {
             toast.error("Failed to leave group.");
         }
     };
+
+   
 
     return (
         <div>
@@ -167,24 +200,28 @@ export default function Group() {
                 <button onClick={handleLeaveGroup}>Leave Group</button>
             </div>
             <div className="chat-container">
-                <h3>Group Chat</h3>
-                <div className="chat-history">
-                    {chatHistory.map((msg, index) => (
-                        <div key={index} className="chat-message">
-                            <strong>{msg.username || "Anonymous"}:</strong> {msg.message}
-                        </div>
-                    ))}
-                </div>
-                <form onSubmit={handleSendChat}>
-                    <input
-                        type="text"
-                        value={chatInput}
-                        onChange={(e) => setChatInput(e.target.value)}
-                        placeholder="Type a message..."
-                    />
-                    <button type="submit">Send</button>
-                </form>
-            </div>
+  <h3>Group Chat</h3>
+  <div className="chat-history">
+    {chatHistory.map((msg, index) => (
+      <div key={index} className="chat-message">
+        <div className="message-header">
+          <span className="username">{msg.user.username}</span>
+          <span className="timestamp">{new Date(msg.createdAt).toLocaleString()}</span>
         </div>
+        <div className="message-content">{msg.message}</div>
+      </div>
+    ))}
+  </div>
+  <form onSubmit={handleSendChat}>
+    <input
+      type="text"
+      value={chatInput}
+      onChange={(e) => setChatInput(e.target.value)}
+      placeholder="Type a message..."
+    />
+    <button type="submit">Send</button>
+  </form>
+</div>
+  </div>
     );
 }
