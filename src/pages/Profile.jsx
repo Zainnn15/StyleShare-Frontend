@@ -328,10 +328,10 @@ export default function Profile() {
                   </p>
                   <p>
                     <label className="text-b">Description:<label className="tab"></label></label>
-                    <div className="container-border m1-v">
-                      <label>{garment.garmentDescription}</label>
-                    </div>
                   </p>
+                  <div className="container-border m1-v">
+                      <label>{garment.garmentDescription}</label>
+                  </div>
                   <p>
                     <label className="text-b">Country of Origin:<label className="tab"></label></label>
                     {garment.garmentCountry}

@@ -3,17 +3,30 @@ import { useState } from 'react';
 import '../../styles/main.scss';
 import { toast } from 'react-hot-toast';
 import ScreenHeaderIn from "../../components/common/ScreenHeaderIn";
-import { wearTears, repairRequests } from '../../constants/data/lists';
+import { wearTears, repairRequests, measurementTypes } from '../../constants/data/lists';
 import InfoPopup from '../../components/common/InfoPopup';
-import { addErrorMessageByID, checkOnID } from '../../constants/functions/inputHandlers';
+import { addErrorMessageByID, checkOnID, clickID, readURL, validatePage } from '../../constants/functions/inputHandlers';
 import axios from 'axios';
 import { useContext } from 'react';
 import { UserContext } from '../../../context/userContext';
 import { useNavigate } from 'react-router-dom';
+import { GarmentContext } from '../../../context/garmentContext';
+import PopupImg from '../common/PopupImg';
+import CircleBtn from '../common/CircleBtn';
+import { GARMENT_TYPES } from '../../constants/data/options';
+import info from '../../assets/icons/info.png';
+import selectImg from '../../assets/icons/select_img.png';
+import img_twisting from '../../assets/images/twisting.png';
+import img_shrinking from '../../assets/images/spandex_shrink.png';
+import img_pilling from '../../assets/images/pilling.png';
 
 export default function GarmentTear() {
   const navigate = useNavigate();
+  const options = GARMENT_TYPES;
   const {user} = useContext(UserContext);
+  const {garment} = useContext(GarmentContext);
+  const measureTypes = getSetByCategory(getCategory(garment.garmentType));
+  const [measures, setMeasures] = useState([...measureTypes]);
   const [tearDate, setTearDate] = useState('');
   const [wantRepair, setWantRepair] = useState(false);
   const [wearTear, setWearTear] = useState({
@@ -40,11 +53,10 @@ export default function GarmentTear() {
     "twistingArea":"",
     "twistingSize":"",
     "twistingImg":"",
-    "shrinkType":"",
-    "shrinkNewSize":"",
     "discolorHow":"",
     "spandexShrinkArea":"",
     "spandexShrinkImg":"",
+    "printFade":"",
     "printFadeImg":"",
     "holeArea":"",
     "holeSize":"",
@@ -92,12 +104,45 @@ export default function GarmentTear() {
     }
   };
 
+    // functions
+    function getCategory(val) {
+        let category = -1;
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].value === val) {
+                category = options[i].cat;
+                break;
+            }
+        }
+        return category;
+    }
+
+    function getSetByCategory(catID) {
+        let objArr = [];
+        measurementTypes.forEach((obj) => {
+            if (obj.categories.includes(catID)) {
+                objArr.push(obj);
+            }
+        });
+        return objArr;
+    }
+
   // Call the sendGarmentDetails function when the form is submitted
   const handleSubmit = (e) => {
     e.preventDefault();
     sendGarmentDetails();
     navigate("/garment-care");
   };
+
+    //handle submit button
+    function validateAndSubmit(e) {
+        let querySelect = "input[type='text'],input[type='number'],input[type='date'],select";
+        if(!validatePage(querySelect)) {
+            return false;
+        }
+        
+        handleSubmit(e);
+        return true;
+    }
 
 
   return (
@@ -108,11 +153,11 @@ export default function GarmentTear() {
             <label className="container-title">Garment Tear</label>
             <hr/>
         </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={validateAndSubmit}>
             <div className='container-content'>
                 <label className='text-b'>Date of Tear:</label>
                 <label className='tab'></label>
-                <input type='date' value={tearDate} onChange={(e)=>setTearDate(e.target.value)} />
+                <input type='date' value={tearDate} onChange={(e)=>setTearDate(e.target.value)} required/>
             </div>
 
             <div>
@@ -180,6 +225,24 @@ export default function GarmentTear() {
                             }}
                         />
                         <label htmlFor={"tear_"+wearTears[1].value}>{wearTears[1].label}</label>
+                        <CircleBtn
+                            iconUrl={info}
+                            className="button-info"
+                            width="1em"
+                            handlePress={() => {
+                                let e = document.getElementById("info_pilling");
+                                if (e) {
+                                    e.classList.toggle("hide", false);
+                                }
+                            }}
+                        />
+                        <PopupImg
+                            id="info_pilling"
+                            className="container-popup"
+                            iconUrl={img_pilling}
+                            height="75%"
+                            width="75%"
+                        />
                     </div>
                     {wearTear.pilling === 0 && <div></div>}
                     {
@@ -300,6 +363,24 @@ export default function GarmentTear() {
                             }}
                         />
                         <label htmlFor={"tear_"+wearTears[3].value}>{wearTears[3].label}</label>
+                        <CircleBtn
+                            iconUrl={info}
+                            className="button-info"
+                            width="1em"
+                            handlePress={() => {
+                                let e = document.getElementById("info_twisting");
+                                if (e) {
+                                    e.classList.toggle("hide", false);
+                                }
+                            }}
+                        />
+                        <PopupImg
+                            id="info_twisting"
+                            className="container-popup"
+                            iconUrl={img_twisting}
+                            height="75%"
+                            width="75%"
+                        />
                     </div>
                     {wearTear.twisting === 0 && <div></div>}
                     {
@@ -346,17 +427,19 @@ export default function GarmentTear() {
                             <div className='container-prompt'>
                                 <p>Upload photo of twisting area</p>
                             </div>
-                            <div className='container-input'>
-                                <input
-                                    id="twistingImg"
-                                    name="twistingImg"
-                                    type='file'
-                                    required
+                            <div className='container-input-img clickable' onClick={()=>clickID("twistingImg")}>
+                                <img className='clickable' id='twistingImg_img' src={selectImg} alt='upload photo'/>
+                            </div>
+                            <div className="container-input">
+                                <input  type="file" id="twistingImg" name="twistingImg" 
                                     onChange={(e) => {
-                                    setTearExtra({
-                                        ...tearExtra,
-                                        "twistingImg": e.target.files[0]
-                                    });
+                                        setTearExtra({
+                                            ...tearExtra,
+                                            "twistingImg": e.target.files[0]
+                                        });
+                                        if(e.target.files[0]) {
+                                            readURL("twistingImg", "twistingImg_img");
+                                        }
                                     }}
                                 />
                             </div>
@@ -380,49 +463,53 @@ export default function GarmentTear() {
                     {wearTear.washShrink === 0 && <div></div>}
                     {
                         wearTear.washShrink === 1 && (
-                        <div>
-                            <div className='container-prompt'>
-                            <p>In what way did it shrink?</p>
+                            <div className="container-grid-2-md">
+                                {measures.map((measureType, index) => {
+                                    return (
+                                        <div key={"measureSet_" + measureType.value + "_" + index}>
+                                            <PopupImg
+                                                id={"info_temp_"+index}
+                                                className="container-popup"
+                                                iconUrl={measureType.img}
+                                                height="75%"
+                                                width="75%"
+                                                description={measureType.description}
+                                            />
+                                            <div className="container-prompt">
+                                                <p>{measureType.label}</p>
+                                                <CircleBtn
+                                                    iconUrl={info}
+                                                    className="button-info"
+                                                    width="1em"
+                                                    handlePress={() => {
+                                                        let e = document.getElementById("info_temp_"+index);
+                                                        if (e) {
+                                                            e.classList.toggle("hide", false);
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                            <div className="container-measure-group">
+                                                <input
+                                                    id={"measure_" + measureType.value + "_" + index}
+                                                    name={"measure_" + measureType.value}
+                                                    type='number'
+                                                    min={0}
+                                                    step={0.01}
+                                                    required
+                                                />
+                                                <select
+                                                    id={"unit_" + measureType.value + "_" + index}
+                                                    name={"unit_" + measureType.value}
+                                                >
+                                                    <option value='cm'> cm </option>
+                                                    <option value='inches'> in </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
-                            <div className="container-input">
-                            <select 
-                                name="shrinkType" 
-                                id="shrinkType"
-                                value={tearExtra["shrinkType"]}
-                                onChange={(e) => {
-                                    setTearExtra({
-                                    ...tearExtra,
-                                    "shrinkType": e.target.value
-                                    });
-                                }}
-                                required
-                            >
-                                <option value=''>Select in what way...</option>
-                                <option value='length'>Length-wise</option>
-                                <option value='overall'>Overall Size</option>
-                            </select>
-                            </div>
-                            <div className='container-prompt'>
-                            <p>New measurement of garment (in cm)</p>
-                            </div>
-                            <div className='container-input'>
-                            <input
-                                type='number'
-                                name='shrinkNewSize'
-                                value={tearExtra["shrinkNewSize"]}
-                                onChange={(e)=>{
-                                setTearExtra({
-                                    ...tearExtra,
-                                    "shrinkNewSize": e.target.value
-                                });
-                                }}
-                                placeholder='Measurement'
-                                min={0.01}
-                                step={0.01}
-                                required
-                            />                
-                            </div>
-                        </div>
                     )}
 
                     {/*washDiscolor*/}
@@ -479,6 +566,24 @@ export default function GarmentTear() {
                             }}
                         />
                         <label htmlFor={"tear_"+wearTears[6].value}>{wearTears[6].label}</label>
+                        <CircleBtn
+                            iconUrl={info}
+                            className="button-info"
+                            width="1em"
+                            handlePress={() => {
+                                let e = document.getElementById("info_shrinking");
+                                if (e) {
+                                    e.classList.toggle("hide", false);
+                                }
+                            }}
+                        />
+                        <PopupImg
+                            id="info_shrinking"
+                            className="container-popup"
+                            iconUrl={img_shrinking}
+                            height="75%"
+                            width="75%"
+                        />
                     </div>
                     {wearTear.spandexShrink === 0 && <div></div>}
                     {
@@ -506,17 +611,19 @@ export default function GarmentTear() {
                             <div className='container-prompt'>
                                 <p>Upload photo of shrinking area</p>
                             </div>
-                            <div className='container-input'>
-                                <input
-                                    id="spandexShrinkImg"
-                                    name="spandexShrinkImg"
-                                    type='file'
-                                    required
+                            <div className='container-input-img clickable' onClick={()=>clickID("spandexShrinkImg")}>
+                                <img className='clickable' id='spandexShrinkImg_img' src={selectImg} alt='upload photo'/>
+                            </div>
+                            <div className="container-input">
+                                <input  type="file" id="spandexShrinkImg" name="spandexShrinkImg" 
                                     onChange={(e) => {
-                                    setTearExtra({
-                                        ...tearExtra,
-                                        "spandexShrinkImg": e.target.files[0]
-                                    });
+                                        setTearExtra({
+                                            ...tearExtra,
+                                            "spandexShrinkImg": e.target.files[0]
+                                        });
+                                        if(e.target.files[0]) {
+                                            readURL("spandexShrinkImg", "spandexShrinkImg_img");
+                                        }
                                     }}
                                 />
                             </div>
@@ -542,20 +649,46 @@ export default function GarmentTear() {
                     {
                         wearTear.printFade === 1 && (
                         <div>
+                            <div>
+                                <div className='container-prompt'>
+                                <p>How much percent of the print faded?</p>
+                                </div>
+                                <div className='container-input'>
+                                <input
+                                    type='number'
+                                    name='printFade'
+                                    value={tearExtra["printFade"]}
+                                    onChange={(e)=>{
+                                    setTearExtra({
+                                        ...tearExtra,
+                                        "printFade": e.target.value
+                                    });
+                                    }}
+                                    placeholder='Enter percent'
+                                    min={1}
+                                    max={100}
+                                    step={1}
+                                    required
+                                />                
+                                <label>%</label>
+                                </div>
+                            </div>
                             <div className='container-prompt'>
                                 <p>Upload photo of the print</p>
                             </div>
-                            <div className='container-input'>
-                                <input
-                                    id="printFadeImg"
-                                    name="printFadeImg"
-                                    type='file'
-                                    required
+                            <div className='container-input-img clickable' onClick={()=>clickID("printFadeImg")}>
+                                <img className='clickable' id='printFadeImg_img' src={selectImg} alt='upload photo'/>
+                            </div>
+                            <div className="container-input">
+                                <input  type="file" id="printFadeImg" name="printFadeImg" 
                                     onChange={(e) => {
-                                    setTearExtra({
-                                        ...tearExtra,
-                                        "printFadeImg": e.target.files[0]
-                                    });
+                                        setTearExtra({
+                                            ...tearExtra,
+                                            "printFadeImg": e.target.files[0]
+                                        });
+                                        if(e.target.files[0]) {
+                                            readURL("printFadeImg", "printFadeImg_img");
+                                        }
                                     }}
                                 />
                             </div>
@@ -621,17 +754,19 @@ export default function GarmentTear() {
                             <div className='container-prompt'>
                                 <p>Upload photo of the hole</p>
                             </div>
-                            <div className='container-input'>
-                                <input
-                                    id="holeImg"
-                                    name="holeImg"
-                                    type='file'
-                                    required
+                            <div className='container-input-img clickable' onClick={()=>clickID("holeImg")}>
+                                <img className='clickable' id='holeImg_img' src={selectImg} alt='upload photo'/>
+                            </div>
+                            <div className="container-input">
+                                <input  type="file" id="holeImg" name="holeImg" 
                                     onChange={(e) => {
-                                    setTearExtra({
-                                        ...tearExtra,
-                                        "holeImg": e.target.files[0]
-                                    });
+                                        setTearExtra({
+                                            ...tearExtra,
+                                            "holeImg": e.target.files[0]
+                                        });
+                                        if(e.target.files[0]) {
+                                            readURL("holeImg", "holeImg_img");
+                                        }
                                     }}
                                 />
                             </div>
@@ -839,17 +974,19 @@ export default function GarmentTear() {
                             <div className='container-prompt'>
                                 <p>Upload photo of the stain</p>
                             </div>
-                            <div className='container-input'>
-                                <input
-                                    id="stainImg"
-                                    name="stainImg"
-                                    type='file'
-                                    required
+                            <div className='container-input-img clickable' onClick={()=>clickID("stainImg")}>
+                                <img className='clickable' id='stainImg_img' src={selectImg} alt='upload photo'/>
+                            </div>
+                            <div className="container-input">
+                                <input  type="file" id="stainImg" name="stainImg" 
                                     onChange={(e) => {
-                                    setTearExtra({
-                                        ...tearExtra,
-                                        "stainImg": e.target.files[0]
-                                    });
+                                        setTearExtra({
+                                            ...tearExtra,
+                                            "stainImg": e.target.files[0]
+                                        });
+                                        if(e.target.files[0]) {
+                                            readURL("stainImg", "stainImg_img");
+                                        }
                                     }}
                                 />
                             </div>
@@ -959,7 +1096,7 @@ export default function GarmentTear() {
 
           <br/>
           <div className='container-input'>
-              <button className="button-form full" type="submit" onClick={handleSubmit}>
+              <button className="button-form full" type="submit" onClick={validateAndSubmit}>
                   Save
               </button>
           </div>

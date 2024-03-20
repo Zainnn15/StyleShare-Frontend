@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import '../../styles/main.scss';
 
-const PopupImg = ({ id, iconUrl, className, width, height, handlePress }) => {
+const PopupImg = ({ id, iconUrl, className, width, height, handlePress, description }) => {
     function closePopup() {
         let e_popup = document.getElementById(id);
         if(!e_popup) {
@@ -19,6 +19,9 @@ const PopupImg = ({ id, iconUrl, className, width, height, handlePress }) => {
                     width={width}
                     height={height}
                 /> 
+                {description && (
+                    <p>{description}</p>
+                )}
             </div>
         </div>
     );

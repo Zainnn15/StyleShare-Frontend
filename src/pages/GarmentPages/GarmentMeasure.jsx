@@ -168,11 +168,12 @@ const GarmentMeasurement = () => {
                     return (
                         <div key={"measureSet_" + measureType.value + "_" + index}>
                             <PopupImg
-                                id="info_temp"
+                                id={"info_temp_"+index}
                                 className="container-popup"
                                 iconUrl={measureType.img}
                                 height="75%"
                                 width="75%"
+                                description={measureType.description}
                             />
                             <div className="container-prompt">
                                 <p>{measureType.label}</p>
@@ -181,7 +182,7 @@ const GarmentMeasurement = () => {
                                     className="button-info"
                                     width="1em"
                                     handlePress={() => {
-                                        let e = document.getElementById("info_temp");
+                                        let e = document.getElementById("info_temp_"+index);
                                         if (e) {
                                             e.classList.toggle("hide", false);
                                         }

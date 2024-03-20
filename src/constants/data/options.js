@@ -1,14 +1,16 @@
-import { countryListAllIsoData, genericFibre } from "./lists";
+import { careInstructions, countryListAllIsoData, genericFibre } from "./lists";
 
 //garment types
 const GARMENT_TYPES = [
     { cat: 1, value: 'shirt', label: 'Shirt' },
-    { cat: 1, value: 'dressShirt', label: 'Dress-Shirt' },
     { cat: 1, value: 'sweater', label: 'Sweater' },
     { cat: 2, value: 'pants', label: 'Pants' },
-    { cat: 2, value: 'denim', label: 'Denim' },
-    { cat: 2, value: 'skirt', label: 'Skirt' },
-    { cat: 3, value: 'dress', label: 'Dress' },
+    { cat: 2, value: 'trouser', label: 'Trouser' },
+    { cat: 2, value: 'jeans', label: 'Jeans' },
+    { cat: 3, value: 'offDress', label: 'Off-shoulder Dress' },
+    { cat: 6, value: 'dress', label: 'Dress' },
+    { cat: 4, value: 'skirt', label: 'Skirt' },
+    { cat: 5, value: 'tankTop', label: 'Tank Top' },
 ];
 
 //measurement size types
@@ -78,16 +80,66 @@ for(let fibre of genericFibre) {
 }
 
 //wash methods
-const CARE_WASH_METHODS = [
-    {value: 'washingMachine', label: 'Washing Machine'},
-    {value: 'handWash', label: 'Hand Wash'},
-];
-
+const CARE_WASH_METHODS = {
+    "Wash":[
+        {value: 'noWash', label:'Did not wash'},
+        {value: 'washHand', label: 'Hand wash'},
+    ],
+    "Heat":[
+        {value: 'washHeatXXC', label:'Input temperature ('+String.fromCharCode(176)+'C)'},
+        {value: 'washHeatXXF', label:'Input temperature ('+String.fromCharCode(176)+'F)'},
+    ],
+    "Temp":[],
+};
 //dry methods
-const CARE_DRY_METHODS = [
-    {value: 'dryer', label: 'Dryer'},
-    {value: 'hangDry', label: 'Hang & Dry'},
-];
+const CARE_DRY_METHODS = {
+    "Tumble":[
+        {value: 'noTumble', label:'Air dry'},
+    ],
+    "Air":[],
+    "Shade":[],
+    "Heat":[],
+};
+//dry clean methods
+const CARE_DRYC_METHODS = {
+    "Solvent":[],
+    "Care":[],
+};
+//iron methods
+const CARE_IRON_METHODS = {
+    "Heat":[],
+};
+//bleach methods
+const CARE_BLEACH_METHODS = {
+    "Bleach":[],
+};
+
+for(let key in careInstructions) {
+    if(careInstructions[key].type === "wash" && careInstructions[key].subtype !== "") {
+        CARE_WASH_METHODS[careInstructions[key].subtype].push(
+            {value:careInstructions[key].value,label:careInstructions[key].name});
+    }
+    else if(careInstructions[key].type === "dry" && careInstructions[key].subtype !== "") {
+        CARE_DRY_METHODS[careInstructions[key].subtype].push(
+            {value:careInstructions[key].value,label:careInstructions[key].name});
+    }
+    else if(careInstructions[key].type === "tumble" && careInstructions[key].subtype !== "") {
+        CARE_DRY_METHODS[careInstructions[key].subtype].push(
+            {value:careInstructions[key].value,label:careInstructions[key].name});
+    }
+    else if(careInstructions[key].type === "dryC" && careInstructions[key].subtype !== "") {
+        CARE_DRYC_METHODS[careInstructions[key].subtype].push(
+            {value:careInstructions[key].value,label:careInstructions[key].name});
+    }
+    else if(careInstructions[key].type === "iron" && careInstructions[key].subtype !== "") {
+        CARE_IRON_METHODS[careInstructions[key].subtype].push(
+            {value:careInstructions[key].value,label:careInstructions[key].name});
+    }
+    else if(careInstructions[key].type === "bleach" && careInstructions[key].subtype !== "") {
+        CARE_BLEACH_METHODS[careInstructions[key].subtype].push(
+            {value:careInstructions[key].value,label:careInstructions[key].name});
+    }
+}
 
 //wash temperatures celsius
 const WASH_TEMP_C = [
@@ -118,4 +170,5 @@ const PICKUP_LOCS = [
 ];
 
 export { GARMENT_TYPES, GARMENT_SIZE_TYPES, GARMENT_SIZES, GARMENT_FITS, COUNTRIES, FIBRES,
-    CARE_WASH_METHODS, CARE_DRY_METHODS, WASH_TEMP_C, WASH_TEMP_F, PICKUP_LOCS };
+    CARE_WASH_METHODS, CARE_DRY_METHODS, CARE_DRYC_METHODS, CARE_IRON_METHODS, CARE_BLEACH_METHODS,
+    WASH_TEMP_C, WASH_TEMP_F, PICKUP_LOCS };

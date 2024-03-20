@@ -49,6 +49,26 @@ import ironHeatHigh from '../../assets/icons/iron_heat_high.png';
 import noBleach from '../../assets/icons/bleach_no.png';
 import bleach from '../../assets/icons/bleach.png';
 import bleachNonCl from '../../assets/icons/bleach_noncl.png';
+import sh1 from '../../assets/images/SH1.jpeg';
+import sh2 from '../../assets/images/SH2.jpeg';
+import sh3 from '../../assets/images/SH3.jpeg';
+import tj1 from '../../assets/images/TS1.jpeg';
+import tj2 from '../../assets/images/TS1.jpeg';
+import tj3 from '../../assets/images/TS1.jpeg';
+import tj4 from '../../assets/images/TS1.jpeg';
+import tj5 from '../../assets/images/TS1.jpeg';
+import tj6 from '../../assets/images/TS1.jpeg';
+import fs1 from '../../assets/images/FS1.jpeg';
+import fs2 from '../../assets/images/FS2.jpeg';
+import fs3 from '../../assets/images/FS3.jpeg';
+import sk1 from '../../assets/images/SK1.jpeg';
+import sk2 from '../../assets/images/SK2.jpeg';
+import sk3 from '../../assets/images/SK3.jpeg';
+import tt1 from '../../assets/images/TT1.jpeg';
+import tt2 from '../../assets/images/TT2.jpeg';
+import tt3 from '../../assets/images/TT3.jpeg';
+import tt4 from '../../assets/images/TT4.jpeg';
+
 
 const countryListAllIsoData = [
 	{"code": "AF", "code3": "AFG", "name": "Afghanistan", "number": "004"},
@@ -330,86 +350,119 @@ const genericFibre = [
 ];
 
 const careInstructions = {
-	"noWash":{"type":"wash", "name":"Do not wash", "value":"wash0", "img":noWash},
-	"wash":{"type":"wash", "name":"Wash", "value":"wash1", "img":wash},
-	"washHand":{"type":"wash", "name":"Hand wash only", "value":"washHand", "img":washHand},
-	"washRegular":{"type":"wash", "name":"Machine wash regular agitation and press", "value":"washRegular", "img":wash},
-	"washPress":{"type":"wash", "name":"Machine wash permanent press", "value":"washPress", "img":washPress},
-	"washDelicate":{"type":"wash", "name":"Machine wash delicate/gentle", "value":"washDelicate", "img":washDelicate},
-	"washAgitationMin":{"type":"wash", "name":"Minimum agitation", "value":"washAgitationMin", "img":washAgitationMin},
-	"washAgitationMed":{"type":"wash", "name":"Medium agitation", "value":"washAgitationMed", "img":washAgitationMed},
+	"noWash":{"type":"wash", "subtype":"", "name":"Do not wash", "value":"wash0", "img":noWash},
+	"wash":{"type":"wash", "subtype":"", "name":"Wash", "value":"wash1", "img":wash},
+	"washHand":{"type":"wash", "subtype":"", "name":"Hand wash only", "value":"washHand", "img":washHand},
+	"washRegular":{"type":"wash", "subtype":"Wash", "name":"Machine wash regular agitation and press", "value":"washRegular", "img":wash},
+	"washPress":{"type":"wash", "subtype":"Wash", "name":"Machine wash permanent press", "value":"washPress", "img":washPress},
+	"washDelicate":{"type":"wash", "subtype":"Wash", "name":"Machine wash delicate/gentle", "value":"washDelicate", "img":washDelicate},
+	"washAgitationMin":{"type":"wash", "subtype":"Wash", "name":"Minimum agitation", "value":"washAgitationMin", "img":washAgitationMin},
+	"washAgitationMed":{"type":"wash", "subtype":"Wash", "name":"Medium agitation", "value":"washAgitationMed", "img":washAgitationMed},
 	// "wash30Min":{"type":"wash", "name":"Max temp 30"+String.fromCharCode(176)+", minimum agitation", 
 	// 	"value":"wash30Min", "img":wash30Min},
 	// "wash30Med":{"type":"wash", "name":"Max temp 30"+String.fromCharCode(176)+", medium agitation", 
 	// 	"value":"wash30Med", "img":wash30Med},
 	// "wash30Max":{"type":"wash", "name":"Max temp 30"+String.fromCharCode(176)+", max agitation", 
 	// 	"value":"wash30Max", "img":wash30Max},
-	"washCold":{"type":"wash", "name":"Machine wash cold", "value":"washCold", "img":washCold},
-	"washWarm":{"type":"wash", "name":"Machine wash warm", "value":"washWarm", "img":washWarm},
-	"washHot":{"type":"wash", "name":"Machine wash hot", "value":"washHot", "img":washHot},
-	"washHeatXX":{"type":"wash", 
+	"washCold":{"type":"wash", "subtype":"Heat", "name":"Machine wash cold", "value":"washCold", "img":washCold},
+	"washWarm":{"type":"wash", "subtype":"Heat", "name":"Machine wash warm", "value":"washWarm", "img":washWarm},
+	"washHot":{"type":"wash", "subtype":"Heat", "name":"Machine wash hot", "value":"washHot", "img":washHot},
+	"washHeatXX":{"type":"wash", "subtype":"",
 		"name":`Input temperature by degree (40${String.fromCharCode(176)}C, 60${String.fromCharCode(176)}C, 140${String.fromCharCode(176)}F, etc.)`, 
 		"value":"washHeatXX", "img":washHeatXX},
-	"washHeatNo":{"type":"wash", "name":"No temperature/coldwater wash", "value":"washHeatNo", "img":washHeatNo},
-	"dryRegular":{"type":"dry", "name":"Air Dry", "value":"dryAir", "img":dry},
-	"dryDrip":{"type":"dry", "name":"Drip air dry", "value":"dryDrip", "img":dryDrip},
-	"dryFlat":{"type":"dry", "name":"Flat air dry", "value":"dryFlat", "img":dryFlat},
-	"dryHang":{"type":"dry", "name":"Hang air dry", "value":"dryHang", "img":dryHang},
-	"dryShade":{"type":"dry", "name":"Air dry in shade", "value":"dryShade", "img":dryShade},
-	"dryShadeDrip":{"type":"dry", "name":"Drip air dry in shade", "value":"dryShadeDrip", "img":dryShadeDrip},
-	"dryShadeFlat":{"type":"dry", "name":"Flat air dry in shade", "value":"dryShadeFlat", "img":dryShadeFlat},
-	"dryShadeHang":{"type":"dry", "name":"Hang air dry in shade", "value":"dryShadeHang", "img":dryShadeHang},
-	"noTumble":{"type":"tumble", "name":"Do not tumble dry", "value":"tumble0", "img":noTumble},
-	"tumble":{"type":"tumble", "name":"Tumble dry", "value":"tumble1", "img":tumble},
-	"tumbleRegular":{"type":"tumble", "name":"Tumble dry regular", "value":"tumbleRegular", "img":tumble},
-	"tumblePress":{"type":"tumble", "name":"Tumble dry permanent press", 
+	"washHeatNo":{"type":"wash", "subtype":"", "name":"No temperature/coldwater wash", "value":"washHeatNo", "img":washHeatNo},
+	"dryRegular":{"type":"dry", "subtype":"Air", "name":"Air Dry", "value":"dryAir", "img":dry},
+	"dryDrip":{"type":"dry", "subtype":"Air", "name":"Drip air dry", "value":"dryDrip", "img":dryDrip},
+	"dryFlat":{"type":"dry", "subtype":"Air", "name":"Flat air dry", "value":"dryFlat", "img":dryFlat},
+	"dryHang":{"type":"dry", "subtype":"Air", "name":"Hang air dry", "value":"dryHang", "img":dryHang},
+	"dryShade":{"type":"dry", "subtype":"Air", "name":"Air dry in shade", "value":"dryShade", "img":dryShade},
+	"dryShadeDrip":{"type":"dry", "subtype":"Shade", "name":"Drip air dry in shade", "value":"dryShadeDrip", "img":dryShadeDrip},
+	"dryShadeFlat":{"type":"dry", "subtype":"Shade", "name":"Flat air dry in shade", "value":"dryShadeFlat", "img":dryShadeFlat},
+	"dryShadeHang":{"type":"dry", "subtype":"Shade", "name":"Hang air dry in shade", "value":"dryShadeHang", "img":dryShadeHang},
+	"noTumble":{"type":"tumble", "subtype":"", "name":"Do not tumble dry", "value":"tumble0", "img":noTumble},
+	"tumble":{"type":"tumble", "subtype":"", "name":"Tumble dry", "value":"tumble1", "img":tumble},
+	"tumbleRegular":{"type":"tumble", "subtype":"Tumble", "name":"Tumble dry regular", "value":"tumbleRegular", "img":tumble},
+	"tumblePress":{"type":"tumble", "subtype":"Tumble", "name":"Tumble dry permanent press", 
 		"value":"tumblePress", "img":tumblePress},
-	"tumbleDelicate":{"type":"tumble", "name":"Tumble dry delicate/gentle", 
+	"tumbleDelicate":{"type":"tumble", "subtype":"Tumble", "name":"Tumble dry delicate/gentle", 
 		"value":"tumbleDelicate", "img":tumbleDelicate},
-	"tumbleHeatLow":{"type":"tumble", "name":"Tumble dry low heat", 
+	"tumbleHeatLow":{"type":"tumble", "subtype":"Heat", "name":"Tumble dry low heat", 
 		"value":"tumbleHeatLow", "img":tumbleHeatLow},
-	"tumbleHeatMed":{"type":"tumble", "name":"Tumble dry medium heat", 
+	"tumbleHeatMed":{"type":"tumble", "subtype":"Heat", "name":"Tumble dry medium heat", 
 		"value":"tumbleHeatMed", "img":tumbleHeatMed},
-	"tumbleHeatHigh":{"type":"tumble", "name":"Tumble dry high heat", 
+	"tumbleHeatHigh":{"type":"tumble", "subtype":"Heat", "name":"Tumble dry high heat", 
 		"value":"tumbleHeatHigh", "img":tumbleHeatHigh},
-	"tumbleHeatNo":{"type":"tumble", "name":"Tumble dry no heat", 
+	"tumbleHeatNo":{"type":"tumble", "subtype":"Heat", "name":"Tumble dry no heat", 
 		"value":"tumbleHeatNo", "img":tumbleHeatNo},
-	"noDryC":{"type":"dryC", "name":"Do not dry clean", "value":"dryC0", "img":noDryC},
-	"dryC":{"type":"dryC", "name":"Dry clean", "value":"dryC1", "img":dryC},
-	"dryCA":{"type":"dryC", "name":"Dry cleaning in any solvent", "value":"dryCA", "img":dryCA},
-	"dryCP":{"type":"dryC", "name":"Dry cleaning in any solvent except trichloroethylene", 
+	"noDryC":{"type":"dryC", "subtype":"", "name":"Do not dry clean", "value":"dryC0", "img":noDryC},
+	"dryC":{"type":"dryC", "subtype":"", "name":"Dry clean", "value":"dryC1", "img":dryC},
+	"dryCA":{"type":"dryC", "subtype":"Solvent", "name":"Dry cleaning in any solvent (A)", "value":"dryCA", "img":dryCA},
+	"dryCP":{"type":"dryC", "subtype":"Solvent", "name":"Dry cleaning in any solvent except trichloroethylene (P)", 
 		"value":"dryCP", "img":dryCP},
-	"dryCF":{"type":"dryC", "name":"Dry cleaning in petroleum solvent", "value":"dryCF", "img":dryCF},
-	"dryCRegular":{"type":"dryC", "name":"Regular cycle", "value":"dryCRegular", "img":dryCRegular},
-	"dryCSort":{"type":"dryC", "name":"Sort cycle", "value":"dryCSort", "img":dryCSort},
-	"dryCRedMoist":{"type":"dryC", "name":"Reduce moisture", "value":"dryCRedMoist", "img":dryCRedMoist},
-	"dryCSteamNo":{"type":"dryC", "name":"No steam finishing", "value":"dryCSteamNo", "img":dryCSteamNo},
-	"dryCHeatLow":{"type":"dryC", "name":"Low heat", "value":"dryCHeatLow", "img":dryCHeatLow},
-	"noIron":{"type":"iron", "name":"Do not iron", "value":"iron0", "img":noIron},
-	"iron":{"type":"iron", "name":"Iron", "value":"iron1", "img":iron},
-	"ironSteamNo":{"type":"iron", "name":"No steam iron", "value":"ironSteamNo", "img":ironSteamNo},
-	"ironHeatLow":{"type":"iron", "name":"Low heat. Maximum temperature 230"+
+	"dryCF":{"type":"dryC", "subtype":"Solvent", "name":"Dry cleaning in petroleum solvent (F)", "value":"dryCF", "img":dryCF},
+	"dryCRegular":{"type":"dryC", "subtype":"Care", "name":"Regular cycle", "value":"dryCRegular", "img":dryCRegular},
+	"dryCSort":{"type":"dryC", "subtype":"Care", "name":"Sort cycle", "value":"dryCSort", "img":dryCSort},
+	"dryCRedMoist":{"type":"dryC", "subtype":"Care", "name":"Reduce moisture", "value":"dryCRedMoist", "img":dryCRedMoist},
+	"dryCSteamNo":{"type":"dryC", "subtype":"Care", "name":"No steam finishing", "value":"dryCSteamNo", "img":dryCSteamNo},
+	"dryCHeatLow":{"type":"dryC", "subtype":"Care", "name":"Low heat", "value":"dryCHeatLow", "img":dryCHeatLow},
+	"noIron":{"type":"iron", "subtype":"", "name":"Do not iron", "value":"iron0", "img":noIron},
+	"iron":{"type":"iron", "subtype":"", "name":"Iron", "value":"iron1", "img":iron},
+	"ironSteamNo":{"type":"iron", "subtype":"Heat", "name":"No steam iron", "value":"ironSteamNo", "img":ironSteamNo},
+	"ironHeatLow":{"type":"iron", "subtype":"Heat", "name":"Low heat. Maximum temperature 230"+
 		String.fromCharCode(176)+"F (100"+String.fromCharCode(176)+"C)", 
 		"value":"ironHeatLow", "img":ironHeatLow},
-	"ironHeatMed":{"type":"iron", "name":"Medium heat. Maximum temperature 300"+
+	"ironHeatMed":{"type":"iron", "subtype":"Heat", "name":"Medium heat. Maximum temperature 300"+
 		String.fromCharCode(176)+"F (150"+String.fromCharCode(176)+"C)", 
 		"value":"ironHeatMed", "img":ironHeatMed},
-	"ironHeatHigh":{"type":"iron", "name":"High heat. Maximum temperature 390"+
+	"ironHeatHigh":{"type":"iron", "subtype":"Heat", "name":"High heat. Maximum temperature 390"+
 		String.fromCharCode(176)+"F (200"+String.fromCharCode(176)+"C)", 
 		"value":"ironHeatHigh", "img":ironHeatHigh},
-	"noBleach":{"type":"bleach", "name":"Do not bleach", "value":"beach0", "img":noBleach},
-	"bleach":{"type":"bleach", "name":"Bleach", "value":"bleach1", "img":bleach},
-	"bleachNonCl":{"type":"bleach", "name":"Only non-chloride bleach", 
+	"noBleach":{"type":"bleach", "subtype":"", "name":"Do not bleach", "value":"beach0", "img":noBleach},
+	"bleach":{"type":"bleach", "subtype":"Bleach", "name":"Bleach", "value":"bleach1", "img":bleach},
+	"bleachNonCl":{"type":"bleach", "subtype":"Bleach", "name":"Only non-chloride bleach", 
 		"value":"bleachNonCl", "img":bleachNonCl},
 };
 
 //garment measurement per category
 const measurementTypes = [
-	{value: 'length', label: 'Length', categories:[1,2,3], img:''},
-	{value: 'sleeveLength', label: 'Sleeve Length', categories:[1,3], img:''},
-    {value: 'chestWidth', label: 'Chest Width', categories:[1,3], img:''},
-    {value: 'hipWidth', label: 'Hip Width', categories:[2,3], img:''},
-    {value: 'waistWidth', label: 'Waist Width', categories:[2,3], img:''},
+	{value: 'chest', label: 'Chest', categories:[1], img:sh1,
+		description:'Measure around the fullest part of the chest, just below the armpits. Ensure the measuring tape is straight.'},
+	{value: 'length', label: 'Length', categories:[1], img:sh2, 
+		description:'Measure from the highest point of the shoulder near the neckline down to the bottom hem.'},
+	{value: 'sleeveLength', label: 'Sleeve Length', categories:[1,6], img:sh3,
+		description:'Measure from the shoulder seam down to the end of the sleeve.'},
+    {value: 'waist', label: 'Waist', categories:[2], img:tj1,
+		description:'Measure the narrowest part of the waistline from one side to another.'},
+	{value: 'inseam', label: 'Inseam', categories:[2], img:tj2,
+		description:'Measure from the crotch seam down to the bottom of the leg hem.'},
+	{value: 'hip', label: 'Hips', categories:[2], img:tj3,
+		description:'Measure around the fullest part of the hips (the mid-way between the waist and crotch).'},
+	{value: 'thigh', label: 'Thigh', categories:[2], img:tj4,
+		description:'Measure the fullest part of one thigh, typically just below the crotch seam.'},
+	{value: 'frontRise', label: 'Front Rise', categories:[2], img:tj5,
+		description:'Measure from the top of the waistband down to the crotch seam along the front of the trousers.'},
+	{value: 'backRise', label: 'Back Rise', categories:[2], img:tj6,
+		description:'Measure from the top of the waistband down to the crotch seam along the back of the trousers.'},
+	{value: 'bustDress', label: 'Bust', categories:[3,6], img:fs1,
+		description:'Measure around the fullest part of the bust, ensuring the tape measure is straight.'},
+	{value: 'waistDress', label: 'Waist', categories:[3,6], img:fs2,
+		description:'Measure around the narrowest part of the waistline.'},
+	{value: 'lengthDress', label: 'Length', categories:[3,6], img:fs3,
+		description:'Measure from the highest point of the dress (where the off-shoulder portion begins) down to the bottom hem.'},
+	{value: 'waistSkirt', label: 'Waist', categories:[4], img:sk1,
+		description:'Measure the narrowest part of the waistline from one side to another.'},
+	{value: 'hipSkirt', label: 'Hips', categories:[4], img:sk2,
+		description:'Measure the fullest part of the hip from one side to another.'},
+	{value: 'lengthSkirt', label: 'Length', categories:[4], img:sk3,
+		description:'Measure from the waist down to the desired length of the skirt.'},
+	{value: 'bustTank', label: 'Bust', categories:[5], img:tt1,
+		description:'Measure the fullest part of the bust, ensuring the tape measure is straight.'},
+	{value: 'waistTank', label: 'Waist', categories:[5], img:tt2,
+		description:'Measure around the narrowest part of the waistline if the tank top has a fitted or tailored cut.'},
+	{value: 'lengthTank', label: 'Length', categories:[5], img:tt3,
+		description:'Measure from the highest point of the shoulder near the neckline down to the bottom hem.'},
+	{value: 'armholeTank', label: 'Armhole', categories:[5], img:tt4,
+		description:'Measure around the circumference of the armhole, starting from the shoulder seam and going around the armpit area. In case of a shoulder strap, measure from the top of shoulder point to the armhole.'},
 ];
 
 //days of the week
@@ -437,7 +490,7 @@ const wearTears = [
 	{value:'twisting', label:'The garment starts twisting'},
 	{value:'washShrink', label:'Garment shrinks after washing'},
 	{value:'washDiscolor', label:'The garment is discolored after washing'},
-	{value:'spandexShrink', label:'The Elastane or Spandex starts shrinking or curling'},
+	{value:'spandexShrink', label:'The Elastane or Spandex shrinks or curls'},
 	{value:'printFade', label:'The print is washing out'},
 	{value:'hole', label:'Garment get holes'},
 	{value:'labelItching', label:'The label is itching'},
@@ -449,7 +502,7 @@ const wearTears = [
 const repairRequests = [
 	{value:'looseButton', label:'The button is falling off'},
 	{value:'brokenZipper', label:'The zipper is broken'},
-	{value:'lostString', label:'Lost strings (i.e Hoodie string missing'},
+	{value:'lostString', label:'Lost strings (i.e Hoodie string missing)'},
 	{value:'looseHem', label:'Hem is coming down'},
 	{value:'other', label:'Other'},
 ];

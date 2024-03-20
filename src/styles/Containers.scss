@@ -466,12 +466,31 @@ $screen-xl-min: 1200px;
 
     img {
         position: fixed;
-        top: 0;
         left: 0;
         right: 0;
-        bottom: 0;
+        bottom: 5%;
         margin: auto;
         background-color: Colors.$purpleLight;
+    }
+    
+    p {
+        display: block;
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: $headerHeight_sm;
+        background-color: Colors.$purpleLight;
+        text-align: center;
+        margin: 3% 10%;
+        padding: 0.5em;
+        border-radius: 20px;
+    }
+
+    // large devices
+    @include lg {
+        p {
+            margin-top: 2em;
+        }
     }
 }
 

@@ -3,9 +3,9 @@ import { useState } from 'react';
 import '../../styles/main.scss';
 import { toast } from 'react-hot-toast';
 import ScreenHeaderIn from "../../components/common/ScreenHeaderIn";
-import { CARE_DRY_METHODS, CARE_WASH_METHODS } from '../../constants/data/options';
+import { CARE_BLEACH_METHODS, CARE_DRYC_METHODS, CARE_DRY_METHODS, CARE_IRON_METHODS, CARE_WASH_METHODS, WASH_TEMP_C, WASH_TEMP_F } from '../../constants/data/options';
 import InfoPopup from '../../components/common/InfoPopup';
-import { addErrorMessageByID, checkOnID, validateInpName, validatePage } from '../../constants/functions/inputHandlers';
+import { addErrorMessageByID, validatePage } from '../../constants/functions/inputHandlers';
 import axios from 'axios';
 import { useContext } from 'react';
 import { UserContext } from '../../../context/userContext';
@@ -15,12 +15,31 @@ export default function GarmentWash() {
     const navigate = useNavigate();
     const {user} = useContext(UserContext);
     const [washDate, setWashDate] = useState('');
-    const [washMethod, setWashMethod] = useState('');
-    const [dryerMethod, setDryerMethod] = useState('');
+    const [careWash, setCareWash] = useState({
+        "Method":"",
+        "Heat":"",
+        "Temp":""
+    });
+    const [careDry, setCareDry] = useState({
+        "Method":"",
+        "Air":"",
+        "Shade":"",
+        "Heat":"",
+    });
+    const [careDryC, setCareDryC] = useState({
+        "Solvent":"",
+        "Care":"",
+    });
+    const [careIron, setCareIron] = useState({
+        "Heat":"",
+    });
+    const [careBleach, setCareBleach] = useState({
+        "Bleach":"",
+    });
+    const [useDryC, setUseDryC] = useState(false);
     const [useIron, setUseIron] = useState(false);
+    const [useBleach, setUseBleach] = useState(false);
     const [ironDuration, setIronDuration] = useState('');
-    const [ironDegree, setIronDegree] = useState('');
-    const [ironTemp, setIronTemp] = useState('');
     const [isVentilated, setIsVentilated] = useState(false);
     const [ventilatedTime, setVentilatedTime] = useState('');
 
@@ -29,12 +48,13 @@ export default function GarmentWash() {
         try {
         const garmentData = {
             washDate,
-            washMethod,
-            dryerMethod,
+            careWash,
+            careDry,
+            careDryC,
+            careIron,
+            careBleach,
             useIron,
             ironDuration,
-            ironDegree,
-            ironTemp,
             isVentilated,
             ventilatedTime,
         };
@@ -66,14 +86,6 @@ export default function GarmentWash() {
         if(!validatePage(querySelect)) {
             return false;
         }
-        if(useIron && !validateInpName("ironDegree", ironDegree)) {
-            e.preventDefault();
-            return false;
-        }
-        if(isVentilated && !validateInpName("ventilatedTime", ventilatedTime)) {
-            e.preventDefault();
-            return false;
-        }
         
         handleSubmit(e);
         return true;
@@ -89,60 +101,348 @@ export default function GarmentWash() {
             </div>
             <form onSubmit={validateAndSubmit}>
                 <div className='container-content'>
+                    <div id={"washDate_error"} style={{textAlign:"center"}}></div>
                     <label className='text-b'>Wash Date:</label>
                     <label className='tab'></label>
-                    <input type='date' id='washDate' value={washDate} onChange={(e)=>setWashDate(e.target.value)} required />
+                    <input type='date' id='washDate' value={washDate} 
+                        onChange={(e)=>{
+                            setWashDate(e.target.value)
+                            addErrorMessageByID("washDate_error", null);
+                        }} 
+                        required 
+                    />
                 </div>
 
                 <div className='container-grid-2-md'>
                     <div>
-                    <div className='container-prompt'>
-                        <p>Wash Method</p>
-                        <InfoPopup text='Select the method used to wash the garment' />
-                    </div>
-                    <div className='container-input'>
-                        <select id='washMethod' 
-                        name='washMethod' 
-                        value={washMethod} 
-                        onChange={(e)=>setWashMethod(e.target.value)}
-                        required
-                        >
-                        <option key='wash_null' value=''>Select a wash method...</option>
-                        {CARE_WASH_METHODS.map((opt) => {
-                            return (
-                                <option key={"wash_" + opt.value} value={opt.value}>
-                                    {opt.label}
-                                </option>
-                            )
-                        })}
-                        </select> 
-                    </div>
+                        <div className='container-prompt'>
+                            <p>Wash Method</p>
+                            <InfoPopup text='Select the method used to wash the garment' />
+                        </div>
+                        <div id={"washMethod_error"} style={{textAlign:"center"}}></div>
+                        <div className='container-input'>
+                            <select id='washMethod' 
+                            name='washMethod' 
+                            value={careWash.Method} 
+                            onChange={(e)=>{
+                                setCareWash({...careWash, "Method":e.target.value});
+                                addErrorMessageByID("washMethod_error", null);
+                            }}
+                            required
+                            >
+                            <option key='washMethod_null' value=''>Select a wash method...</option>
+                            {CARE_WASH_METHODS.Wash.map((opt) => {
+                                return (
+                                    <option key={"washMethod_" + opt.value} value={opt.value}>
+                                        {opt.label}
+                                    </option>
+                                )
+                            })}
+                            </select> 
+                        </div>
                     </div>
 
+                    {
+                        (careWash.Method === "" ||
+                        careWash.Method === "noWash" || careWash.Method === "washHand") && (
+                            <div></div>
+                        )
+                    }
+                    {
+                        careWash.Method !== "" &&
+                        careWash.Method !== "noWash" && careWash.Method !== "washHand" && (
+                            <div>
+                                <div className='container-prompt'>
+                                    <p>Wash Heat</p>
+                                    <InfoPopup text='Select the heat used in washing the garment' />
+                                </div>
+                                <div id={"washHeat_error"} style={{textAlign:"center"}}></div>
+                                <div className='container-input'>
+                                    <select id='washHeat' 
+                                    name='washHeat' 
+                                    value={careWash.Heat} 
+                                    onChange={(e)=>{
+                                        setCareWash({...careWash, "Heat":e.target.value});
+                                        addErrorMessageByID("washHeat_error", null);
+                                    }}
+                                    required
+                                    >
+                                    <option key='washHeat_null' value=''>Select a wash heat...</option>
+                                    {CARE_WASH_METHODS.Heat.map((opt) => {
+                                        return (
+                                            <option key={"washHeat_" + opt.value} value={opt.value}>
+                                                {opt.label}
+                                            </option>
+                                        )
+                                    })}
+                                    </select> 
+                                </div>
+                                {
+                                    careWash.Heat === "washHeatXXC" && (
+                                        <div>
+                                            <div className="container-prompt">
+                                                <p>Select temperature</p>
+                                                <InfoPopup text='Select the temperature in Celsius' />
+                                            </div>
+                                            <div id={"wash_temp_c_error"} style={{textAlign:"center"}}></div>
+                                            <div className="container-input">
+                                                <select 
+                                                    name="washTemp" 
+                                                    id="wash_temp_c"
+                                                    value={careWash.Temp}
+                                                    onChange={(e) => {
+                                                        setCareWash({
+                                                            ...careWash,
+                                                            "Temp": e.target.value
+                                                        });
+                                                        addErrorMessageByID("wash_temp_c_error", null);
+                                                    }}
+                                                    required
+                                                >
+                                                    <option key='temp_c_null' value=''>Select a temperature...</option>
+                                                    {WASH_TEMP_C.map((opt) => {
+                                                        return <option key={"temp_c_" + opt.value} value={opt.value}>{opt.label}</option>
+                                                    })}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    )
+                                }
+                                {
+                                    careWash.Heat === "washHeatXXF" && (
+                                        <div>
+                                            <div className="container-prompt">
+                                                <p>Select temperature</p>
+                                                <InfoPopup text='Select the temperature in Fahrenheit' />
+                                            </div>
+                                            <div id={"wash_temp_f_error"} style={{textAlign:"center"}}></div>
+                                            <div className="container-input">
+                                                <select 
+                                                    name="washTemp" 
+                                                    id="wash_temp_f"
+                                                    value={careWash.Temp}
+                                                    onChange={(e) => {
+                                                        setCareWash({
+                                                            ...careWash,
+                                                            "Temp": e.target.value
+                                                        });
+                                                        addErrorMessageByID("wash_temp_f_error", null);
+                                                    }}
+                                                    required
+                                                >
+                                                    <option key='temp_f_null' value=''>Select a temperature...</option>
+                                                    {WASH_TEMP_F.map((opt) => {
+                                                        return <option key={"temp_f_" + opt.value} value={opt.value}>{opt.label}</option>
+                                                    })}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    )
+                                }
+                            </div>
+                        )
+                    }
+
+
                     <div>
-                    <div className='container-prompt'>
-                        <p>Dryer Method</p>
-                        <InfoPopup text='Select the method used for drying the garment'/>
+                        <div className='container-prompt'>
+                            <p>Dry Method</p>
+                            <InfoPopup text='Select the method used to dry the garment' />
+                        </div>
+                        <div id={"dryMethod_error"} style={{textAlign:"center"}}></div>
+                        <div className='container-input'>
+                            <select id='dryMethod' 
+                            name='dryMethod' 
+                            value={careDry.Method} 
+                            onChange={(e)=>{
+                                setCareDry({...careDry, "Method":e.target.value});
+                                addErrorMessageByID("dryMethod_error", null);
+                            }}
+                            required
+                            >
+                            <option key='dry_null' value=''>Select a dry method...</option>
+                            {CARE_DRY_METHODS.Tumble.map((opt) => {
+                                return (
+                                    <option key={"dryMethod_" + opt.value} value={opt.value}>
+                                        {opt.label}
+                                    </option>
+                                )
+                            })}
+                            </select> 
+                        </div>
                     </div>
-                    <div className='container-input'>
-                        <select id='dryMethod' 
-                        name='dryMethod' 
-                        value={dryerMethod} 
-                        onChange={(e)=>setDryerMethod(e.target.value)}
-                        required
-                        >
-                        <option key='dry_null' value=''>Select a dryer method...</option>
-                        {CARE_DRY_METHODS.map((opt) => {
-                            return (
-                                <option key={"dry_" + opt.value} value={opt.value}>
-                                    {opt.label}
-                                </option>
-                            )
-                        })}
-                        </select> 
-                    </div>
-                    </div>
+
+                    {
+                        careDry.Method === "noTumble" &&  (
+                            <div>
+                                <div className='container-prompt'>
+                                    <p>Air Dry Type</p>
+                                    <InfoPopup text='Select the type of air dry done on the garment' />
+                                </div>
+                                <div id={"dryAir_error"} style={{textAlign:"center"}}></div>
+                                <div className='container-input'>
+                                    <select id='dryAir' 
+                                    name='dryAir' 
+                                    value={careDry.Air} 
+                                    onChange={(e)=>{
+                                        setCareDry({...careDry, "Air":e.target.value});
+                                        addErrorMessageByID("dryAir_error", null);
+                                    }}
+                                    required
+                                    >
+                                    <option key='dryAir_null' value=''>Select an air dry...</option>
+                                    {CARE_DRY_METHODS.Air.map((opt) => {
+                                        return (
+                                            <option key={"dryAir_" + opt.value} value={opt.value}>
+                                                {opt.label}
+                                            </option>
+                                        )
+                                    })}
+                                    </select> 
+                                </div>
+
+                                {
+                                    careDry.Air === "dryShade" && (
+                                        <div>
+                                            <div className='container-prompt'>
+                                                <p>Air Dry in Shade Type</p>
+                                                <InfoPopup text='Select the type of air dry in shade done on the garment' />
+                                            </div>
+                                            <div id={"dryShade_error"} style={{textAlign:"center"}}></div>
+                                            <div className='container-input'>
+                                                <select id='dryShade' 
+                                                name='dryShade' 
+                                                value={careDry.Shade} 
+                                                onChange={(e)=>{
+                                                    setCareDry({...careDry, "Shade":e.target.value});
+                                                    addErrorMessageByID("dryShade_error", null);
+                                                }}
+                                                required
+                                                >
+                                                <option key='dryShade_null' value=''>Select an air dry in shade...</option>
+                                                {CARE_DRY_METHODS.Shade.map((opt) => {
+                                                    return (
+                                                        <option key={"dryShade_" + opt.value} value={opt.value}>
+                                                            {opt.label}
+                                                        </option>
+                                                    )
+                                                })}
+                                                </select> 
+                                            </div>
+                                        </div>
+                                    )
+                                }
+                               
+                            </div>
+                        )
+                    }
+
+                    {
+                        careDry.Method !== "" &&
+                        careDry.Method !== "noTumble" && (
+                            <div>
+                                <div className='container-prompt'>
+                                    <p>Tumble Dry Heat</p>
+                                    <InfoPopup text='Select the heat used to dry the garment' />
+                                </div>
+                                <div id={"dryHeat_error"} style={{textAlign:"center"}}></div>
+                                <div className='container-input'>
+                                    <select id='dryHeat' 
+                                    name='dryHeat' 
+                                    value={careDry.Heat} 
+                                    onChange={(e)=>{
+                                        setCareDry({...careDry, "Heat":e.target.value});
+                                        addErrorMessageByID("dryHeat_error", null);
+                                    }}
+                                    required
+                                    >
+                                    <option key='dryHeat_null' value=''>Select a heat...</option>
+                                    {CARE_DRY_METHODS.Heat.map((opt) => {
+                                        return (
+                                            <option key={"dryHeat_" + opt.value} value={opt.value}>
+                                                {opt.label}
+                                            </option>
+                                        )
+                                    })}
+                                    </select> 
+                                </div>
+                            </div>
+                        )
+                    }
+
                 </div>
+
+
+                <div className='container-grid-2-md'>
+                    <div className='container-content'>
+                    <label className='text-b clickable' htmlFor='isDryC'>Use Dry Clean:</label>
+                    <label className='tab'></label>
+                    <input type='checkbox' id="isDryC" name="isDryC" value={1} checked={useDryC} 
+                        onChange={(e)=>setUseDryC(e.target.checked)} />
+                    <InfoPopup text='Check if the garment was dry cleaned'/>
+                    </div>
+
+                    {useDryC && (
+                    <div>
+                        <div>
+                            <div className='container-prompt'>
+                                <p>Dry Cleaning Method</p>
+                                <InfoPopup text='Select the dry cleaning method applied to the garment' />
+                            </div>
+                            <div id={"dryCSolvent_error"} style={{textAlign:"center"}}></div>
+                            <div className='container-input'>
+                                <select id='dryCSolvent' 
+                                name='dryCSolvent' 
+                                value={careDryC.Solvent} 
+                                onChange={(e)=>{
+                                    setCareDryC({...careDryC, "Solvent":e.target.value});
+                                    addErrorMessageByID("dryCSolvent_error", null);
+                                }}
+                                required
+                                >
+                                <option key='dryCSolvent_null' value=''>Select a method...</option>
+                                {CARE_DRYC_METHODS.Solvent.map((opt) => {
+                                    return (
+                                        <option key={"dryCSolvent_" + opt.value} value={opt.value}>
+                                            {opt.label}
+                                        </option>
+                                    )
+                                })}
+                                </select> 
+                            </div>
+                        </div>
+
+                        <div>
+                            <div className='container-prompt'>
+                                <p>Dry Cleaning Extra Care</p>
+                                <InfoPopup text='Select the extra care applied during dry cleaning' />
+                            </div>
+                            <div id={"dryCCare_error"} style={{textAlign:"center"}}></div>
+                            <div className='container-input'>
+                                <select id='dryCCare' 
+                                name='dryCCare' 
+                                value={careDryC.Care} 
+                                onChange={(e)=>{
+                                    setCareDryC({...careDryC, "Care":e.target.value});
+                                    addErrorMessageByID("dryCCare_error", null);
+                                }}
+                                required
+                                >
+                                <option key='dryCCare_null' value=''>Select an extra care...</option>
+                                {CARE_DRYC_METHODS.Care.map((opt) => {
+                                    return (
+                                        <option key={"dryCCare_" + opt.value} value={opt.value}>
+                                            {opt.label}
+                                        </option>
+                                    )
+                                })}
+                                </select> 
+                            </div>
+                        </div>
+                    </div>
+                    )}
+                </div>
+
             
                 <div className='container-grid-2-md'>
                     <div className='container-content'>
@@ -160,13 +460,17 @@ export default function GarmentWash() {
                             <p>Ironing duration (in minutes)</p>
                             <InfoPopup text='Enter the duration for which the garment was ironed'/>
                         </div>
+                        <div id={"ironDuration_error"} style={{textAlign:"center"}}></div>
                         <div className='container-input'>
                             <input
                             type='number'
                             id='ironDuration'
                             name='ironDuration'
                             value={ironDuration}
-                            onChange={(e)=>setIronDuration(e.target.value)}
+                            onChange={(e)=>{
+                                setIronDuration(e.target.value);
+                                addErrorMessageByID("ironDuration_error", null);
+                            }}
                             placeholder='Enter duration'
                             min={0}
                             step={1}
@@ -176,63 +480,79 @@ export default function GarmentWash() {
                         </div>
 
                         <div>
-                            <div className="container-prompt">
-                                <p>Iron Heat Unit</p>
+                            <div className='container-prompt'>
+                                <p>Iron Heat</p>
+                                <InfoPopup text='Select the iron heat used on the garment' />
                             </div>
-                            <div id={"ironDegree_error"} style={{textAlign:"center"}}></div>
-                            <div className="container-radio">
-                                <div className="container-radio-group">
-                                    <input type="radio" id="iron_degree_c" name="ironDegree"
-                                        value={"C"} 
-                                        onClick={(e) => {
-                                            setIronDegree(e.target.id);
-                                            addErrorMessageByID("ironDegree_error", null);
-                                        }}
-                                        defaultChecked={checkOnID("iron_degree_c", ironDegree)}
-                                    />
-                                    <label htmlFor="iron_degree_c">Celsius</label>
-                                </div>
-                                <div className="container-radio-group">
-                                    <input type="radio" id="iron_degree_f" name="ironDegree"
-                                        value={"F"} 
-                                        onClick={(e) => {
-                                            setIronDegree(e.target.id);
-                                            addErrorMessageByID("ironDegree_error", null);
-                                        }}
-                                        defaultChecked={checkOnID("iron_degree_f", ironDegree)}
-                                    />
-                                    <label htmlFor="iron_degree_f">Fahrenheit</label>
-                                </div>
+                            <div id={"ironHeat_error"} style={{textAlign:"center"}}></div>
+                            <div className='container-input'>
+                                <select id='ironHeat' 
+                                name='ironHeat' 
+                                value={careIron.Heat} 
+                                onChange={(e)=>{
+                                    setCareIron({...careIron, "Heat":e.target.value});
+                                    addErrorMessageByID("ironHeat_error", null);
+                                }}
+                                required
+                                >
+                                <option key='ironHeat_null' value=''>Select a heat...</option>
+                                {CARE_IRON_METHODS.Heat.map((opt) => {
+                                    return (
+                                        <option key={"ironHeat_" + opt.value} value={opt.value}>
+                                            {opt.label}
+                                        </option>
+                                    )
+                                })}
+                                </select> 
                             </div>
-
-                            {
-                            ironDegree !== ""  && (
-                                <div>
-                                <div className='container-prompt'>
-                                    <p>Iron Temperature</p>
-                                    <InfoPopup text='Enter the temperature in which the garment was ironed'/>
-                                </div>
-                                <div className='container-input'>
-                                    <input
-                                    type='number'
-                                    id='ironTemp'
-                                    name='ironTemp'
-                                    value={ironTemp}
-                                    onChange={(e)=>setIronTemp(e.target.value)}
-                                    placeholder='Enter Temperature'
-                                    min={0}
-                                    step={1}
-                                    required
-                                    />
-                                    <label>{String.fromCharCode(176)}{ironDegree === "iron_degree_c" ? "C" : "F"}</label>                
-                                </div>
-                                </div>
-                            )
-                            }
                         </div>
                     </div>
                     )}
                 </div>
+
+
+                <div className='container-grid-2-md'>
+                    <div className='container-content'>
+                    <label className='text-b clickable' htmlFor='isIroned'>Use Bleach:</label>
+                    <label className='tab'></label>
+                    <input type='checkbox' id="isBleached" name="isBleached" value={1} checked={useBleach} 
+                        onChange={(e)=>setUseBleach(e.target.checked)} />
+                    <InfoPopup text='Check if the garment was bleached'/>
+                    </div>
+
+                    {useBleach && (
+                    <div>
+                        <div>
+                            <div className='container-prompt'>
+                                <p>Type of Bleach</p>
+                                <InfoPopup text='Select the type of bleach used on the garment' />
+                            </div>
+                            <div id={"bleach_error"} style={{textAlign:"center"}}></div>
+                            <div className='container-input'>
+                                <select id='bleach' 
+                                name='bleach' 
+                                value={careBleach.Bleach} 
+                                onChange={(e)=>{
+                                    setCareBleach({...careBleach, "Bleach":e.target.value});
+                                    addErrorMessageByID("bleach_error", null);
+                                }}
+                                required
+                                >
+                                <option key='bleach_null' value=''>Select a bleach...</option>
+                                {CARE_BLEACH_METHODS.Bleach.map((opt) => {
+                                    return (
+                                        <option key={"bleach_" + opt.value} value={opt.value}>
+                                            {opt.label}
+                                        </option>
+                                    )
+                                })}
+                                </select> 
+                            </div>
+                        </div>
+                    </div>
+                    )}
+                </div>
+
 
                 <div className='container-grid-2-md'>
                     <div className='container-content'>
@@ -249,13 +569,17 @@ export default function GarmentWash() {
                             <p>Ventilated Time (in hours)</p>
                             <InfoPopup text='Enter the duration for which the garment was ventilated'/>
                         </div>
+                        <div id={"ventilationTime_error"} style={{textAlign:"center"}}></div>
                         <div className='container-input'>
                             <input
                             type='number'
                             id='ventilationTime'
                             name='ventilationTime'
                             value={ventilatedTime}
-                            onChange={(e)=>setVentilatedTime(e.target.value)}
+                            onChange={(e)=>{
+                                setVentilatedTime(e.target.value);
+                                addErrorMessageByID("ventilatedTime_error", null);
+                            }}
                             placeholder='Enter hours'
                             min={0}
                             step={0.01}
