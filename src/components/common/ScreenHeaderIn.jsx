@@ -115,7 +115,7 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
                     <div>
                         <div className="container-header-profile" id="profile_dropdown">
                             <Link to="/userprofile">Profile</Link>
-                            <Link to="/settings">Settings</Link>
+                            <Link to="/garment-care">Settings</Link>
                             <Link to="/group">Group</Link>
                             <div onClick={handleLogout}>
                                 <label>Sign Out</label>
@@ -125,7 +125,7 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
                             <Link to="/dashboard">Home</Link>
                             <Link to="/garment-details">Add Garment</Link>
                             <Link to="/garment-measure">Add Measurement</Link>
-                            <Link to="/garment-wash">Garment Care</Link>
+                            <Link to="/garment-care">Garment Care</Link>
                             <Link to="/garment-exchange">Exchange Garment</Link>
                             <Link to="/garment-reserve">Reserve a Garment</Link>
                         </div>

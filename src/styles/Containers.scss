@@ -528,11 +528,10 @@ $screen-xl-min: 1200px;
 .container-card {
     background-color: Colors.$purpleLight;
     box-shadow: 0.15em 0.2em 0.2em rgba(0,0,0,0.2);
+    cursor: pointer;
 
     .container-card-img {
-        @include container-col;
-        background-color: Colors.$primary;
-        cursor: pointer;
+        margin: auto;
     }
     
     .container-card-title {
