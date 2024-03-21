@@ -242,11 +242,6 @@ $screen-xl-min: 1200px;
     @include title;
     text-align: initial;
     font-size: Sizes.$medium;
-
-    // large devices
-    @include lg {
-        font-size: Sizes.$large;
-    }
 }
 
 .container-button-form {

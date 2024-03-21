@@ -11,6 +11,7 @@ import { addErrorMessageByID } from "../constants/functions/inputHandlers";
 import General from "../components/profile/Garment_general";
 import Composition from "../components/profile/Garment_composition";
 import Care from "../components/profile/Garment_care";
+import Measure from "../components/profile/Garment_measure";
 
 export default function Profile() {
     const {user} = useContext(UserContext);
@@ -142,6 +143,8 @@ export default function Profile() {
       temp[index][field] = value;
       setSelectedTimes(temp);
     };
+
+    console.log(garment);
 
   return (
     <div>
@@ -385,8 +388,7 @@ export default function Profile() {
           {
             tabPage === 1 &&
             garment && (
-              <div>
-              </div>
+              <Measure garment={garment}/>
             )
           }
 
@@ -406,7 +408,25 @@ export default function Profile() {
 
           {
             tabPage === 4 &&
-            <div></div>
+            garment && (
+              <div className="m1">
+                <label className="container-subtitle-2">Wear</label>
+                <div className="container-border">
+                </div>
+                <br/>
+
+                <label className="container-subtitle-2">Wash</label>
+                <div className="container-border">
+                </div>
+                <br/>
+
+                <label className="container-subtitle-2">Tear</label>
+                <div className="container-border">
+                </div>
+                <br/>
+
+              </div>
+            )
           }
 
         </div>
