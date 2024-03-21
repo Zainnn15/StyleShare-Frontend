@@ -486,17 +486,17 @@ const colorStatus = {
 const wearTears = [
 	{value:'colorFade', label:'The color is getting pale'},
 	{value:'pilling', label:'The garment shows signs of pilling'},
-	{value:'shapeLoss', label:'Garment loses its shape'},
+	{value:'shapeLoss', label:'The garment loses its shape'},
 	{value:'twisting', label:'The garment starts twisting'},
-	{value:'washShrink', label:'Garment shrinks after washing'},
+	{value:'washShrink', label:'The garment shrinks after washing'},
 	{value:'washDiscolor', label:'The garment is discolored after washing'},
 	{value:'spandexShrink', label:'The Elastane or Spandex shrinks or curls'},
 	{value:'printFade', label:'The print is washing out'},
-	{value:'hole', label:'Garment get holes'},
+	{value:'hole', label:'The garment has holes'},
 	{value:'labelItching', label:'The label is itching'},
-	{value:'looseButton', label:'Loose buttons'},
-	{value:'stain', label:'Garment got stains'},
-	{value:'other', label:'Other'},
+	{value:'looseButton', label:'The buttons are loose'},
+	{value:'stain', label:'The garment got stained'},
+	{value:'other', label:'Other (please specify)'},
 ];
 
 const repairRequests = [
