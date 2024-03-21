@@ -7,7 +7,6 @@ import Axios from "axios";
 import '../styles/main.scss';
 
 import ScreenHeaderIn from "../components/common/ScreenHeaderIn";
-import { addErrorMessageByID } from "../constants/functions/inputHandlers";
 import General from "../components/profile/Garment_general";
 import Composition from "../components/profile/Garment_composition";
 import Care from "../components/profile/Garment_care";
@@ -30,6 +29,8 @@ export default function Profile() {
     const [editMode, setEditMode] = useState(false);
     const [garmentDetails, setGarmentDetails] = useState(null); //used for?
     const [tabPage, setTabPage] = useState(0);
+    const [selectedCampus, setSelectedCampus] = useState('');
+const [customCampus, setCustomCampus] = useState('');
 
     const weekDays = [
       { value: 0, label: "Sunday", short: "Sun" },
@@ -53,32 +54,33 @@ export default function Profile() {
   
     const weeks = weekDays.filter((day) => day.value > 0 && day.value < 6);
 
-    const handleUpdateProfile = () => {
-      //validate time
-      for(let time of selectedTimes) {
-        if(time.start && time.end && time.start > time.end) {
-          addErrorMessageByID("timeRange_error", "Time range must be sequential");
-          return false;
-        }
-      }
-      addErrorMessageByID("timeRange_error", null);
-      setEditMode(false);
+    const handleCampusChange = (event) => {
+      // Convert the HTMLOptionsCollection into an array and filter selected options
+      const selectedOptions = Array.from(event.target.options).filter(option => option.selected);
+      // Map over selected options to create an array of values
+      const selectedValues = selectedOptions.map(option => option.value);
+      setSelectedCampus(selectedValues);
+  };
 
-      // Send selectedDays as an array to the server using Axios
+  const handleUpdateProfile = async () => {
+    // Validation logic...
 
-      Axios.post('/updateProfile', {
+    // Preparing the payload for the backend
+    const payload = {
         userId: user.id,
-        selectedDays: selectedDays,
-        selectedTimes: selectedTimes.filter(time => time.start && time.end), // Filter out times without start/end
-      })
-        .then((response) => {
-          // Handle the response from the server, if needed
-          console.log(response.data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+        selectedDays,
+        selectedTimes: selectedTimes.filter(t => t.start && t.end),
+        campuses: selectedCampus.includes('Other') ? selectedCampus.filter(c => c !== 'Other') : selectedCampus,
+        customCampus: selectedCampus.includes('Other') ? customCampus : '',
     };
+
+    try {
+        const response = await Axios.post('/updateProfile', payload);
+        console.log(response.data);
+    } catch (error) {
+        console.error(error);
+    }
+};
 
     useEffect(() => {
       if (!profile && garmentDetails === null) {
@@ -175,6 +177,27 @@ export default function Profile() {
                   }
                 </p>
               </div>
+                {/* Campus Selection */}
+                {editMode && (
+                <div className="container-input">
+                    <label htmlFor="campuses">Campus:</label>
+                    <select multiple id="campuses" value={selectedCampus} onChange={handleCampusChange} className="form-control">
+                        <option value="Newham">Newham</option>
+                        <option value="York">York</option>
+                        <option value="King">King</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    {selectedCampus.includes('Other') && (
+                        <input
+                            type="text"
+                            placeholder="Specify your location"
+                            value={customCampus}
+                            onChange={e => setCustomCampus(e.target.value)}
+                            className="form-control mt-2"
+                        />
+                    )}
+                </div>
+            )}
               <div className="container-border clear-box">
               <p>Days going to Seneca: {selectedDays.map(dayNum => dayMapping[dayNum]).join(", ")}</p>
         <div id="user_schedule">
