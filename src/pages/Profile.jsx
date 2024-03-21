@@ -8,11 +8,9 @@ import '../styles/main.scss';
 
 import ScreenHeaderIn from "../components/common/ScreenHeaderIn";
 import { addErrorMessageByID } from "../constants/functions/inputHandlers";
-import { findAttribute, formatDate, formatTemp, getAttrByInpID} from "../constants/functions/valueHandlers";
-import { GARMENT_TYPES } from "../constants/data/options";
-import { id_instructionBleach, id_instructionDry, id_instructionDryC, id_instructionIron, id_instructionTumble, id_instructionWash, id_purchaseMethod } from "../constants/data/inputID";
-import CircleImg from "../components/common/CircleImg";
-
+import General from "../components/profile/Garment_general";
+import Composition from "../components/profile/Garment_composition";
+import Care from "../components/profile/Garment_care";
 
 export default function Profile() {
     const {user} = useContext(UserContext);
@@ -31,13 +29,7 @@ export default function Profile() {
     ]);
     const [editMode, setEditMode] = useState(false);
     const [garmentDetails, setGarmentDetails] = useState(null); //used for?
-    const [instructions, setInstructions] = useState({
-      "Wash": "",
-      "Tumble":"",
-      "DryC":"",
-      "Iron":"",
-      "Bleach":""
-    })
+    const [tabPage, setTabPage] = useState(0);
 
     const weekDays = [
       { value: 0, label: "Sunday", short: "Sun" },
@@ -109,17 +101,6 @@ export default function Profile() {
         })
         .catch((error) => console.error('Error fetching garment details:', error));
       }
-
-      if(garment) {
-        setInstructions({
-          ...instructions, 
-          "Wash": JSON.parse(garment.instructionWash[0]),
-          "Tumble": JSON.parse(garment.instructionTumble[0]),
-          "DryC": JSON.parse(garment.instructionDryC[0]),
-          "Iron": JSON.parse(garment.instructionIron[0]),
-          "Bleach": JSON.parse(garment.instructionBleach[0]),
-        });
-      }
     }, []);
     
     function handleChangeSchedule() {
@@ -161,8 +142,6 @@ export default function Profile() {
       temp[index][field] = value;
       setSelectedTimes(temp);
     };
-
-    console.log()
 
   return (
     <div>
@@ -310,384 +289,128 @@ export default function Profile() {
             
           </div>
         )}
-
         <br/>
-        {
-          garment && (
-            <div>
-              <hr/>
-              <div className="container-content popup">
-                <h3>Garment Details</h3>
-                <hr/>
-              </div>
-              <div className="container-grid-2-md gap container-border clear-box">
-                <div>
-                  <p>
-                    <label className="text-b">Type:<label className="tab"></label></label>
-                    {findAttribute(GARMENT_TYPES, garment.garmentType)}
-                  </p>
-                  <p>
-                    <label className="text-b">Description:<label className="tab"></label></label>
-                  </p>
-                  <div className="container-border m1-v">
-                      <label>{garment.garmentDescription}</label>
-                  </div>
-                  <p>
-                    <label className="text-b">Country of Origin:<label className="tab"></label></label>
-                    {garment.garmentCountry}
-                  </p>
-                </div>
 
-                <div>
-                  <p>
-                    <label className="text-b">Store:<label className="tab"></label></label>
-                    {garment.purchaseLocation}
-                  </p>
-                  <p>
-                    <label className="text-b">Purchase Date:<label className="tab"></label></label>
-                    {
-                      formatDate(garment.purchaseDate)
-                    }
-                  </p>
-                  <p>
-                    <label className="text-b">Purchase Method:<label className="tab"></label></label>
-                    {id_purchaseMethod[garment.purchaseMethod]}
-                  </p>
-                  <p>
-                    <label className="text-b">Cost:<label className="tab"></label></label>
-                    $ {garment.garmentCost}
-                    {garment.garmentDiscount === "discount_yes" && (<label> (Discounted)</label>)}
-                  </p>
-                  {
-                    garment.garmentDiscount === "discount_yes" &&
-                    (
-                      <p>
-                        <label className="tab"></label>
-                        <label className="text-b">Original Price:<label className="tab"></label></label>
-                        $ {garment.garmentOgCost}
-                      </p>
-                    )
-                  }
-                </div>
-              </div>
-              <br/>
-                  
-              <label className="container-subtitle-2">Garment Composition</label>
-              <div className="container-border clear-box">
-                <div className="container-grid-3-md gap m1-v">
-                  <div>
-                    <p className="text-b text-u center m0">Main</p>
-                    <ul>
-                    {
-                      garment.compositionMain.map((comp, index)=>{
-                        return (
-                          <li key={"main_"+index}>
-                              <label>{comp.value}:</label>
-                              <label className="tab"></label>
-                              <label>{comp.percent}%</label>
-                          </li>
-                        )
-                      })
-                    }
-                    </ul>
-                  </div>
-
-                  <div>
-                    <p className="text-b text-u center m0">Lining</p>
-                    {!garment.compositionLining.length > 0 && <p>N/A</p>}
-                    <ul>
-                    {
-                      garment.compositionLining.length > 0 &&
-                      garment.compositionLining.map((comp, index)=>{
-                        return (
-                          <li key={"lining_"+index}>
-                              <label>{comp.value}:</label>
-                              <label className="tab"></label>
-                              <label>{comp.percent}%</label>
-                          </li>
-                        )
-                      })
-                    }
-                    </ul>
-                  </div>
-
-                  <div>
-                    <p className="text-b text-u center m0">Padding/Stuffing</p>
-                    {!garment.compositionPadding.length > 0 && <p>N/A</p>}
-                    <ul>
-                    {
-                      garment.compositionPadding.length > 0 &&
-                      garment.compositionPadding.map((comp, index)=>{
-                        return (
-                          <li key={"padding_"+index}>
-                              <label>{comp.value}:</label>
-                              <label className="tab"></label>
-                              <label>{comp.percent}%</label>
-                          </li>
-                        )
-                      })
-                    }
-                    </ul>
-                  </div>
-
-                </div>
-              </div>
-
+        <hr/>
+        <div className="container-content popup">
+          <h3>Garment Details</h3>
+          <hr/>
+        </div>
+        <div className="container-border page-tab">
+          <div className="container-tab">
+            <div id="tab0" className="container-tab-group active" 
+              onClick={()=>{
+                let e_active = document.getElementById(`tab${tabPage}`);
+                if(e_active) {
+                  e_active.classList.toggle("active", false);
+                }
+                setTabPage(0);
+                let e_div = document.getElementById(`tab0`)
+                if(e_div) {
+                  e_div.classList.toggle("active", true);
+                }
+              }}
+            >
+              <p className="text-purpleLight">General</p>
             </div>
-          )
-        }
-
-        <br/><br/>
-        {
-          garment &&  (
-            <div>
-              <hr/>
-              <div className="container-content popup">
-                <h3>Care Instructions</h3>
-                <hr/>
-              </div>
-
-              <label className="container-subtitle-2">Washing Instructions</label>
-              <div className="container-border">
-                <div className="container-care">
-                    <div className="container-care-group">
-                      <span className="container-care-img">
-                        <CircleImg className="img-care" 
-                            iconUrl={getAttrByInpID(instructions.Wash["Wash"], id_instructionWash)}
-                            width="50%"/>
-                        <label>
-                          {getAttrByInpID(instructions.Wash["Wash"], id_instructionWash, "name")}
-                        </label>
-                      </span>
-                    </div>
-
-                    {
-                      instructions.Wash["Wash"] === "wash_yes" &&
-                      <div className="container-care-group">
-                        <span className="container-care-img">
-                          <CircleImg className="img-care" 
-                              iconUrl={getAttrByInpID(instructions.Wash["Machine"], id_instructionWash)}
-                              width="50%"/>
-                          <label>
-                            {getAttrByInpID(instructions.Wash["Machine"], id_instructionWash, "name")}
-                          </label>
-                        </span>
-                      </div>
-                    }
-
-                    {
-                      instructions.Wash["Wash"] === "wash_yes" &&
-                      instructions.Wash["Heat"] !== "wash_heat_xx" &&
-                      instructions.Wash["Heat"] !== "" &&
-                      <div className="container-care-group">
-                      <span className="container-care-img">
-                        <CircleImg className="img-care" 
-                            iconUrl={getAttrByInpID(instructions.Wash["Heat"], id_instructionWash)} 
-                            width="50%"/>
-                        <label>
-                          {getAttrByInpID(instructions.Wash["Heat"], id_instructionWash, "name")}
-                        </label>
-                      </span>
-                    </div>
-                    }
-
-                    {
-                      instructions.Wash["Wash"] === "wash_yes" &&
-                      instructions.Wash["Heat"] === "wash_heat_xx" &&
-                      instructions.Wash["Temp"] !== "" &&
-                      <div className="container-care-group">
-                        <span className="container-care-img">
-                          <CircleImg className="img-care" 
-                              iconUrl={getAttrByInpID(instructions.Wash["Temp"], id_instructionWash)} 
-                              width="50%"/>
-                          <label>
-                            {
-                              formatTemp(getAttrByInpID(instructions.Wash["Temp"], id_instructionWash, "name"))
-                            }
-                          </label>
-                        </span>
-                      </div>
-                    }
-
-                </div>
-              </div>
-              <br/>
-          
-              <label className="container-subtitle-2">Tumble Drying Instructions</label>
-              <div className="container-border">
-                <div className="container-care">
-                    <div className="container-care-group">
-                      <span className="container-care-img">
-                        <CircleImg className="img-care" 
-                            iconUrl={getAttrByInpID(instructions.Tumble["Tumble"], id_instructionTumble)}
-                            width="50%"/>
-                        <label>
-                          {getAttrByInpID(instructions.Tumble["Tumble"], id_instructionTumble, "name")}
-                        </label>
-                      </span>
-                    </div>
-
-                    {
-                      instructions.Tumble["Tumble"] === "tumble_no" &&
-                      <div className="container-care-group">
-                      <span className="container-care-img">
-                        <CircleImg className="img-care" 
-                            iconUrl={getAttrByInpID(instructions.Tumble["Air"], id_instructionDry)} 
-                            width="50%"/>
-                        <label>
-                          {getAttrByInpID(instructions.Tumble["Air"], id_instructionDry, "name")}
-                        </label>
-                      </span>
-                    </div>
-                    }
-  
-                    {
-                      instructions.Tumble["Tumble"] === "tumble_no" &&
-                      instructions.Tumble["Air"] === "dry_shade" &&
-                        <div className="container-care-group">
-                          <span className="container-care-img">
-                            <CircleImg className="img-care" 
-                                iconUrl={getAttrByInpID(instructions.Tumble["Shade"], id_instructionDry)} 
-                                width="50%"/>
-                            <label>
-                              {getAttrByInpID(instructions.Tumble["Shade"], id_instructionDry, "name")}
-                            </label>
-                          </span>
-                        </div>
-                    }
-
-                    {
-                      instructions.Tumble["Tumble"] === "tumble_yes" &&
-                        <div className="container-care-group">
-                          <span className="container-care-img">
-                            <CircleImg className="img-care" 
-                                iconUrl={getAttrByInpID(instructions.Tumble["Delicate"], id_instructionTumble)} 
-                                width="50%"/>
-                            <label>
-                              {getAttrByInpID(instructions.Tumble["Delicate"], id_instructionTumble, "name")}
-                            </label>
-                          </span>
-                        </div>    
-                    }
-
-                    {
-                      instructions.Tumble["Tumble"] === "tumble_yes" &&
-                      <div className="container-care-group">
-                        <span className="container-care-img">
-                          <CircleImg className="img-care" 
-                              iconUrl={getAttrByInpID(instructions.Tumble["Heat"], id_instructionTumble)} 
-                              width="50%"/>
-                          <label>
-                            {getAttrByInpID(instructions.Tumble["Heat"], id_instructionTumble, "name")}
-                          </label>
-                        </span>
-                      </div>
-                    }
-
-                </div>
-              </div>
-              <br/>
-
-              <label className="container-subtitle-2">Dry Cleaning Instructions</label>
-              <div className="container-border">
-                <div className="container-care">
-                  <div className="container-care-group">
-                    <span className="container-care-img">
-                      <CircleImg className="img-care" 
-                        iconUrl={getAttrByInpID(instructions.DryC["DryC"], id_instructionDryC)} 
-                        width="50%"
-                      />
-                      <label>
-                        {getAttrByInpID(instructions.DryC["DryC"], id_instructionDryC, "name")}
-                      </label>
-                    </span>
-                  </div>
-
-                  {
-                    instructions.DryC["DryC"] === "dryC_yes" &&
-                    <div className="container-care-group">
-                    <span className="container-care-img">
-                      <CircleImg className="img-care" 
-                          iconUrl={getAttrByInpID(instructions.DryC["Solvent"], id_instructionDryC)} 
-                          width="50%"/>
-                      <label>
-                        {getAttrByInpID(instructions.DryC["Solvent"], id_instructionDryC, "name")}
-                      </label>
-                    </span>
-                  </div>
-                  }
-
-                  {
-                    instructions.DryC["DryC"] === "dryC_yes" &&
-                    <div className="container-care-group">
-                    <span className="container-care-img">
-                      <CircleImg className="img-care" 
-                          iconUrl={getAttrByInpID(instructions.DryC["Care"], id_instructionDryC)} 
-                          width="50%"/>
-                      <label>
-                        {getAttrByInpID(instructions.DryC["Care"], id_instructionDryC, "name")}
-                      </label>
-                    </span>
-                  </div>
-                  }
-
-                </div>
-              </div>
-              <br/>
-
-              <label className="container-subtitle-2">Ironing Instructions</label>
-              <div className="container-border">
-                <div className="container-care">
-                    <div className="container-care-group">
-                      <span className="container-care-img">
-                        <CircleImg className="img-care" 
-                          iconUrl={getAttrByInpID(instructions.Iron["Iron"], id_instructionIron)} 
-                          width="50%"
-                        />
-                        <label>
-                          {getAttrByInpID(instructions.Iron["Iron"], id_instructionIron, "name")}
-                        </label>
-                      </span>
-                    </div>
-
-                    {
-                      instructions.Iron["Iron"] === "iron_yes" &&
-                      <div className="container-care-group">
-                        <span className="container-care-img">
-                          <CircleImg className="img-care" 
-                              iconUrl={getAttrByInpID(instructions.Iron["Heat"], id_instructionIron)} 
-                              width="50%"/>
-                          <label>
-                            {getAttrByInpID(instructions.Iron["Heat"], id_instructionIron, "name")}
-                          </label>
-                        </span>
-                      </div>
-                    }
-
-                </div>
-              </div>
-              <br/>
-
-              <label className="container-subtitle-2">Bleaching Instructions</label>
-              <div className="container-border">
-                <div className="container-care">
-                  <div className="container-care-group">
-                    <span className="container-care-img">
-                      <CircleImg className="img-care" 
-                        iconUrl={getAttrByInpID(instructions.Bleach["Bleach"], id_instructionBleach)} 
-                        width="50%"
-                      />
-                      <label>
-                        {getAttrByInpID(instructions.Bleach["Bleach"], id_instructionBleach, "name")}
-                      </label>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
+            <div id="tab1" className="container-tab-group"
+              onClick={()=>{
+                let e_active = document.getElementById(`tab${tabPage}`);
+                if(e_active) {
+                  e_active.classList.toggle("active", false);
+                }
+                setTabPage(1);
+                let e_div = document.getElementById(`tab1`)
+                if(e_div) {
+                  e_div.classList.toggle("active", true);
+                }
+              }}
+            >
+              <p className="text-purpleLight">Measurements</p>
             </div>
-        )}
+            <div id="tab2" className="container-tab-group"
+              onClick={()=>{
+                let e_active = document.getElementById(`tab${tabPage}`);
+                if(e_active) {
+                  e_active.classList.toggle("active", false);
+                }
+                setTabPage(2);
+                let e_div = document.getElementById(`tab2`)
+                if(e_div) {
+                  e_div.classList.toggle("active", true);
+                }
+              }}
+            >
+              <p className="text-purpleLight">Composition</p>
+            </div>
+            <div id="tab3" className="container-tab-group"
+              onClick={()=>{
+                let e_active = document.getElementById(`tab${tabPage}`);
+                if(e_active) {
+                  e_active.classList.toggle("active", false);
+                }
+                setTabPage(3);
+                let e_div = document.getElementById(`tab3`)
+                if(e_div) {
+                  e_div.classList.toggle("active", true);
+                }
+              }}
+            >
+              <p className="text-purpleLight">Care Instructions</p>
+            </div>
+            <div id="tab4" className="container-tab-group"
+              onClick={()=>{
+                let e_active = document.getElementById(`tab${tabPage}`);
+                if(e_active) {
+                  e_active.classList.toggle("active", false);
+                }
+                setTabPage(4);
+                let e_div = document.getElementById(`tab4`)
+                if(e_div) {
+                  e_div.classList.toggle("active", true);
+                }
+              }}
+            >
+              <p className="text-purpleLight">Wear & Tear</p>
+            </div>
+          </div>
 
+          {
+            tabPage === 0 &&
+            garment && (
+              <General garment={garment}/>
+            )
+          }
+
+          {
+            tabPage === 1 &&
+            garment && (
+              <div>
+              </div>
+            )
+          }
+
+          {
+            tabPage === 2 &&
+            garment && (
+              <Composition garment={garment}/>
+            )
+          }
+
+          {
+            tabPage === 3 &&
+            garment && (
+              <Care garment={garment}/>
+            )
+          }
+
+          {
+            tabPage === 4 &&
+            <div></div>
+          }
+
+        </div>
+        
       </div>
     </div>
   )

@@ -543,6 +543,10 @@ $screen-xl-min: 1200px;
 .clear-box {
     background-color: Colors.$purpleLight;
 }
+.page-tab {
+    border-radius: 0;
+    padding: 0;
+}
 
 .container-card {
     background-color: Colors.$purpleLight;
@@ -602,6 +606,40 @@ $screen-xl-min: 1200px;
         img {
             max-width: 20em;
             max-height: 20em;
+        }
+    }
+}
+
+.container-tab {
+    @include container-col;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    background-color: Colors.$purple;   
+    border-bottom: 0.05em solid Colors.$purpleScarlet;
+    text-align: center;
+
+    .container-tab-group {
+        width: 100%;
+        color: Colors.$purpleLight;
+        cursor: pointer;
+        box-shadow: inset 0.1em 0.1em 0.2em rgba(0,0,0,0.1);
+    }
+    .container-tab-group:hover {
+        background-color: darken(Colors.$purple, 10);
+    }
+    .container-tab-group.active {
+        background-color: darken(Colors.$purple, 20);
+    }
+
+    // Medium devices
+    @include md {
+        flex-direction: row;
+
+        .container-tab-group {
+            width: auto;
+            box-shadow: none;
+            padding: 0 1em;
+            border-right: 0.05em solid Colors.$gray2;
         }
     }
 }
