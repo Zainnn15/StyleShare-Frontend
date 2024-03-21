@@ -156,7 +156,7 @@ export default function GarmentTear() {
 
             <div>
                 <div className="container-prompt">
-                    <p>What are the wear and tears? (Check all that applies)</p>
+                    <p>What are the wear and tear issues? (Check all that apply)</p>
                 </div>
                 <div id={"wearTear_error"} style={{textAlign:"center"}}></div>
                 <div className="container-radio">
@@ -1044,7 +1044,7 @@ export default function GarmentTear() {
         wantRepair && (
             <div>
             <div className="container-prompt">
-                <p>Select which repairs are needed (Check all that applies)</p>
+                <p>Select which repairs are needed (Check all that apply)</p>
             </div>
             <div id={"repair_error"} style={{textAlign:"center"}}></div>
             {

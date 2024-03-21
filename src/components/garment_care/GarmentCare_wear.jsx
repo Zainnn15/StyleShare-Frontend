@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useContext } from 'react';
 import { UserContext } from '../../../context/userContext';
 import { useNavigate } from "react-router-dom";
-import { clickID, readURL, selectID, validate, validatePage } from '../../constants/functions/inputHandlers';
+import {validatePage } from '../../constants/functions/inputHandlers';
 import selectImg from '../../assets/icons/select_img.png';
 
 export default function GarmentWear() {
@@ -16,39 +16,43 @@ export default function GarmentWear() {
     const {user} = useContext(UserContext);
     const [wearDate, setWearDate] = useState('');
     const [wearTime, setWearTime] = useState('');
-    const [fileWearFront, setFileWearFront] = useState('');
-    const [fileWearBack, setFileWearBack] = useState('');
+    const [WearFront, setWearFront] = useState('');
+    const [WearBack, setWearBack] = useState('');
 
     // Function to send the garment details to the backend
     const sendGarmentDetails = async () => {
+        const formData = new FormData();
+        formData.append('wearDate', wearDate);
+        formData.append('wearTime', wearTime);
+        formData.append('userId', user.id);
+        if (WearFront) formData.append('WearFront', WearFront);
+        if (WearBack) formData.append('WearBack', WearBack);
+
         try {
-        const garmentData = {
-            wearDate,
-            wearTime,
-            fileWearFront,
-            fileWearBack,
-        };
+            const { data } = await axios.post('/addgarmentdetails', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
 
-        // Spread garmentData at the same level as userId
-        const {data} = await axios.post('/addgarmentdetails', {...garmentData, userId: user.id});
-
-        if (data.error) {
-            toast.error(data.error);
-        } else {
-            toast.success(data.message);
-        }
+            if (data.error) {
+                toast.error(data.error);
+            } else {
+                toast.success(data.message);
+                navigate('/garment-care');
+            }
         } catch (error) {
-        console.log('Error sending garment details to the backend:', error);
+            console.error('Error sending garment wear details:', error);
+            toast.error('Failed to send garment wear details.');
         }
     };
+
 
     // Call the sendGarmentDetails function when the form is submitted
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("submitting");
-        sendGarmentDetails();
-        navigate('/garment-care');
-    };
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // Prevent default form submission behavior
+        await sendGarmentDetails(); // Send the garment details
+      };
 
 
     //handle submit button
@@ -102,57 +106,24 @@ export default function GarmentWear() {
             <br/>
 
             <div className="container-grid-2-md gap">
-            <div>
-                <div className="container-prompt" onClick={()=>selectID("fileWearFront")}>
-                    <p>Front photo of the garment after wearing</p>
-                </div>
-                <div id={"fileWearFront_error"} style={{textAlign:"center"}}></div>
-                <div className='container-input-img clickable' onClick={()=>clickID("fileWearFront")}>
-                    <img className='clickable' id='fileWearFront_img' src={selectImg} alt='current photo'/>
-                </div>
-                <div className="container-input">
-                    <input  type="file" id="fileWearFront" name="fileWearFront" 
-                        onChange={(e) => {
-                            setFileWearFront(e.target.files[0]);
-                            if(e.target.files[0]) {
-                                readURL("fileWearFront", "fileWearFront_img");
-                                validate("fileWearFront");
-                            }
-                        }}
-                        required
-                    />
-                </div>
-            </div>
+                        <div className='container-input-img clickable'>
+                            <label>Front photo of the garment after wearing</label>
+                            <input type="file" onChange={(e) => setWearFront(e.target.files[0])} required />
+                            <img id='fileWearFront_img' src={WearFront ? URL.createObjectURL(WearFront) : selectImg} alt='Front Wear' />
+                        </div>
 
-            <div>
-                <div className="container-prompt" onClick={()=>selectID("fileWearBack")}>
-                    <p>Back photo of the garment after wearing</p>
-                </div>
-                <div id={"fileWearBack_error"} style={{textAlign:"center"}}></div>
-                <div className='container-input-img clickable' onClick={()=>clickID("fileWearBack")}>
-                    <img className='clickable' id='fileWearBack_img' src={selectImg} alt='current photo'/>
-                </div>
-                <div className="container-input">
-                    <input  type="file" id="fileWearBack" name="fileWearBack" 
-                        onChange={(e) => {
-                            setFileWearBack(e.target.files[0]);
-                            if(e.target.files[0]) {
-                                readURL("fileWearBack", "fileWearBack_img");
-                                validate("fileWearBack");
-                            }
-                        }}
-                        required
-                    />
-                </div>
-            </div>
-            
-            </div>
+                        <div className='container-input-img clickable'>
+                            <label>Back photo of the garment after wearing</label>
+                            <input type="file" onChange={(e) => setWearBack(e.target.files[0])} required />
+                            <img id='fileWearBack_img' src={WearBack ? URL.createObjectURL(WearBack) : selectImg} alt='Back Wear' />
+                        </div>
+                    </div>
 
             
 
             <br/>
             <div className='container-input'>
-                <button className="button-form full" type="submit" onClick={validateAndSubmit}>
+                <button className="button-form full" type="submit" onClick={handleSubmit}>
                     Save
                 </button>
             </div>
