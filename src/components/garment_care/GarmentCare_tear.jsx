@@ -3,147 +3,141 @@ import { useState } from 'react';
 import '../../styles/main.scss';
 import { toast } from 'react-hot-toast';
 import ScreenHeaderIn from "../../components/common/ScreenHeaderIn";
-import { wearTears, repairRequests, measurementTypes } from '../../constants/data/lists';
+import { wearTears, repairRequests} from '../../constants/data/lists';
 import InfoPopup from '../../components/common/InfoPopup';
-import { addErrorMessageByID, checkOnID, clickID, readURL, validatePage } from '../../constants/functions/inputHandlers';
+import { addErrorMessageByID, checkOnID, clickID, readURL } from '../../constants/functions/inputHandlers';
+import { GARMENT_TYPES } from '../../constants/data/options';
+import { measurementTypes } from '../../constants/data/lists';
 import axios from 'axios';
 import { useContext } from 'react';
 import { UserContext } from '../../../context/userContext';
-import { useNavigate } from 'react-router-dom';
 import { GarmentContext } from '../../../context/garmentContext';
+import { useNavigate } from 'react-router-dom';
 import PopupImg from '../common/PopupImg';
 import CircleBtn from '../common/CircleBtn';
-import { GARMENT_TYPES } from '../../constants/data/options';
 import info from '../../assets/icons/info.png';
 import selectImg from '../../assets/icons/select_img.png';
 import img_twisting from '../../assets/images/twisting.png';
 import img_shrinking from '../../assets/images/spandex_shrink.png';
 import img_pilling from '../../assets/images/pilling.png';
 
+
 export default function GarmentTear() {
-  const navigate = useNavigate();
-  const options = GARMENT_TYPES;
-  const {user} = useContext(UserContext);
-  const {garment} = useContext(GarmentContext);
-  const measureTypes = getSetByCategory(getCategory(garment.garmentType));
-  const [measures, setMeasures] = useState([...measureTypes]);
-  const [tearDate, setTearDate] = useState('');
-  const [wantRepair, setWantRepair] = useState(false);
-  const [wearTear, setWearTear] = useState({
-    'colorFade': 0,
-    'pilling': 0,
-    'shapeLoss': 0,
-    'twisting': 0,
-    'washShrink': 0,
-    'washDiscolor': 0,
-    'spandexShrink': 0,
-    'printFade': 0,
-    'hole': 0,
-    'labelItching': 0,
-    'looseButton':0,
-    'stain': 0,
-    'other': 0,
-  });
-  const [tearExtra, setTearExtra] = useState({
-    "colorLost":"",
-    "pillingArea":"",
-    "pillingStrength":"",
-    "shapeLossArea":"",
-    "shapeLossHow":"",
-    "twistingArea":"",
-    "twistingSize":"",
-    "twistingImg":"",
-    "discolorHow":"",
-    "spandexShrinkArea":"",
-    "spandexShrinkImg":"",
-    "printFade":"",
-    "printFadeImg":"",
-    "holeArea":"",
-    "holeSize":"",
-    "holeImg":"",
-    "looseButtonArea":"",
-    "looseButtonQty":"",
-    "stainArea":"",
-    "stainSourceKnow":"",
-    "stainSource":"",
-    "stainUgly":"",
-    "stainImg":"",
-    "tearOther":"",
-  });
-  const [repairRequest, setRepairRequest] = useState({
-    "looseButton":"",
-    "brokenZipper":"",
-    "lostString":"",
-    "looseHem":"",
-    "other":"",
-  });
-  const [repairOther, setRepairOther] = useState('');
-
-  // Function to send the garment details to the backend
-  const sendGarmentDetails = async () => {
-    try {
-      const garmentData = {
-        tearDate,
-        wantRepair,
-        wearTear,
-        tearExtra,
-        repairRequest,
-        repairOther,
-      };
-
-      // Spread garmentData at the same level as userId
-      const {data} = await axios.post('/addgarmentdetails', {...garmentData, userId: user.id});
-
-      if (data.error) {
-        toast.error(data.error);
-      } else {
-        toast.success(data.message);
-      }
-    } catch (error) {
-      console.log('Error sending garment details to the backend:', error);
-    }
-  };
-
-    // functions
-    function getCategory(val) {
-        let category = -1;
-        for (let i = 0; i < options.length; i++) {
-            if (options[i].value === val) {
-                category = options[i].cat;
-                break;
-            }
+    const navigate = useNavigate();
+    const { user } = useContext(UserContext);
+    const { garment } = useContext(GarmentContext);
+    const [tearDate, setTearDate] = useState('');
+    const [wantRepair, setWantRepair] = useState(false);
+    const measureTypes = garment ? getSetByCategory(getCategory(garment?.garmentType)) : [];
+  const [measures] = useState([...measureTypes]);
+    const [wearTear, setWearTear] = useState({
+      'colorFade': 0,
+      'pilling': 0,
+      'shapeLoss': 0,
+      'twisting': 0,
+      'washShrink': 0,
+      'washDiscolor': 0,
+      'spandexShrink': 0,
+      'printFade': 0,
+      'hole': 0,
+      'labelItching': 0,
+      'looseButton':0,
+      'stain': 0,
+      'other': 0,
+    });
+    const [tearExtra, setTearExtra] = useState({
+      // All tearExtra fields initialized
+    });
+    const [repairRequest, setRepairRequest] = useState({
+      "looseButton": "",
+      "brokenZipper": "",
+      "lostString": "",
+      "looseHem": "",
+      "other": "",
+    });
+    const [repairOther, setRepairOther] = useState('');
+  
+    const sendGarmentDetails = async () => {
+        const formData = new FormData();
+        formData.append('tearDate', tearDate);
+        formData.append('wantRepair', wantRepair);
+        formData.append('wearTear', JSON.stringify(wearTear));
+        formData.append('tearExtra', JSON.stringify(tearExtra));
+        formData.append('repairRequest', JSON.stringify(repairRequest));
+        formData.append('repairOther', repairOther);
+    
+        // Append images and other file inputs dynamically
+        Object.entries(tearExtra).forEach(([key, value]) => {
+          if (value instanceof File) {
+            formData.append(key, value);
+          }
+        });
+    
+        formData.append('userId', user.id);
+    
+        try {
+          const { data } = await axios.post('/addgarmentdetails', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+    
+          if (data.error) {
+            toast.error(data.error);
+          } else {
+            toast.success('Garment details updated successfully');
+            navigate("/garment-care"); // Adjust as needed
+          }
+        } catch (error) {
+          console.error('Error sending garment details:', error);
+          toast.error('An error occurred while updating garment details.');
         }
+    };
+    
+    function getCategory(val) {
+        const category = GARMENT_TYPES.find(option => option.value === val)?.cat;
+        console.log(`Category found: ${category}`);
         return category;
     }
-
+    
     function getSetByCategory(catID) {
-        let objArr = [];
-        measurementTypes.forEach((obj) => {
-            if (obj.categories.includes(catID)) {
-                objArr.push(obj);
-            }
-        });
+        const objArr = measurementTypes.filter(obj => obj.categories.includes(catID));
+        console.log(`objArr returned: `, objArr);
         return objArr;
     }
 
-  // Call the sendGarmentDetails function when the form is submitted
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    sendGarmentDetails();
-    navigate("/garment-care");
-  };
-
-    //handle submit button
+    const validatePage = (selector) => {
+        // Assuming this function is supposed to select elements and validate them
+        const elements = document.querySelectorAll(selector);
+        let isValid = true;
+        elements.forEach(el => {
+            // Example validation check for an input
+            if(el.type === 'text' && !el.value.trim()) {
+                console.error(`Validation failed for ${el.name}: Field is empty.`);
+                isValid = false;
+            }
+            // Add other validation checks as needed
+        });
+        return isValid;
+    };
+    
+    // New validateAndSubmit function similar to GarmentWear
     function validateAndSubmit(e) {
-        let querySelect = "input[type='text'],input[type='number'],input[type='date'],select";
-        if(!validatePage(querySelect)) {
-            return false;
+        e.preventDefault(); // Prevent the default form submission behavior
+    
+        // Perform your validation check here
+        if (!validatePage("input[type='text'],input[type='number'],input[type='date'],select")) {
+            console.error('Validation failed. Please check your input.');
+            toast.error('Validation failed. Please check your input.');
+            // Log detailed information here
+            console.log('Inspecting inputs for failure reasons:');
+            // Potentially call a more detailed validation check here that logs specific failures
+            return; // Stop execution if validation fails
         }
-        
-        handleSubmit(e);
-        return true;
+    
+        console.log('Validation passed, proceeding with sending garment details.');
+        sendGarmentDetails();
     }
-
 
   return (
     <div>
@@ -1096,7 +1090,7 @@ export default function GarmentTear() {
 
           <br/>
           <div className='container-input'>
-              <button className="button-form full" type="submit" onClick={validateAndSubmit}>
+              <button className="button-form full" type="submit">
                   Save
               </button>
           </div>

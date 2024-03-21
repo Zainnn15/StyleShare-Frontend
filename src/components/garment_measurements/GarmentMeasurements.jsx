@@ -11,8 +11,6 @@ import info from '../../assets/icons/info.png';
 import { selectID } from "../../constants/functions/inputHandlers";
 import { GARMENT_TYPES, GARMENT_SIZES, GARMENT_FITS, GARMENT_SIZE_TYPES } from "../../constants/data/options";
 import { measurementTypes } from "../../constants/data/lists";
-import PopupImg from "../common/PopupImg";
-import CircleBtn from "../common/CircleBtn";
 import { useNavigate } from "react-router-dom";
 //comment out to enable selecting of garment
 import { GarmentContext } from "../../../context/garmentContext";
