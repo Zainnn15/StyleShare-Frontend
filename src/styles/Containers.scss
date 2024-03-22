@@ -578,6 +578,7 @@ $screen-xl-min: 1200px;
     height: 12em;
     background-color: Colors.$purpleLight;
     margin: auto;
+    padding: 1%;
     
     img {
         max-width: 12em;
@@ -587,7 +588,7 @@ $screen-xl-min: 1200px;
     // Small devices
     @include sm {
         width: 18em;
-        height: 18em;
+        height: max-content;
         img {
             max-width: 18em;
             max-height: 18em;
@@ -597,7 +598,7 @@ $screen-xl-min: 1200px;
     // Medium devices
     @include md {
         width: 20em;
-        height: 20em;
+        height: max-content;
         img {
             max-width: 20em;
             max-height: 20em;

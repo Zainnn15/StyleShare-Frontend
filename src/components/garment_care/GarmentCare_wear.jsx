@@ -85,7 +85,7 @@ export default function GarmentWear() {
             
             <div>
                 <div className='container-prompt'>
-                <p>How long was the garment worn? (in hours)</p>
+                <p>How long was the garment worn?</p>
                 <InfoPopup text='How many hours was the garment worn? If not known, use your best estimate'/>
                 </div>
                 <div id={"hoursWorn_error"} style={{textAlign:"center"}}></div>

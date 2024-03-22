@@ -277,7 +277,6 @@ export default function GarmentTear() {
                                 required
                             >
                                 <option value=''>Select a strength...</option>
-                                <option value='little'>Little</option>
                                 <option value='hardlyVisible'>Hardly Visible</option>
                                 <option value='visible'>Visible</option>
                                 <option value='stronglyVisible'>Strongly Visible</option>
@@ -337,7 +336,7 @@ export default function GarmentTear() {
                                     "shapeLossHow": e.target.value
                                 });
                                 }}
-                                placeholder='Describe how the shape was lost'
+                                placeholder='Describe how the shape is different'
                                 required
                             />                
                             </div>
@@ -394,7 +393,7 @@ export default function GarmentTear() {
                                     "twistingArea": e.target.value
                                 });
                                 }}
-                                placeholder='Describe where it has twisted'
+                                placeholder='Describe where it twisted'
                                 required
                             />                
                             </div>
@@ -538,7 +537,7 @@ export default function GarmentTear() {
                                     "discolorHow": e.target.value
                                     });
                                 }}
-                                placeholder='Did the change come from other garments during wash process? Describe'
+                                placeholder='Describe the change in color'
                                 rows={3}
                                 required
                             >
@@ -584,7 +583,7 @@ export default function GarmentTear() {
                         wearTear.spandexShrink === 1 && (
                         <div>
                             <div className='container-prompt'>
-                            <p>Describe the area which has been affected</p>
+                            <p>Describe the area that has been affected</p>
                             </div>
                             <div className='container-input'>
                             <input
@@ -598,7 +597,7 @@ export default function GarmentTear() {
                                     "spandexShrinkArea": e.target.value
                                 });
                                 }}
-                                placeholder='Which part did it shrink?'
+                                placeholder='Which area shrunk?'
                                 required
                             />                
                             </div>
@@ -646,6 +645,7 @@ export default function GarmentTear() {
                             <div>
                                 <div className='container-prompt'>
                                 <p>How much percent of the print faded?</p>
+                                <InfoPopup text='How much of the print area has faded? 0% means nothing has faded and 100% means it is completely faded. If not known, use your best estimate'/>
                                 </div>
                                 <div className='container-input'>
                                 <input
@@ -708,7 +708,7 @@ export default function GarmentTear() {
                         wearTear.hole === 1 && (
                         <div>
                             <div className='container-prompt'>
-                            <p>Which part of the garment has holes?</p>
+                            <p>Which part of the garment has a hole?</p>
                             </div>
                             <div className='container-input'>
                             <input
@@ -802,7 +802,7 @@ export default function GarmentTear() {
                         wearTear.looseButton === 1 && (
                         <div>
                             <div className='container-prompt'>
-                            <p>Describe which buttons</p>
+                            <p>Where on the garment?</p>
                             </div>
                             <div className='container-input'>
                             <input
@@ -861,7 +861,7 @@ export default function GarmentTear() {
                         wearTear.stain === 1 && (
                         <div>
                             <div className='container-prompt'>
-                            <p>Describe the area that has the stain</p>
+                            <p>Describe the stained area</p>
                             </div>
                             <div className='container-input'>
                             <input
@@ -874,7 +874,7 @@ export default function GarmentTear() {
                                     "stainArea": e.target.value
                                 });
                                 }}
-                                placeholder='Which part has the stain?'
+                                placeholder='Where is the stain?'
                                 required
                             />                
                             </div>
@@ -934,7 +934,7 @@ export default function GarmentTear() {
                             )
                             }
                             <div className='container-prompt'>
-                            <p>Did the stain make it too ugly to wear?</p>
+                            <p>Does the stain make it too ugly to wear?</p>
                             </div>
                             <div className="container-radio">
                             <div className="container-radio-group">
