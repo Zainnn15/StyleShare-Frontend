@@ -9,6 +9,14 @@ import Card from '../../components/common/Card';
 import { findAttribute, getImageFromURL } from '../../constants/functions/valueHandlers';
 import { GARMENT_TYPES } from '../../constants/data/options';
 import notApplicable from '../../assets/icons/not_applicable.png'
+import General from '../../components/profile/Garment_general'
+import Measure from '../../components/profile/Garment_measure'
+import Composition from '../../components/profile/Garment_composition'
+import Care from '../../components/profile/Garment_care'
+import Wear from '../../components/profile/Garment_wear'
+import Wash from '../../components/profile/Garment_wash'
+import Tear from '../../components/profile/Garment_tear'
+
 
 Modal.setAppElement('#root'); // Set this to your application root element
 
@@ -18,12 +26,14 @@ function GarmentExchange() {
     const [exchangeRequests, setExchangeRequests] = useState([]);
     const [sentRequests, setSentRequests] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [garmentModalID, setGarmentModalID] = useState('');
     const [reservationDetails, setReservationDetails] = useState({
         pickupDate: '',
         pickupTime: '',
         pickupLocation: '',
     });
     const [selectedGarmentDetails, setSelectedGarmentDetails] = useState(null);
+    const [tabPage, setTabPage] = useState(0);
 
     useEffect(() => {
         if (user.id) {
@@ -95,6 +105,10 @@ function GarmentExchange() {
         }
     };
 
+    function handleCardPress(garment) {
+        setGarmentModalID(garment);
+    }
+
     return (
         <div>
             <ScreenHeader />
@@ -118,7 +132,7 @@ function GarmentExchange() {
                                         imgUrl={getImageFromURL(member.garments[0].fileFront)}
                                         imgClassName={"container-card-img"}
                                         title={<p className="center text-purpleLight text-midLg">{member.username}</p>}
-                                        titleClassName={"container-row bg-purpleDark"}
+                                        titleClassName={"container-row clickable bg-purpleDark"}
                                         description={
                                             <div>
                                                 <p className="card-text">Type: {findAttribute(GARMENT_TYPES, garment.garmentType)}</p>
@@ -137,6 +151,9 @@ function GarmentExchange() {
                                         }
                                         isBtn={false}
                                         footerClassName={"center"}
+                                        handleImgPress={()=>handleCardPress(garment)}
+                                        handleTitlePress={()=>handleCardPress(garment)}
+                                        handleDescPress={()=>handleCardPress(garment)}
                                     />
                                     </div>
                                 ))}
@@ -249,6 +266,205 @@ function GarmentExchange() {
                                 <button className="button-regular full" onClick={handleModalSubmit}>Submit</button>
                             </form>
                         </Modal>
+
+                        {/* Garment Details Modal */}
+                        {
+                            garmentModalID !== "" &&
+                            <Modal
+                            isOpen={garmentModalID !== ""}
+                            onRequestClose={() => {
+                                setGarmentModalID("");
+                                setTabPage(0);
+                            }}
+                            contentLabel="Reservation Details"
+                            style={{
+                                content: {
+                                    top: '20%',
+                                    left: '50%',
+                                    right: 'auto',
+                                    bottom: 'auto',
+                                    transform: 'translate(-50%, 0)',
+                                    backgroundColor: "#F8E7E7",
+                                    maxHeight: '65%',
+                                    width: '90%'
+                                },
+                            }}
+                        >
+                            {
+                                garmentModalID !== "" && (
+                                <div className='container'>
+                                    <hr/>
+                                    <div className="container-content popup">
+                                    <h3>Garment Details</h3>
+                                    <hr/>
+                                    </div>
+                                    <div className="container-border page-tab">
+                                    <div className="container-tab">
+                                        <div id="tab0" className="container-tab-group active" 
+                                        onClick={()=>{
+                                            let e_active = document.getElementById(`tab${tabPage}`);
+                                            if(e_active) {
+                                            e_active.classList.toggle("active", false);
+                                            }
+                                            setTabPage(0);
+                                            let e_div = document.getElementById(`tab0`)
+                                            if(e_div) {
+                                            e_div.classList.toggle("active", true);
+                                            }
+                                        }}
+                                        >
+                                        <p className="text-purpleLight">General</p>
+                                        </div>
+                                        <div id="tab1" className="container-tab-group"
+                                        onClick={()=>{
+                                            let e_active = document.getElementById(`tab${tabPage}`);
+                                            if(e_active) {
+                                            e_active.classList.toggle("active", false);
+                                            }
+                                            setTabPage(1);
+                                            let e_div = document.getElementById(`tab1`)
+                                            if(e_div) {
+                                            e_div.classList.toggle("active", true);
+                                            }
+                                        }}
+                                        >
+                                        <p className="text-purpleLight">Measurements</p>
+                                        </div>
+                                        <div id="tab2" className="container-tab-group"
+                                        onClick={()=>{
+                                            let e_active = document.getElementById(`tab${tabPage}`);
+                                            if(e_active) {
+                                            e_active.classList.toggle("active", false);
+                                            }
+                                            setTabPage(2);
+                                            let e_div = document.getElementById(`tab2`)
+                                            if(e_div) {
+                                            e_div.classList.toggle("active", true);
+                                            }
+                                        }}
+                                        >
+                                        <p className="text-purpleLight">Composition</p>
+                                        </div>
+                                        <div id="tab3" className="container-tab-group"
+                                        onClick={()=>{
+                                            let e_active = document.getElementById(`tab${tabPage}`);
+                                            if(e_active) {
+                                            e_active.classList.toggle("active", false);
+                                            }
+                                            setTabPage(3);
+                                            let e_div = document.getElementById(`tab3`)
+                                            if(e_div) {
+                                            e_div.classList.toggle("active", true);
+                                            }
+                                        }}
+                                        >
+                                        <p className="text-purpleLight">Care Instructions</p>
+                                        </div>
+                                        <div id="tab4" className="container-tab-group"
+                                        onClick={()=>{
+                                            let e_active = document.getElementById(`tab${tabPage}`);
+                                            if(e_active) {
+                                            e_active.classList.toggle("active", false);
+                                            }
+                                            setTabPage(4);
+                                            let e_div = document.getElementById(`tab4`)
+                                            if(e_div) {
+                                            e_div.classList.toggle("active", true);
+                                            }
+                                        }}
+                                        >
+                                        <p className="text-purpleLight">Wear</p>
+                                        </div>
+                                        <div id="tab5" className="container-tab-group"
+                                        onClick={()=>{
+                                            let e_active = document.getElementById(`tab${tabPage}`);
+                                            if(e_active) {
+                                            e_active.classList.toggle("active", false);
+                                            }
+                                            setTabPage(5);
+                                            let e_div = document.getElementById(`tab5`)
+                                            if(e_div) {
+                                            e_div.classList.toggle("active", true);
+                                            }
+                                        }}
+                                        >
+                                        <p className="text-purpleLight">Wash</p>
+                                        </div>
+                                        <div id="tab6" className="container-tab-group"
+                                        onClick={()=>{
+                                            let e_active = document.getElementById(`tab${tabPage}`);
+                                            if(e_active) {
+                                            e_active.classList.toggle("active", false);
+                                            }
+                                            setTabPage(6);
+                                            let e_div = document.getElementById(`tab6`)
+                                            if(e_div) {
+                                            e_div.classList.toggle("active", true);
+                                            }
+                                        }}
+                                        >
+                                        <p className="text-purpleLight">Tear</p>
+                                        </div>
+                                    </div>
+
+                                    {
+                                        tabPage === 0 &&
+                                        garmentModalID && (
+                                        <General garment={garmentModalID}/>
+                                        )
+                                    }
+
+                                    {
+                                        tabPage === 1 &&
+                                        garmentModalID.garmentSize && (
+                                        <Measure garment={garmentModalID}/>
+                                        )
+                                    }
+
+                                    {
+                                        tabPage === 2 &&
+                                        garmentModalID && (
+                                        <Composition garment={garmentModalID}/>
+                                        )
+                                    }
+
+                                    {
+                                        tabPage === 3 &&
+                                        garmentModalID && (
+                                        <Care garment={garmentModalID}/>
+                                        )
+                                    }
+
+                                    {
+                                        tabPage === 4 &&
+                                        garmentModalID.wearDate && (
+                                        <Wear garment={garmentModalID}/>
+                                        )
+                                    }
+
+                                    {
+                                        tabPage === 5 &&
+                                        garmentModalID.washCareInstructions && (
+                                        <Wash garment={garmentModalID}/>
+                                        )
+                                    }
+
+                                    {
+                                        tabPage === 6 &&
+                                        garmentModalID.tearInfo && (
+                                        <Tear garment={garmentModalID}/>
+                                        )
+                                    }
+
+                                    </div>
+                                </div>
+                                )
+                            }
+                            
+                        </Modal>
+                        }
+                        
+                        
                     </div>
                 );
             }

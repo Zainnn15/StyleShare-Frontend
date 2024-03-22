@@ -160,7 +160,7 @@ const [customCampus, setCustomCampus] = useState('');
               <label className="container-title">Profile</label>
               <hr/>
           </div>
-          <div className="container-row space-evenly container-border greeting">
+          <div className="container-row space-evenly wrap container-border greeting">
             <div className="container-profile-img">
               <img src={garment ? getImageFromURL(garment.fileFront) : profile} alt="profile"/>    
             </div>        
@@ -447,7 +447,7 @@ const [customCampus, setCustomCampus] = useState('');
 
           {
             tabPage === 1 &&
-            garment && (
+            garment.garmentSize && (
               <Measure garment={garment}/>
             )
           }
@@ -468,21 +468,21 @@ const [customCampus, setCustomCampus] = useState('');
 
           {
             tabPage === 4 &&
-            garment && (
+            garment.wearDate && (
               <Wear garment={garment}/>
             )
           }
 
           {
             tabPage === 5 &&
-            garment && (
+            garment.washCareInstructions && (
               <Wash garment={garment}/>
             )
           }
 
           {
             tabPage === 6 &&
-            garment && (
+            garment.tearInfo && (
               <Tear garment={garment}/>
             )
           }

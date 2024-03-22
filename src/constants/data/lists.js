@@ -417,8 +417,8 @@ const careInstructions = {
 	"ironHeatHigh":{"type":"iron", "subtype":"Heat", "name":"High heat. Maximum temperature 390"+
 		String.fromCharCode(176)+"F (200"+String.fromCharCode(176)+"C)", 
 		"value":"ironHeatHigh", "img":ironHeatHigh},
-	"noBleach":{"type":"bleach", "subtype":"", "name":"Do not bleach", "value":"beach0", "img":noBleach},
-	"bleach":{"type":"bleach", "subtype":"Bleach", "name":"Bleach", "value":"bleach1", "img":bleach},
+	"noBleach":{"type":"bleach", "subtype":"", "name":"Do not bleach", "value":"noBleach", "img":noBleach},
+	"bleach":{"type":"bleach", "subtype":"Bleach", "name":"Bleach", "value":"bleach", "img":bleach},
 	"bleachNonCl":{"type":"bleach", "subtype":"Bleach", "name":"Only non-chloride bleach", 
 		"value":"bleachNonCl", "img":bleachNonCl},
 };

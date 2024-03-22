@@ -7,7 +7,8 @@ $large: 24px;
 $xLarge: 26px;
 $xxLarge: 32px;
 
-$profileImg: 200px;
+$profileImg_sm: 150px;
+$profileImg_md: 200px;
 
 /*Size*/
 .text-midLg {
@@ -58,4 +59,8 @@ $profileImg: 200px;
 
 .p0 {
     padding: 0;
+}
+
+.w-sm {
+    width: 3em;
 }
