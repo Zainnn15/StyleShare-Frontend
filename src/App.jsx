@@ -18,7 +18,6 @@ import GarmentWash from './components/garment_care/GarmentCare_wash';
 import GarmentTear from './components/garment_care/GarmentCare_tear';
 import UserSearch from './pages/UserSearch';
 import GarmentDetails from './pages/GarmentPages/GarmentDetails';
-import GarmentReserve from './pages/GarmentPages/GarmentReserve';
 import GarmentExchange from './pages/GarmentPages/GarmentExchange';
 
 axios.defaults.baseURL = 'http://localhost:8000';
@@ -44,7 +43,6 @@ function App() {
             <Route path='/garment-tear' element={<GarmentTear />} />
             <Route path='/usersearch' element={<UserSearch />} />
             <Route path='/garment-details' element={<GarmentDetails />} />
-            <Route path='/garment-reserve' element={<GarmentReserve />} />
             <Route path='/garment-exchange' element={<GarmentExchange />} />
           </Routes>
         </GroupContextProvider>

@@ -127,7 +127,6 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
                             <Link to="/garment-measure">Add Measurement</Link>
                             <Link to="/garment-care">Garment Care</Link>
                             <Link to="/garment-exchange">Exchange Garment</Link>
-                            <Link to="/garment-reserve">Reserve a Garment</Link>
                         </div>
                     </div>
                 )
