@@ -211,6 +211,9 @@ $screen-xl-min: 1200px;
 .container-row {
     @include container-row;
 }
+.space-evenly {
+    justify-content: space-evenly;
+}
 
 .container-col {
     @include container-col;
@@ -271,8 +274,10 @@ $screen-xl-min: 1200px;
     margin: 0 1em;
 
     img {
+        max-width: 2.5em;
+        max-height: 2.5em;
         border-radius: 50%;
-        object-fit: contain;
+        object-fit: fill;
     }
 
     // large devices
@@ -604,6 +609,15 @@ $screen-xl-min: 1200px;
         }
     }
 }
+.img-size-sm {
+    width: 12em;
+    height: 12em;
+
+    img {
+        max-width: 12em;
+        max-height: 12em;
+    }
+}
 
 .container-tab {
     @include container-col;
@@ -636,5 +650,19 @@ $screen-xl-min: 1200px;
             padding: 0 1em;
             border-right: 0.05em solid Colors.$gray2;
         }
+    }
+}
+
+.container-profile-img {
+    @include container-col;
+    background-color: Colors.$secondary;
+    border-radius: 50%;
+    width: Sizes.$profileImg;
+    height: Sizes.$profileImg;
+
+    img {
+        max-width: Sizes.$profileImg;
+        max-height: Sizes.$profileImg;
+        border-radius: 50%;
     }
 }

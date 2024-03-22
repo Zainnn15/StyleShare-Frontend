@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useContext } from 'react';
 import { UserContext } from '../../../context/userContext';
 import { useNavigate } from "react-router-dom";
-import {validatePage } from '../../constants/functions/inputHandlers';
+import {clickID, validatePage } from '../../constants/functions/inputHandlers';
 import selectImg from '../../assets/icons/select_img.png';
 
 export default function GarmentWear() {
@@ -106,20 +106,30 @@ export default function GarmentWear() {
             <br/>
 
             <div className="container-grid-2-md gap">
-                        <div className='container-input-img clickable'>
-                            <label>Front photo of the garment after wearing</label>
-                            <input type="file" onChange={(e) => setWearFront(e.target.files[0])} required />
-                            <img id='fileWearFront_img' src={WearFront ? URL.createObjectURL(WearFront) : selectImg} alt='Front Wear' />
-                        </div>
-
-                        <div className='container-input-img clickable'>
-                            <label>Back photo of the garment after wearing</label>
-                            <input type="file" onChange={(e) => setWearBack(e.target.files[0])} required />
-                            <img id='fileWearBack_img' src={WearBack ? URL.createObjectURL(WearBack) : selectImg} alt='Back Wear' />
-                        </div>
+                <div>
+                    <div className='container-prompt'>
+                        <p>Front photo of the garment after wearing</p>
                     </div>
+                    <div className='container-input-img clickable' onClick={()=>clickID("fileWearFront")}>
+                        <img id='fileWearFront_img' src={WearFront ? URL.createObjectURL(WearFront) : selectImg} alt='Front Wear' />
+                    </div>
+                    <div className="container-input">
+                        <input id="fileWearFront" type="file" onChange={(e) => setWearFront(e.target.files[0])} required />
+                    </div>
+                </div>
 
-            
+                <div>
+                    <div className='container-prompt'>
+                        <p>Back photo of the garment after wearing</p>
+                    </div>
+                    <div className='container-input-img clickable' onClick={()=>clickID("fileWearBack")}>
+                        <img id='fileWearBack_img' src={WearBack ? URL.createObjectURL(WearBack) : selectImg} alt='Back Wear' />
+                    </div>
+                    <div className="container-input">
+                        <input id="fileWearBack" type="file" onChange={(e) => setWearBack(e.target.files[0])} required />
+                    </div>
+                </div>
+            </div>
 
             <br/>
             <div className='container-input'>

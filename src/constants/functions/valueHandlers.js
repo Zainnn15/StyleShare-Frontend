@@ -1,4 +1,5 @@
 import { careInstructions } from "../data/lists";
+const imgHostURL = 'http://localhost:8000/';
 
 function findAttribute(objArr, val, attrCheck="value", attrReturn="label") {
     try {
@@ -64,4 +65,10 @@ function getAttrByInpID(dataID, mapObj, listAttr="img", listObj=careInstructions
     return listObj[mapObj[dataID]][listAttr];
 }
 
-export { findAttribute, parseID, formatStr, formatDate, formatTemp, getAttrByInpID }
+function getImageFromURL(imgName) {
+    let srcName = imgHostURL + imgName.replace(/\\/g,'/');
+    return srcName;
+}
+
+export { findAttribute, parseID, formatStr, formatDate, formatTemp, getAttrByInpID,
+getImageFromURL }

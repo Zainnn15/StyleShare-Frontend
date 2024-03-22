@@ -1,14 +1,18 @@
 /* eslint-disable react/prop-types */
 import '../../styles/main.scss';
 import { Link } from "react-router-dom";
+import { useContext } from 'react';
+import { GarmentContext } from "../../../context/garmentContext.jsx";
 
 import logo from '../../assets/icons/logo192.png';
 import menu from '../../assets/icons/menu.png';
 import profile from '../../assets/images/profile_default.jpg';
 
 import CircleBtn from "./CircleBtn.jsx";
+import { getImageFromURL } from '../../constants/functions/valueHandlers.js';
 
 const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
+    const {garment} = useContext(GarmentContext);
       // logout function
     const handleLogout = async () => {
         try {
@@ -96,7 +100,8 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
                 {
                     isLogin &&
                     <div className="container-header-button popup">
-                    <CircleBtn iconUrl={profile} className={"button-header"} width={"80%"} 
+                    <CircleBtn iconUrl={garment ? getImageFromURL(garment.fileFront) : profile} 
+                        className={"button-header"} width={"35px"} height={"35px"}
                         handlePress={openProfileDropdown}
                     />
                     </div>
