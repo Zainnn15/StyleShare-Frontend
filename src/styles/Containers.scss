@@ -211,6 +211,9 @@ $screen-xl-min: 1200px;
 .container-row {
     @include container-row;
 }
+.space-evenly {
+    justify-content: space-evenly;
+}
 
 .container-col {
     @include container-col;
@@ -242,11 +245,6 @@ $screen-xl-min: 1200px;
     @include title;
     text-align: initial;
     font-size: Sizes.$medium;
-
-    // large devices
-    @include lg {
-        font-size: Sizes.$large;
-    }
 }
 
 .container-button-form {
@@ -276,8 +274,10 @@ $screen-xl-min: 1200px;
     margin: 0 1em;
 
     img {
+        max-width: 2.5em;
+        max-height: 2.5em;
         border-radius: 50%;
-        object-fit: contain;
+        object-fit: fill;
     }
 
     // large devices
@@ -583,6 +583,7 @@ $screen-xl-min: 1200px;
     height: 12em;
     background-color: Colors.$purpleLight;
     margin: auto;
+    padding: 1%;
     
     img {
         max-width: 12em;
@@ -592,7 +593,7 @@ $screen-xl-min: 1200px;
     // Small devices
     @include sm {
         width: 18em;
-        height: 18em;
+        height: max-content;
         img {
             max-width: 18em;
             max-height: 18em;
@@ -602,11 +603,20 @@ $screen-xl-min: 1200px;
     // Medium devices
     @include md {
         width: 20em;
-        height: 20em;
+        height: max-content;
         img {
             max-width: 20em;
             max-height: 20em;
         }
+    }
+}
+.img-size-sm {
+    width: 12em;
+    height: 12em;
+
+    img {
+        max-width: 12em;
+        max-height: 12em;
     }
 }
 
@@ -641,5 +651,19 @@ $screen-xl-min: 1200px;
             padding: 0 1em;
             border-right: 0.05em solid Colors.$gray2;
         }
+    }
+}
+
+.container-profile-img {
+    @include container-col;
+    background-color: Colors.$secondary;
+    border-radius: 50%;
+    width: Sizes.$profileImg;
+    height: Sizes.$profileImg;
+
+    img {
+        max-width: Sizes.$profileImg;
+        max-height: Sizes.$profileImg;
+        border-radius: 50%;
     }
 }

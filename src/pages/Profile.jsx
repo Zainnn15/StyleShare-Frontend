@@ -10,6 +10,11 @@ import ScreenHeaderIn from "../components/common/ScreenHeaderIn";
 import General from "../components/profile/Garment_general";
 import Composition from "../components/profile/Garment_composition";
 import Care from "../components/profile/Garment_care";
+import Measure from "../components/profile/Garment_measure";
+import Wear from "../components/profile/Garment_wear";
+import Wash from "../components/profile/Garment_wash";
+import Tear from "../components/profile/Garment_tear";
+import { getImageFromURL } from "../constants/functions/valueHandlers";
 
 export default function Profile() {
     const {user} = useContext(UserContext);
@@ -145,6 +150,8 @@ const [customCampus, setCustomCampus] = useState('');
       setSelectedTimes(temp);
     };
 
+    console.log(garment);
+
   return (
     <div>
       <ScreenHeaderIn />
@@ -153,7 +160,10 @@ const [customCampus, setCustomCampus] = useState('');
               <label className="container-title">Profile</label>
               <hr/>
           </div>
-          <div className="container-border greeting">
+          <div className="container-row space-evenly container-border greeting">
+            <div className="container-profile-img">
+              <img src={garment ? getImageFromURL(garment.fileFront) : profile} alt="profile"/>    
+            </div>        
             <h3>Welcome, {user.name}</h3>
           </div>        
           <hr/>
@@ -394,7 +404,37 @@ const [customCampus, setCustomCampus] = useState('');
                 }
               }}
             >
-              <p className="text-purpleLight">Wear & Tear</p>
+              <p className="text-purpleLight">Wear</p>
+            </div>
+            <div id="tab5" className="container-tab-group"
+              onClick={()=>{
+                let e_active = document.getElementById(`tab${tabPage}`);
+                if(e_active) {
+                  e_active.classList.toggle("active", false);
+                }
+                setTabPage(5);
+                let e_div = document.getElementById(`tab5`)
+                if(e_div) {
+                  e_div.classList.toggle("active", true);
+                }
+              }}
+            >
+              <p className="text-purpleLight">Wash</p>
+            </div>
+            <div id="tab6" className="container-tab-group"
+              onClick={()=>{
+                let e_active = document.getElementById(`tab${tabPage}`);
+                if(e_active) {
+                  e_active.classList.toggle("active", false);
+                }
+                setTabPage(6);
+                let e_div = document.getElementById(`tab6`)
+                if(e_div) {
+                  e_div.classList.toggle("active", true);
+                }
+              }}
+            >
+              <p className="text-purpleLight">Tear</p>
             </div>
           </div>
 
@@ -408,8 +448,7 @@ const [customCampus, setCustomCampus] = useState('');
           {
             tabPage === 1 &&
             garment && (
-              <div>
-              </div>
+              <Measure garment={garment}/>
             )
           }
 
@@ -429,7 +468,23 @@ const [customCampus, setCustomCampus] = useState('');
 
           {
             tabPage === 4 &&
-            <div></div>
+            garment && (
+              <Wear garment={garment}/>
+            )
+          }
+
+          {
+            tabPage === 5 &&
+            garment && (
+              <Wash garment={garment}/>
+            )
+          }
+
+          {
+            tabPage === 6 &&
+            garment && (
+              <Tear garment={garment}/>
+            )
           }
 
         </div>

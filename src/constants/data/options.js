@@ -163,12 +163,22 @@ const WASH_TEMP_F = [
 
 //on campus pickup locations
 const PICKUP_LOCS = [
-    {value: 'Fashion Boutique', label: 'Outside the building B fashion boutique'},
-    {value: 'Cafeteria', label: 'Inside the building D Cafeteria'},
-    {value: 'Library', label: 'Outside the building B Library'},
-    {value: 'Starbucks', label: 'By the building A Starbucks'},
+    {value: 'Fashion Boutique', label: 'Outside the Newnham building B fashion boutique'},
+    {value: 'Cafeteria', label: 'Inside the Newnham building D Cafeteria'},
+    {value: 'Library', label: 'Outside the Newnham building B Library'},
+    {value: 'Starbucks', label: 'By the Newnham building A Starbucks'},
+    {value: 'Other Campus', label: 'Other Seneca campus (please specify)'},
+    {value: 'Off Campus', label: 'Off campus (please specify)'},
+];
+
+const PICKUP_CAMPUS = [
+    {value: 'King', label: 'King Campus'},
+    {value: 'Markham', label: 'Markham Campus (Seneca International Academy)'},
+    {value: 'Peterborogh', label: 'Peterbrorough Campus'},
+    {value: 'York', label: 'Seneca@York Campus'},
+    {value: 'Yorkgate', label: 'Yorkgate Campus'},
 ];
 
 export { GARMENT_TYPES, GARMENT_SIZE_TYPES, GARMENT_SIZES, GARMENT_FITS, COUNTRIES, FIBRES,
     CARE_WASH_METHODS, CARE_DRY_METHODS, CARE_DRYC_METHODS, CARE_IRON_METHODS, CARE_BLEACH_METHODS,
-    WASH_TEMP_C, WASH_TEMP_F, PICKUP_LOCS };
+    WASH_TEMP_C, WASH_TEMP_F, PICKUP_LOCS, PICKUP_CAMPUS };
