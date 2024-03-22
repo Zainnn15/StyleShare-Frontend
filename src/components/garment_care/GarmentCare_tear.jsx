@@ -35,6 +35,7 @@ export default function GarmentTear() {
     const [printFadeImg, setPrintFadeImg] = useState(null);
     const [holeImg, setHoleImg] = useState(null);
     const [stainImg, setStainImg] = useState(null);
+    const [measuresData, setMeasuresData] = useState([]);
     const [wearTear, setWearTear] = useState({
       'colorFade': 0,
       'pilling': 0,
@@ -148,7 +149,6 @@ export default function GarmentTear() {
         console.log('Validation passed, proceeding with sending garment details.');
         sendGarmentDetails();
     }
-    
 
   return (
     <div>
@@ -288,9 +288,9 @@ export default function GarmentTear() {
                                 required
                             >
                                 <option value=''>Select a strength...</option>
-                                <option value='hardlyVisible'>Hardly Visible</option>
-                                <option value='visible'>Visible</option>
-                                <option value='stronglyVisible'>Strongly Visible</option>
+                                <option value='Hardly Visible'>Hardly Visible</option>
+                                <option value='Visible'>Visible</option>
+                                <option value='Strongly Visible'>Strongly Visible</option>
                             </select>
                             </div>
                         </div>
@@ -488,6 +488,21 @@ export default function GarmentTear() {
                                                     id={"measure_" + measureType.value + "_" + index}
                                                     name={"measure_" + measureType.value}
                                                     type='number'
+                                                    value={measuresData[index] ? measuresData[index].value : ""}
+                                                    onChange={(e)=>{
+                                                        let temp = measuresData;
+                                                        if(!measuresData[index]) {
+                                                            measuresData[index] = {
+                                                                "measureType":measureType.value,
+                                                                value:e.target.value, 
+                                                                unit:""
+                                                            }
+                                                        }
+                                                        else {
+                                                            measuresData[index].value = e.target.value;
+                                                        }
+                                                        setMeasuresData([...temp]);
+                                                    }}
                                                     min={0}
                                                     step={0.01}
                                                     required
@@ -495,9 +510,23 @@ export default function GarmentTear() {
                                                 <select
                                                     id={"unit_" + measureType.value + "_" + index}
                                                     name={"unit_" + measureType.value}
-                                                >
+                                                    value={measuresData[index] ? measuresData[index].unit : ""}
+                                                    onChange={(e)=>{
+                                                        let temp = measuresData;
+                                                        if(!measuresData[index]) {
+                                                            measuresData[index] = {
+                                                                "measureType":measureType.value,
+                                                                value:"", 
+                                                                unit:e.target.value
+                                                            }
+                                                        }
+                                                        else {
+                                                            measuresData[index].unit = e.target.value;
+                                                        }
+                                                        setMeasuresData([...temp]);
+                                                    }}                                                >
                                                     <option value='cm'> cm </option>
-                                                    <option value='inches'> in </option>
+                                                    <option value='in'> in </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -538,7 +567,7 @@ export default function GarmentTear() {
                                     "discolorHow": e.target.value
                                     });
                                 }}
-                                placeholder='Describe the change in color'
+                                placeholder='Describe what caused the change in color'
                                 rows={3}
                                 required
                             >

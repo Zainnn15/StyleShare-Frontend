@@ -549,12 +549,13 @@ $screen-xl-min: 1200px;
 }
 
 .container-card {
+    margin: auto;
     background-color: Colors.$purpleLight;
     box-shadow: 0.15em 0.2em 0.2em rgba(0,0,0,0.2);
-    cursor: pointer;
 
     .container-card-img {
-        margin: auto;
+        @include container-col;
+        cursor: pointer;
     }
     
     .container-card-title {
@@ -562,17 +563,21 @@ $screen-xl-min: 1200px;
         justify-content: space-between;
         padding: 0.5em;
         background-color: Colors.$purpleDark;
-        color: Colors.$purpleLight
+        color: Colors.$purpleLight;
+        cursor: pointer;
     }
 
     .container-card-description {
+        overflow: auto;
         padding: 0.5em;
+        cursor: pointer;
     }   
 
     .container-card-button {
         @include container-row;
         justify-content: end;
         padding: 0.5em;
+        cursor: pointer;
     }
 }
 
@@ -656,14 +661,27 @@ $screen-xl-min: 1200px;
 
 .container-profile-img {
     @include container-col;
+    flex-shrink: 0;
+    flex-wrap: wrap;
     background-color: Colors.$secondary;
     border-radius: 50%;
-    width: Sizes.$profileImg;
-    height: Sizes.$profileImg;
+    width: Sizes.$profileImg_sm;
+    height: Sizes.$profileImg_sm;
 
     img {
-        max-width: Sizes.$profileImg;
-        max-height: Sizes.$profileImg;
+        max-width: Sizes.$profileImg_sm;
+        max-height: Sizes.$profileImg_sm;
         border-radius: 50%;
+    }
+
+    // Medium devices
+    @include md {
+        width: Sizes.$profileImg_md;
+        height: Sizes.$profileImg_md;
+
+        img {
+            max-width: Sizes.$profileImg_md;
+            max-height: Sizes.$profileImg_md;
+        }
     }
 }

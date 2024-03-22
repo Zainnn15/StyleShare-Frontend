@@ -19,7 +19,7 @@ export default function GarmentCare() {
                     <div>
                         <Card 
                             imgUrl={wear}
-                            width="15em"
+                            imgHeight="15em"
                             imgClassName={"container-card-img"}
                             title={<p className="center text-purpleLight text-midLg">Garment Wear</p>}
                             titleClassName={"container-row bg-purpleDark"}
@@ -29,8 +29,8 @@ export default function GarmentCare() {
                                 </p>
                             }
                             DescClassName={"container-card-description"}
-                            btnText={<Link id="card_wear" style={{color:"white"}} to={"/garment-wear"}>Log Details</Link>}
-                            btnClassName={"container-card-button"}
+                            footer={<Link id="card_wear" style={{color:"white"}} to={"/garment-wear"}>Log Details</Link>}
+                            footerClassName={"container-card-button"}
                             handlePress={()=>clickID("card_wear")}
                         />
                     </div>
@@ -38,7 +38,7 @@ export default function GarmentCare() {
                     <div>
                         <Card 
                              imgUrl={wash}
-                             width="15em"
+                             imgHeight="15em"
                              imgClassName={"container-card-img"}
                              title={<p className="center text-purpleLight text-midLg">Garment Wash</p>}
                              titleClassName={"container-row bg-purpleDark"}
@@ -48,8 +48,8 @@ export default function GarmentCare() {
                                  </p>
                              }
                              DescClassName={"container-card-description"}
-                             btnText={<Link id="card_wash" style={{color:"white"}} to={"/garment-wash"}>Log Details</Link>}
-                             btnClassName={"container-card-button"}
+                             footer={<Link id="card_wash" style={{color:"white"}} to={"/garment-wash"}>Log Details</Link>}
+                             footerClassName={"container-card-button"}
                              handlePress={()=>clickID("card_wash")}
                         />
                     </div>
@@ -57,7 +57,7 @@ export default function GarmentCare() {
                     <div>
                         <Card 
                             imgUrl={tear}
-                            width="15em"
+                            imgHeight="15em"
                             imgClassName={"container-card-img"}
                             title={<p className="center text-purpleLight text-midLg">Garment Tear</p>}
                             titleClassName={"container-row bg-purpleDark"}
@@ -67,8 +67,8 @@ export default function GarmentCare() {
                                 </p>
                             }
                             DescClassName={"container-card-description"}
-                            btnText={<Link id="card_tear" style={{color:"white"}} to={"/garment-tear"}>Log Details</Link>}
-                            btnClassName={"container-card-button"}
+                            footer={<Link id="card_tear" style={{color:"white"}} to={"/garment-tear"}>Log Details</Link>}
+                            footerClassName={"container-card-button"}
                             handlePress={()=>clickID("card_tear")}
                         />
                     </div>

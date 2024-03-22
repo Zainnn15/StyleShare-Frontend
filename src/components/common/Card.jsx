@@ -1,18 +1,18 @@
 /* eslint-disable react/prop-types */
 import '../../styles/main.scss';
 
-const Card = ({ imgUrl, title, status, description, btnText, handlePress, handleImgPress, handleBtnPress, width="30%", height="40%", imgClassName, titleClassName, DescClassName, btnClassName }) => {
+const Card = ({ imgUrl, title, status, description, footer, handlePress, handleImgPress, handleTitlePress, handleDescPress, handleFooterPress, width="16em", height="32em", imgWidth="16em", imgHeight="16em", titleHeight="4em", descHeight="8em", imgClassName, titleClassName, DescClassName, footerClassName, isBtn=true }) => {
     return(
-        <div className='container-card' style={{width:{width}, height:{height}}} onClick={handlePress}>
+        <div className='container-card' style={{width:width, height:height}} onClick={handlePress}>
             {
                 imgUrl && (
                 <div className={imgClassName} onClick={handleImgPress}
-                    style={{width:width, height:height}}
+                    style={{width:imgWidth, height:imgHeight}}
                 >
                     <img 
                         src={imgUrl} 
                         alt="img"
-                        style={{maxWidth:width, maxHeight: "100%"}}
+                        style={{maxWidth:imgWidth, maxHeight: imgHeight}}
                     /> 
                 </div>
                 )
@@ -20,7 +20,7 @@ const Card = ({ imgUrl, title, status, description, btnText, handlePress, handle
             
             {
                 title && (
-                <div className={titleClassName}>
+                <div className={titleClassName} style={{height:titleHeight}} onClick={handleTitlePress}>
                     {title}
                     {status && (status)}
                 </div>
@@ -29,16 +29,22 @@ const Card = ({ imgUrl, title, status, description, btnText, handlePress, handle
             
             {
                 description && (
-                <div className={DescClassName}>
+                <div className={DescClassName} style={{height:descHeight}} onClick={handleDescPress}>
                     {description}
                 </div>
                 )
             }
 
             {
-                btnText && (
-                <div className={btnClassName}>
-                    <button className="button-regular" onClick={handleBtnPress}>{btnText}</button>
+                footer && (
+                <div className={footerClassName}>
+                    {isBtn &&
+                        <button className="button-regular" onClick={handleFooterPress}>{footer}</button>
+                    }
+                    {
+                     !isBtn &&
+                        <span onClick={handleFooterPress}>{footer}</span>
+                    }
                 </div>
                 )
             }

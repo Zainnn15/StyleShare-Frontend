@@ -5,6 +5,18 @@ import { GroupContext } from '../../../context/groupContext';
 import '../../styles/card.css';
 import ScreenHeader from '../../components/common/ScreenHeaderIn';
 import Modal from 'react-modal'; // Assuming you are using react-modal for modal dialogs
+import Card from '../../components/common/Card';
+import { findAttribute, getImageFromURL } from '../../constants/functions/valueHandlers';
+import { GARMENT_TYPES } from '../../constants/data/options';
+import notApplicable from '../../assets/icons/not_applicable.png'
+import General from '../../components/profile/Garment_general'
+import Measure from '../../components/profile/Garment_measure'
+import Composition from '../../components/profile/Garment_composition'
+import Care from '../../components/profile/Garment_care'
+import Wear from '../../components/profile/Garment_wear'
+import Wash from '../../components/profile/Garment_wash'
+import Tear from '../../components/profile/Garment_tear'
+
 
 Modal.setAppElement('#root'); // Set this to your application root element
 
@@ -14,12 +26,14 @@ function GarmentExchange() {
     const [exchangeRequests, setExchangeRequests] = useState([]);
     const [sentRequests, setSentRequests] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [garmentModalID, setGarmentModalID] = useState('');
     const [reservationDetails, setReservationDetails] = useState({
         pickupDate: '',
         pickupTime: '',
         pickupLocation: '',
     });
     const [selectedGarmentDetails, setSelectedGarmentDetails] = useState(null);
+    const [tabPage, setTabPage] = useState(0);
 
     useEffect(() => {
         if (user.id) {
@@ -91,48 +105,83 @@ function GarmentExchange() {
         }
     };
 
+    function handleCardPress(garment) {
+        setGarmentModalID(garment);
+    }
+
     return (
         <div>
             <ScreenHeader />
-            <h2>Group Members and Their Garments</h2>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
-                {userGroups?.members?.map((member) => (
-                    <div key={member._id} className="card">
-                        {member.garments && member.garments.length > 0 ? (
-                            <>
-                                <img src={`http://localhost:8000/${member.garments[0].fileFront.replace(/\\/g, '/')}`} alt="Garment" />
-                                <div className="card-container">
-                                    <h4 className="card-title">{member.username}</h4>
-                                    {member.garments.map((garment) => (
-                                        <div key={garment._id}>
-                                            <p className="card-text">Type: {garment.garmentType}</p>
-                                            <p className="card-text">Description: {garment.garmentDescription}</p>
-                                            <p className="card-text">Country: {garment.garmentCountry}</p>
-                                            {member._id !== user.id && (
-                                                <button 
-                                                    onClick={() => openReservationModal(member._id, garment._id)}
-                                                    disabled={sentRequests[`${member._id}_${garment._id}`]}
-                                                >
-                                                    Send Exchange Request
-                                                </button>
-                                            )}
-                                            {member._id === user.id && <p>Your Garment</p>}
-                                        </div>
-                                    ))}
-                                </div>
-                            </>
+            <div className='container main'>
+                <div>
+                    <label className="container-title">Garment Exchange</label>
+                    <hr/>
+                </div>
+                <h3>Garments of Group Members</h3>
+                <hr/>
+                <div className="container-care gap m2-v">
+                    {userGroups?.members?.map((member) => (
+
+                    <div key={member._id}>
+                        {member.garments && member.garments.length > 0 ? (   
+                            <div>
+                                {member.garments.map((garment) => (
+                                    <div key={garment._id}>
+                                        <Card
+                                        height='33em'
+                                        imgUrl={getImageFromURL(member.garments[0].fileFront)}
+                                        imgClassName={"container-card-img"}
+                                        title={<p className="center text-purpleLight text-midLg">{member.username}</p>}
+                                        titleClassName={"container-row clickable bg-purpleDark"}
+                                        description={
+                                            <div>
+                                                <p className="card-text">Type: {findAttribute(GARMENT_TYPES, garment.garmentType)}</p>
+                                                <p className="card-text">Description: {garment.garmentDescription}</p>
+                                                <p className="card-text">Country: {garment.garmentCountry}</p> 
+                                            </div>
+                                        }
+                                        DescClassName={"container-card-description"}
+                                        footer={member._id === user.id ? <p>Your Garment</p> : 
+                                            <button className='button-regular'
+                                                onClick={() => openReservationModal(member._id, garment._id)}
+                                                disabled={sentRequests[`${member._id}_${garment._id}`]}
+                                            >
+                                                Send Exchange Request
+                                            </button>
+                                        }
+                                        isBtn={false}
+                                        footerClassName={"center"}
+                                        handleImgPress={()=>handleCardPress(garment)}
+                                        handleTitlePress={()=>handleCardPress(garment)}
+                                        handleDescPress={()=>handleCardPress(garment)}
+                                    />
+                                    </div>
+                                ))}
+                            </div>
                         ) : (
-                            <p>No garments found for this member.</p>
+                            <Card
+                                height='33em'
+                                imgUrl={notApplicable}
+                                imgClassName={"container-card-img"}
+                                title={<p className="center text-purpleLight text-midLg">{member.username}</p>}
+                                titleClassName={"container-row bg-purpleDark"}
+                                description={<p>No garments found for this member</p>}
+                                DescClassName={"container-card-description"}
+                            />
+                            
                         )}
                     </div>
-                ))}
-            </div>
 
-            <h2>Exchange Requests</h2>
+                    ))}
+                </div>
+
+                <hr/>
+                <h3>Exchange Requests</h3>
+                <hr/>
 {exchangeRequests.length > 0 ? (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+    <div className='container-grid-3-md gap m2-v'>
         {exchangeRequests.map((request) => (
-            <div key={request._id} className="exchange-request-card">
+            <div key={request._id} className="container-border clear-box">
                 <p><strong>From:</strong> {request.senderId.username} <strong>To:</strong> {request.recipientId.username}</p>
                 <p><strong>Your Garment:</strong> {request.userGarmentId.garmentDescription}</p>
                 <p><strong>Exchange For:</strong> {request.recipientGarmentId.garmentDescription}</p>
@@ -142,22 +191,26 @@ function GarmentExchange() {
                         <button onClick={() => handleExchangeResponse(request._id, 'rejected')}>Reject</button>
                     </>
                 )}
-                <p>Status: {request.status.charAt(0).toUpperCase() + request.status.slice(1)}</p>
+                <p><strong>Status: </strong>{request.status.charAt(0).toUpperCase() + request.status.slice(1)}</p>
                 {request.pickupDate && (
-                    <p>Pickup Date: {request.pickupDate}</p>
+                    <p><strong>Pickup Date: </strong>{request.pickupDate}</p>
                 )}
                 {request.pickupTime && (
-                    <p>Pickup Time: {request.pickupTime}</p>
+                    <p><strong>Pickup Time: </strong>{request.pickupTime}</p>
                 )}
                 {request.pickupLocation && (
-                    <p>Pickup Location: {request.pickupLocation}</p>
+                    <p><strong>Pickup Location: </strong>{request.pickupLocation}</p>
                 )}
             </div>
         ))}
     </div>
 ) : (
-    <p>No exchange requests.</p>
+    <p className='center'>No exchange requests</p>
 )}
+            </div>
+            
+
+            
 
             
                         {/* Reservation Modal */}
@@ -167,45 +220,251 @@ function GarmentExchange() {
                             contentLabel="Reservation Details"
                             style={{
                                 content: {
-                                    top: '50%',
+                                    top: '20%',
                                     left: '50%',
                                     right: 'auto',
                                     bottom: 'auto',
-                                    marginRight: '-50%',
-                                    transform: 'translate(-50%, -50%)',
+                                    transform: 'translate(-50%, 0)',
+                                    backgroundColor: "#F8E7E7",
+                                    maxHeight: '65%',
                                 },
                             }}
                         >
-                            <h2>Enter Reservation Details</h2>
+                            <h3>Enter Reservation Details</h3>
                             <form onSubmit={(e) => e.preventDefault()}>
                                 <div className="form-group">
-                                    <label>Date:</label>
+                                    <label>Date: </label>
                                     <input
                                         type="date"
                                         value={reservationDetails.pickupDate}
                                         onChange={(e) => setReservationDetails(prev => ({ ...prev, pickupDate: e.target.value }))}
                                     />
                                 </div>
+                                <br/>
                                 <div className="form-group">
-                                    <label>Time:</label>
+                                    <label>Time: </label>
                                     <input
                                         type="time"
                                         value={reservationDetails.pickupTime}
                                         onChange={(e) => setReservationDetails(prev => ({ ...prev, pickupTime: e.target.value }))}
                                     />
                                 </div>
+                                <br/>
                                 <div className="form-group">
                                     <label>Location:</label>
+                                    <br/>
                                     <input
+                                        className='m1'
                                         type="text"
                                         value={reservationDetails.pickupLocation}
                                         placeholder="Location"
                                         onChange={(e) => setReservationDetails(prev => ({ ...prev, pickupLocation: e.target.value }))}
+                                        style={{width:"80%"}}
                                     />
                                 </div>
-                                <button onClick={handleModalSubmit} className="button">Submit</button>
+                                <br/>
+                                <button className="button-regular full" onClick={handleModalSubmit}>Submit</button>
                             </form>
                         </Modal>
+
+                        {/* Garment Details Modal */}
+                        {
+                            garmentModalID !== "" &&
+                            <Modal
+                            isOpen={garmentModalID !== ""}
+                            onRequestClose={() => {
+                                setGarmentModalID("");
+                                setTabPage(0);
+                            }}
+                            contentLabel="Reservation Details"
+                            style={{
+                                content: {
+                                    top: '20%',
+                                    left: '50%',
+                                    right: 'auto',
+                                    bottom: 'auto',
+                                    transform: 'translate(-50%, 0)',
+                                    backgroundColor: "#F8E7E7",
+                                    maxHeight: '65%',
+                                    width: '90%'
+                                },
+                            }}
+                        >
+                            {
+                                garmentModalID !== "" && (
+                                <div className='container'>
+                                    <hr/>
+                                    <div className="container-content popup">
+                                    <h3>Garment Details</h3>
+                                    <hr/>
+                                    </div>
+                                    <div className="container-border page-tab">
+                                    <div className="container-tab">
+                                        <div id="tab0" className="container-tab-group active" 
+                                        onClick={()=>{
+                                            let e_active = document.getElementById(`tab${tabPage}`);
+                                            if(e_active) {
+                                            e_active.classList.toggle("active", false);
+                                            }
+                                            setTabPage(0);
+                                            let e_div = document.getElementById(`tab0`)
+                                            if(e_div) {
+                                            e_div.classList.toggle("active", true);
+                                            }
+                                        }}
+                                        >
+                                        <p className="text-purpleLight">General</p>
+                                        </div>
+                                        <div id="tab1" className="container-tab-group"
+                                        onClick={()=>{
+                                            let e_active = document.getElementById(`tab${tabPage}`);
+                                            if(e_active) {
+                                            e_active.classList.toggle("active", false);
+                                            }
+                                            setTabPage(1);
+                                            let e_div = document.getElementById(`tab1`)
+                                            if(e_div) {
+                                            e_div.classList.toggle("active", true);
+                                            }
+                                        }}
+                                        >
+                                        <p className="text-purpleLight">Measurements</p>
+                                        </div>
+                                        <div id="tab2" className="container-tab-group"
+                                        onClick={()=>{
+                                            let e_active = document.getElementById(`tab${tabPage}`);
+                                            if(e_active) {
+                                            e_active.classList.toggle("active", false);
+                                            }
+                                            setTabPage(2);
+                                            let e_div = document.getElementById(`tab2`)
+                                            if(e_div) {
+                                            e_div.classList.toggle("active", true);
+                                            }
+                                        }}
+                                        >
+                                        <p className="text-purpleLight">Composition</p>
+                                        </div>
+                                        <div id="tab3" className="container-tab-group"
+                                        onClick={()=>{
+                                            let e_active = document.getElementById(`tab${tabPage}`);
+                                            if(e_active) {
+                                            e_active.classList.toggle("active", false);
+                                            }
+                                            setTabPage(3);
+                                            let e_div = document.getElementById(`tab3`)
+                                            if(e_div) {
+                                            e_div.classList.toggle("active", true);
+                                            }
+                                        }}
+                                        >
+                                        <p className="text-purpleLight">Care Instructions</p>
+                                        </div>
+                                        <div id="tab4" className="container-tab-group"
+                                        onClick={()=>{
+                                            let e_active = document.getElementById(`tab${tabPage}`);
+                                            if(e_active) {
+                                            e_active.classList.toggle("active", false);
+                                            }
+                                            setTabPage(4);
+                                            let e_div = document.getElementById(`tab4`)
+                                            if(e_div) {
+                                            e_div.classList.toggle("active", true);
+                                            }
+                                        }}
+                                        >
+                                        <p className="text-purpleLight">Wear</p>
+                                        </div>
+                                        <div id="tab5" className="container-tab-group"
+                                        onClick={()=>{
+                                            let e_active = document.getElementById(`tab${tabPage}`);
+                                            if(e_active) {
+                                            e_active.classList.toggle("active", false);
+                                            }
+                                            setTabPage(5);
+                                            let e_div = document.getElementById(`tab5`)
+                                            if(e_div) {
+                                            e_div.classList.toggle("active", true);
+                                            }
+                                        }}
+                                        >
+                                        <p className="text-purpleLight">Wash</p>
+                                        </div>
+                                        <div id="tab6" className="container-tab-group"
+                                        onClick={()=>{
+                                            let e_active = document.getElementById(`tab${tabPage}`);
+                                            if(e_active) {
+                                            e_active.classList.toggle("active", false);
+                                            }
+                                            setTabPage(6);
+                                            let e_div = document.getElementById(`tab6`)
+                                            if(e_div) {
+                                            e_div.classList.toggle("active", true);
+                                            }
+                                        }}
+                                        >
+                                        <p className="text-purpleLight">Tear</p>
+                                        </div>
+                                    </div>
+
+                                    {
+                                        tabPage === 0 &&
+                                        garmentModalID && (
+                                        <General garment={garmentModalID}/>
+                                        )
+                                    }
+
+                                    {
+                                        tabPage === 1 &&
+                                        garmentModalID.garmentSize && (
+                                        <Measure garment={garmentModalID}/>
+                                        )
+                                    }
+
+                                    {
+                                        tabPage === 2 &&
+                                        garmentModalID && (
+                                        <Composition garment={garmentModalID}/>
+                                        )
+                                    }
+
+                                    {
+                                        tabPage === 3 &&
+                                        garmentModalID && (
+                                        <Care garment={garmentModalID}/>
+                                        )
+                                    }
+
+                                    {
+                                        tabPage === 4 &&
+                                        garmentModalID.wearDate && (
+                                        <Wear garment={garmentModalID}/>
+                                        )
+                                    }
+
+                                    {
+                                        tabPage === 5 &&
+                                        garmentModalID.washCareInstructions && (
+                                        <Wash garment={garmentModalID}/>
+                                        )
+                                    }
+
+                                    {
+                                        tabPage === 6 &&
+                                        garmentModalID.tearInfo && (
+                                        <Tear garment={garmentModalID}/>
+                                        )
+                                    }
+
+                                    </div>
+                                </div>
+                                )
+                            }
+                            
+                        </Modal>
+                        }
+                        
+                        
                     </div>
                 );
             }

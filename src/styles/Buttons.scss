@@ -52,6 +52,9 @@ button:active {
 .clickable {
     cursor: pointer;
 }
+.clickable-no {
+    cursor: default ;
+}
 
 .button-regular {
     background-color: Colors.$purpleScarlet;
