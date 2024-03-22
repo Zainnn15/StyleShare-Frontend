@@ -3,7 +3,7 @@ import { useState } from 'react';
 import '../../styles/main.scss';
 import { toast } from 'react-hot-toast';
 import ScreenHeaderIn from "../../components/common/ScreenHeaderIn";
-import { CARE_BLEACH_METHODS, CARE_DRYC_METHODS, CARE_DRY_METHODS, CARE_IRON_METHODS, CARE_WASH_METHODS, WASH_TEMP_C, WASH_TEMP_F } from '../../constants/data/options';
+import { CARE_DRYC_METHODS, CARE_DRY_METHODS, CARE_IRON_METHODS, CARE_WASH_METHODS, WASH_TEMP_C, WASH_TEMP_F } from '../../constants/data/options';
 import InfoPopup from '../../components/common/InfoPopup';
 import { addErrorMessageByID, validatePage } from '../../constants/functions/inputHandlers';
 import axios from 'axios';
@@ -33,12 +33,8 @@ export default function GarmentWash() {
     const [careIron, setCareIron] = useState({
         "Heat":"",
     });
-    const [careBleach, setCareBleach] = useState({
-        "Bleach":"",
-    });
     const [useDryC, setUseDryC] = useState(false);
     const [useIron, setUseIron] = useState(false);
-    const [useBleach, setUseBleach] = useState(false);
     const [ironDuration, setIronDuration] = useState('');
     const [isVentilated, setIsVentilated] = useState(false);
     const [ventilatedTime, setVentilatedTime] = useState('');
@@ -46,18 +42,17 @@ export default function GarmentWash() {
     // Function to send the garment details to the backend
     const sendGarmentDetails = async () => {
         try {
-        const garmentData = {
-            washDate,
-            careWash,
-            careDry,
-            careDryC,
-            careIron,
-            careBleach,
-            useIron,
-            ironDuration,
-            isVentilated,
-            ventilatedTime,
-        };
+            const garmentData = {
+                washDate,
+                careWash: JSON.stringify(careWash),
+                careDry: JSON.stringify(careDry),
+                careDryC: JSON.stringify(careDryC),
+                careIron: JSON.stringify(careIron),
+                useIron,
+                ironDuration,
+                isVentilated,
+                ventilatedTime,
+            };
 
         // Spread garmentData at the same level as userId
         const {data} = await axios.post('/addgarmentdetails', {...garmentData, userId: user.id});
@@ -499,49 +494,6 @@ export default function GarmentWash() {
                                 {CARE_IRON_METHODS.Heat.map((opt) => {
                                     return (
                                         <option key={"ironHeat_" + opt.value} value={opt.value}>
-                                            {opt.label}
-                                        </option>
-                                    )
-                                })}
-                                </select> 
-                            </div>
-                        </div>
-                    </div>
-                    )}
-                </div>
-
-
-                <div className='container-grid-2-md'>
-                    <div className='container-content'>
-                    <label className='text-b clickable' htmlFor='isIroned'>Use Bleach:</label>
-                    <label className='tab'></label>
-                    <input type='checkbox' id="isBleached" name="isBleached" value={1} checked={useBleach} 
-                        onChange={(e)=>setUseBleach(e.target.checked)} />
-                    <InfoPopup text='Check if the garment was bleached'/>
-                    </div>
-
-                    {useBleach && (
-                    <div>
-                        <div>
-                            <div className='container-prompt'>
-                                <p>Type of Bleach</p>
-                                <InfoPopup text='Select the type of bleach used on the garment' />
-                            </div>
-                            <div id={"bleach_error"} style={{textAlign:"center"}}></div>
-                            <div className='container-input'>
-                                <select id='bleach' 
-                                name='bleach' 
-                                value={careBleach.Bleach} 
-                                onChange={(e)=>{
-                                    setCareBleach({...careBleach, "Bleach":e.target.value});
-                                    addErrorMessageByID("bleach_error", null);
-                                }}
-                                required
-                                >
-                                <option key='bleach_null' value=''>Select a bleach...</option>
-                                {CARE_BLEACH_METHODS.Bleach.map((opt) => {
-                                    return (
-                                        <option key={"bleach_" + opt.value} value={opt.value}>
                                             {opt.label}
                                         </option>
                                     )

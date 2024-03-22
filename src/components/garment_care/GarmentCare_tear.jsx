@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast';
 import ScreenHeaderIn from "../../components/common/ScreenHeaderIn";
 import { wearTears, repairRequests} from '../../constants/data/lists';
 import InfoPopup from '../../components/common/InfoPopup';
-import { addErrorMessageByID, checkOnID, clickID, readURL } from '../../constants/functions/inputHandlers';
+import { addErrorMessageByID, checkOnID, clickID } from '../../constants/functions/inputHandlers';
 import { GARMENT_TYPES } from '../../constants/data/options';
 import { measurementTypes } from '../../constants/data/lists';
 import axios from 'axios';
@@ -29,7 +29,12 @@ export default function GarmentTear() {
     const [tearDate, setTearDate] = useState('');
     const [wantRepair, setWantRepair] = useState(false);
     const measureTypes = garment ? getSetByCategory(getCategory(garment?.garmentType)) : [];
-  const [measures] = useState([...measureTypes]);
+    const [measures] = useState([...measureTypes]);
+    const [twistingImg, setTwistingImg] = useState(null);
+    const [spandexShrinkImg, setSpandexShrinkImg] = useState(null);
+    const [printFadeImg, setPrintFadeImg] = useState(null);
+    const [holeImg, setHoleImg] = useState(null);
+    const [stainImg, setStainImg] = useState(null);
     const [wearTear, setWearTear] = useState({
       'colorFade': 0,
       'pilling': 0,
@@ -46,7 +51,7 @@ export default function GarmentTear() {
       'other': 0,
     });
     const [tearExtra, setTearExtra] = useState({
-      // All tearExtra fields initialized
+      
     });
     const [repairRequest, setRepairRequest] = useState({
       "looseButton": "",
@@ -65,6 +70,11 @@ export default function GarmentTear() {
         formData.append('tearExtra', JSON.stringify(tearExtra));
         formData.append('repairRequest', JSON.stringify(repairRequest));
         formData.append('repairOther', repairOther);
+    if (twistingImg) formData.append('twistingImg', twistingImg);
+    if (spandexShrinkImg) formData.append('spandexShrinkImg', spandexShrinkImg);
+    if (printFadeImg) formData.append('printFadeImg', printFadeImg);
+    if (holeImg) formData.append('holeImg', holeImg);
+    if (stainImg) formData.append('stainImg', stainImg);
     
         // Append images and other file inputs dynamically
         Object.entries(tearExtra).forEach(([key, value]) => {
@@ -138,6 +148,7 @@ export default function GarmentTear() {
         console.log('Validation passed, proceeding with sending garment details.');
         sendGarmentDetails();
     }
+    
 
   return (
     <div>
@@ -421,20 +432,10 @@ export default function GarmentTear() {
                                 <p>Upload photo of twisting area</p>
                             </div>
                             <div className='container-input-img clickable' onClick={()=>clickID("twistingImg")}>
-                                <img className='clickable' id='twistingImg_img' src={selectImg} alt='upload photo'/>
+                                <img className='clickable' id='twistingImg' src={selectImg} alt='upload photo'/>
                             </div>
                             <div className="container-input">
-                                <input  type="file" id="twistingImg" name="twistingImg" 
-                                    onChange={(e) => {
-                                        setTearExtra({
-                                            ...tearExtra,
-                                            "twistingImg": e.target.files[0]
-                                        });
-                                        if(e.target.files[0]) {
-                                            readURL("twistingImg", "twistingImg_img");
-                                        }
-                                    }}
-                                />
+                             <input id="twistingImg" type="file" onChange={(e) => setTwistingImg(e.target.files[0])} required />
                             </div>
                         </div>
                     )}
@@ -608,17 +609,7 @@ export default function GarmentTear() {
                                 <img className='clickable' id='spandexShrinkImg_img' src={selectImg} alt='upload photo'/>
                             </div>
                             <div className="container-input">
-                                <input  type="file" id="spandexShrinkImg" name="spandexShrinkImg" 
-                                    onChange={(e) => {
-                                        setTearExtra({
-                                            ...tearExtra,
-                                            "spandexShrinkImg": e.target.files[0]
-                                        });
-                                        if(e.target.files[0]) {
-                                            readURL("spandexShrinkImg", "spandexShrinkImg_img");
-                                        }
-                                    }}
-                                />
+                            <input id="spandexShrinkImg" type="file" onChange={(e) => setSpandexShrinkImg(e.target.files[0])} required />
                             </div>
                         </div>
                     )}
@@ -674,17 +665,7 @@ export default function GarmentTear() {
                                 <img className='clickable' id='printFadeImg_img' src={selectImg} alt='upload photo'/>
                             </div>
                             <div className="container-input">
-                                <input  type="file" id="printFadeImg" name="printFadeImg" 
-                                    onChange={(e) => {
-                                        setTearExtra({
-                                            ...tearExtra,
-                                            "printFadeImg": e.target.files[0]
-                                        });
-                                        if(e.target.files[0]) {
-                                            readURL("printFadeImg", "printFadeImg_img");
-                                        }
-                                    }}
-                                />
+                            <input id="printFadeImg" type="file" onChange={(e) => setPrintFadeImg(e.target.files[0])} required />
                             </div>
                         </div>
                     )}
@@ -730,7 +711,7 @@ export default function GarmentTear() {
                             </div>
                             <div className='container-input'>
                             <input
-                                type='number'
+                                type='number' 
                                 name='holeSize'
                                 value={tearExtra["holeSize"]}
                                 onChange={(e)=>{
@@ -739,12 +720,12 @@ export default function GarmentTear() {
                                     "holeSize": e.target.value
                                 });
                                 }}
-                                placeholder='Hole size'
+                                placeholder='Enter size of hole'
                                 min={0.01}
                                 step={0.01}
                                 required
-                            />                
-                            </div>
+                            />
+                                </div>
                             <div className='container-prompt'>
                                 <p>Upload photo of the hole</p>
                             </div>
@@ -752,17 +733,7 @@ export default function GarmentTear() {
                                 <img className='clickable' id='holeImg_img' src={selectImg} alt='upload photo'/>
                             </div>
                             <div className="container-input">
-                                <input  type="file" id="holeImg" name="holeImg" 
-                                    onChange={(e) => {
-                                        setTearExtra({
-                                            ...tearExtra,
-                                            "holeImg": e.target.files[0]
-                                        });
-                                        if(e.target.files[0]) {
-                                            readURL("holeImg", "holeImg_img");
-                                        }
-                                    }}
-                                />
+                            <input id="holeImg" type="file" onChange={(e) => setHoleImg(e.target.files[0])} required />
                             </div>
                         </div>
                     )}
@@ -972,17 +943,7 @@ export default function GarmentTear() {
                                 <img className='clickable' id='stainImg_img' src={selectImg} alt='upload photo'/>
                             </div>
                             <div className="container-input">
-                                <input  type="file" id="stainImg" name="stainImg" 
-                                    onChange={(e) => {
-                                        setTearExtra({
-                                            ...tearExtra,
-                                            "stainImg": e.target.files[0]
-                                        });
-                                        if(e.target.files[0]) {
-                                            readURL("stainImg", "stainImg_img");
-                                        }
-                                    }}
-                                />
+                            <input id="stainImg" type="file" onChange={(e) => setStainImg(e.target.files[0])} required />
                             </div>
                         </div>
                     )}

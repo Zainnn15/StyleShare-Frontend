@@ -92,11 +92,12 @@ const GarmentMeasurement = () => {
         // Construct the payload with all necessary data
         const payload = {
             userId: user.id,
-            clothingType: formData.clothingType.value,
+            clothingType: formData.clothingType, // Send the whole object
             garmentSize: formData.garmentSize,
             garmentFit: formData.garmentFit,
             garmentMeasurements,
         };
+        
     
         try {
             const response = await axios.post('/addgarmentdetails', payload, {
