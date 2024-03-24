@@ -18,11 +18,11 @@ const Garment_care = ({garment}) => {
         if(garment) {
             setInstructions({
               ...instructions, 
-              "Wash": JSON.parse(garment.instructionWash[0]),
-              "Tumble": JSON.parse(garment.instructionTumble[0]),
-              "DryC": JSON.parse(garment.instructionDryC[0]),
-              "Iron": JSON.parse(garment.instructionIron[0]),
-              "Bleach": JSON.parse(garment.instructionBleach[0]),
+              "Wash": garment.instructionWash,
+              "Tumble": garment.instructionTumble,
+              "DryC": garment.instructionDryC,
+              "Iron": garment.instructionIron,
+              "Bleach": garment.instructionBleach,
             });
         }
     }, []);

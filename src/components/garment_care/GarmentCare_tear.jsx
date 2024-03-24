@@ -432,7 +432,7 @@ export default function GarmentTear() {
                                 <p>Upload photo of twisting area</p>
                             </div>
                             <div className='container-input-img clickable' onClick={()=>clickID("twistingImg")}>
-                                <img className='clickable' id='twistingImg' src={selectImg} alt='upload photo'/>
+                                <img id='twistingImg_img' src={twistingImg ? URL.createObjectURL(twistingImg) : selectImg} alt='upload photo'/>
                             </div>
                             <div className="container-input">
                              <input id="twistingImg" type="file" onChange={(e) => setTwistingImg(e.target.files[0])} required />
@@ -635,7 +635,7 @@ export default function GarmentTear() {
                                 <p>Upload photo of shrinking area</p>
                             </div>
                             <div className='container-input-img clickable' onClick={()=>clickID("spandexShrinkImg")}>
-                                <img className='clickable' id='spandexShrinkImg_img' src={selectImg} alt='upload photo'/>
+                                <img id='spandexShrinkImg_img' src={spandexShrinkImg ? URL.createObjectURL(spandexShrinkImg) : selectImg} alt='upload photo'/>
                             </div>
                             <div className="container-input">
                             <input id="spandexShrinkImg" type="file" onChange={(e) => setSpandexShrinkImg(e.target.files[0])} required />
@@ -691,7 +691,7 @@ export default function GarmentTear() {
                                 <p>Upload photo of the print</p>
                             </div>
                             <div className='container-input-img clickable' onClick={()=>clickID("printFadeImg")}>
-                                <img className='clickable' id='printFadeImg_img' src={selectImg} alt='upload photo'/>
+                                <img id='printFadeImg_img' src={printFadeImg ? URL.createObjectURL(printFadeImg) : selectImg} alt='upload photo'/>
                             </div>
                             <div className="container-input">
                             <input id="printFadeImg" type="file" onChange={(e) => setPrintFadeImg(e.target.files[0])} required />
@@ -759,7 +759,7 @@ export default function GarmentTear() {
                                 <p>Upload photo of the hole</p>
                             </div>
                             <div className='container-input-img clickable' onClick={()=>clickID("holeImg")}>
-                                <img className='clickable' id='holeImg_img' src={selectImg} alt='upload photo'/>
+                                <img id='holeImg_img' src={holeImg ? URL.createObjectURL(holeImg) : selectImg} alt='upload photo'/>
                             </div>
                             <div className="container-input">
                             <input id="holeImg" type="file" onChange={(e) => setHoleImg(e.target.files[0])} required />
@@ -969,7 +969,7 @@ export default function GarmentTear() {
                                 <p>Upload photo of the stain</p>
                             </div>
                             <div className='container-input-img clickable' onClick={()=>clickID("stainImg")}>
-                                <img className='clickable' id='stainImg_img' src={selectImg} alt='upload photo'/>
+                                <img id='stainImg_img' src={stainImg ? URL.createObjectURL(stainImg) : selectImg} alt='upload photo'/>
                             </div>
                             <div className="container-input">
                             <input id="stainImg" type="file" onChange={(e) => setStainImg(e.target.files[0])} required />

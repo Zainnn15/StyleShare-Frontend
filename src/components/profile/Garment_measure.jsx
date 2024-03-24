@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
 import '../../styles/main.scss';
-import { findAttribute } from '../../constants/functions/valueHandlers';
+import { findAttribute, formatDate } from '../../constants/functions/valueHandlers';
 import { GARMENT_TYPES } from '../../constants/data/options';
 
 const Garment_measure = ({garment}) => {
     return(
-        <div>
-            <div className="container-grid-2-md gap container-border clear-box m1">
+        <div className='m1'>
+            <label className="container-subtitle-2">Original ({formatDate(garment.purchaseDate)})</label>
+            <div className="container-grid-2-md gap container-border clear-box">
                 <div>
                     <p>
                     <label className="text-b">Garment Type:<label className="tab"></label></label>

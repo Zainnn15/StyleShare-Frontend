@@ -1,13 +1,23 @@
 /* eslint-disable react/prop-types */
 import '../../styles/main.scss';
-import { findAttribute, formatDate } from '../../constants/functions/valueHandlers';
+import { findAttribute, formatDate, getElemByMaxAttr, getImageFromURL } from '../../constants/functions/valueHandlers';
 import { GARMENT_TYPES } from '../../constants/data/options';
 import { id_purchaseMethod } from '../../constants/data/inputID';
+import { useEffect, useState } from 'react';
 
 const Garment_general = ({garment}) => {
+    const [maxWearInfo, setMaxWearInfo] = useState('');
+    useEffect(() => {
+        //get latest wear
+        if(garment.wearInfo && garment.wearInfo.length > 0) {
+          setMaxWearInfo(getElemByMaxAttr(garment.wearInfo, "wearDate", true));
+        }
+      }, []);
+
     return(
-        <div>
-            <div className="container-grid-2-md gap container-border clear-box m1">
+        <div className='m1'>
+            <label className="container-subtitle-2">Details</label>
+            <div className="container-grid-2-md gap container-border clear-box">
                 <div>
                 <p>
                     <label className="text-b">Type:<label className="tab"></label></label>
@@ -56,6 +66,60 @@ const Garment_general = ({garment}) => {
                     )
                 }
                 </div>
+            </div>
+            <br/>
+            <label className="container-subtitle-2">Photos</label>
+            <div className="container-grid-2-md gap container-border clear-box">
+                <div>
+                    <p>
+                    <label className="text-b">
+                        Original Front Photo ({formatDate(garment.purchaseDate)}):
+                    <label className="tab"></label></label>
+                    </p>
+                    <div className='container-input-img img-size-sm'>
+                        <img src={getImageFromURL(garment.fileFront)} alt="front"/>
+                    </div>
+                </div>
+                <div>
+                    <p>
+                    <label className="text-b">
+                        Original Front Photo ({formatDate(garment.purchaseDate)}):
+                    <label className="tab"></label></label>
+                    </p>
+                    <div className='container-input-img img-size-sm'>
+                        <img src={getImageFromURL(garment.fileBack)} alt="back"/>
+                    </div>
+                </div>
+                
+                {
+                    maxWearInfo !== "" && maxWearInfo.wearDate && (
+                        <div>
+                            <p>
+                            <label className="text-b">
+                                Current Front Photo ({formatDate(maxWearInfo.wearDate)}):
+                            <label className="tab"></label></label>
+                            </p>
+                            <div className='container-input-img img-size-sm'>
+                                <img src={getImageFromURL(maxWearInfo.wearFront)} alt="front"/>
+                            </div>
+                        </div>
+                    )
+                }
+                {
+                    maxWearInfo !== "" && maxWearInfo.wearDate && (
+                        <div>
+                            <p>
+                            <label className="text-b">
+                                Current Back Photo ({formatDate(maxWearInfo.wearDate)}):
+                            <label className="tab"></label></label>
+                            </p>
+                            <div className='container-input-img img-size-sm'>
+                                <img src={getImageFromURL(maxWearInfo.wearBack)} alt="front"/>
+                            </div>
+                        </div>
+                    )
+                    
+                }
             </div>
 
         </div>

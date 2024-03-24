@@ -15,6 +15,7 @@ import Wear from "../components/profile/Garment_wear";
 import Wash from "../components/profile/Garment_wash";
 import Tear from "../components/profile/Garment_tear";
 import { getImageFromURL } from "../constants/functions/valueHandlers";
+import defaultProfile from "../assets/images/profile_default.jpg";
 
 export default function Profile() {
     const {user} = useContext(UserContext);
@@ -35,7 +36,7 @@ export default function Profile() {
     const [garmentDetails, setGarmentDetails] = useState(null); //used for?
     const [tabPage, setTabPage] = useState(0);
     const [selectedCampus, setSelectedCampus] = useState('');
-const [customCampus, setCustomCampus] = useState('');
+    const [customCampus, setCustomCampus] = useState('');
 
     const weekDays = [
       { value: 0, label: "Sunday", short: "Sun" },
@@ -108,6 +109,45 @@ const [customCampus, setCustomCampus] = useState('');
         })
         .catch((error) => console.error('Error fetching garment details:', error));
       }
+
+      //sort by date
+      if(garment) {
+        //sort wearInfo by date
+        if(garment.wearInfo) {
+            garment.wearInfo.sort((obj1, obj2)=>{
+                if(obj1.wearDate < obj2.wearDate) {
+                    return -1;
+                }
+                else {
+                    return 1;
+                }
+            });
+        }
+
+        //sort washCareInstructions by date
+        if(garment.washCareInstructions) {
+            garment.washCareInstructions.sort((obj1, obj2)=>{
+                if(obj1.washDate < obj2.washDate) {
+                    return -1;
+                }
+                else {
+                    return 1;
+                }
+            });
+        }
+
+        //sort tearInfo by date
+        if(garment.tearInfo) {
+            garment.tearInfo.sort((obj1, obj2)=>{
+                if(obj1.tearDate < obj2.tearDate) {
+                    return -1;
+                }
+                else {
+                    return 1;
+                }
+            });
+        }
+      }
     }, []);
     
     function handleChangeSchedule() {
@@ -162,7 +202,7 @@ const [customCampus, setCustomCampus] = useState('');
           </div>
           <div className="container-row space-evenly wrap container-border greeting">
             <div className="container-profile-img">
-              <img src={garment ? getImageFromURL(garment.fileFront) : profile} alt="profile"/>    
+              <img src={garment ? getImageFromURL(garment.fileFront) : defaultProfile} alt="profile"/>    
             </div>        
             <h3>Welcome, {user.name}</h3>
           </div>        
@@ -447,6 +487,7 @@ const [customCampus, setCustomCampus] = useState('');
 
           {
             tabPage === 1 &&
+            garment && 
             garment.garmentSize && (
               <Measure garment={garment}/>
             )
@@ -468,21 +509,27 @@ const [customCampus, setCustomCampus] = useState('');
 
           {
             tabPage === 4 &&
-            garment.wearDate && (
+            garment &&
+            garment.wearInfo &&
+            garment.wearInfo.length > 0 && (
               <Wear garment={garment}/>
             )
           }
 
           {
             tabPage === 5 &&
-            garment.washCareInstructions && (
+            garment &&
+            garment.washCareInstructions &&
+            garment.washCareInstructions.length > 0 && (
               <Wash garment={garment}/>
             )
           }
 
           {
             tabPage === 6 &&
-            garment.tearInfo && (
+            garment &&
+            garment.tearInfo &&
+            garment.tearInfo.length > 0 && (
               <Tear garment={garment}/>
             )
           }

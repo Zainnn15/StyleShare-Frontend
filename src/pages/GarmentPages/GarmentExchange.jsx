@@ -39,6 +39,51 @@ function GarmentExchange() {
         if (user.id) {
             fetchExchangeRequests();
         }
+
+        //sort by date
+        userGroups.members && 
+        userGroups.members.forEach((member)=>{
+            if(member.garments && member.garments.length > 0) {
+                for(let garment of member.garments) {
+                    //sort wearInfo by date
+                    if(garment.wearInfo) {
+                        garment.wearInfo.sort((obj1, obj2)=>{
+                            if(obj1.wearDate < obj2.wearDate) {
+                                return -1;
+                            }
+                            else {
+                                return 1;
+                            }
+                        });
+                    }
+
+                    //sort washCareInstructions by date
+                    if(garment.washCareInstructions) {
+                        garment.washCareInstructions.sort((obj1, obj2)=>{
+                            if(obj1.washDate < obj2.washDate) {
+                                return -1;
+                            }
+                            else {
+                                return 1;
+                            }
+                        });
+                    }
+
+                    //sort tearInfo by date
+                    if(garment.tearInfo) {
+                        garment.tearInfo.sort((obj1, obj2)=>{
+                            if(obj1.tearDate < obj2.tearDate) {
+                                return -1;
+                            }
+                            else {
+                                return 1;
+                            }
+                        });
+                    }
+                }
+            }
+        });
+
     }, [user.id]);
 
     const openReservationModal = (recipientId, recipientGarmentId) => {
@@ -108,6 +153,8 @@ function GarmentExchange() {
     function handleCardPress(garment) {
         setGarmentModalID(garment);
     }
+
+
 
     return (
         <div>
@@ -416,6 +463,7 @@ function GarmentExchange() {
 
                                     {
                                         tabPage === 1 &&
+                                        garmentModalID &&
                                         garmentModalID.garmentSize && (
                                         <Measure garment={garmentModalID}/>
                                         )
@@ -437,21 +485,27 @@ function GarmentExchange() {
 
                                     {
                                         tabPage === 4 &&
-                                        garmentModalID.wearDate && (
+                                        garmentModalID &&
+                                        garmentModalID.wearInfo &&
+                                        garmentModalID.wearInfo.length > 0 && (
                                         <Wear garment={garmentModalID}/>
                                         )
                                     }
 
                                     {
                                         tabPage === 5 &&
-                                        garmentModalID.washCareInstructions && (
+                                        garmentModalID &&
+                                        garmentModalID.washCareInstructions &&
+                                        garmentModalID.washCareInstructions.length > 0 && (
                                         <Wash garment={garmentModalID}/>
                                         )
                                     }
 
                                     {
                                         tabPage === 6 &&
-                                        garmentModalID.tearInfo && (
+                                        garmentModalID &&
+                                        garmentModalID.tearInfo &&
+                                        garmentModalID.tearInfo.length > 0 && (
                                         <Tear garment={garmentModalID}/>
                                         )
                                     }

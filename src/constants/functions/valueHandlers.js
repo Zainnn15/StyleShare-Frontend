@@ -70,5 +70,44 @@ function getImageFromURL(imgName) {
     return srcName;
 }
 
+function getElemByMaxAttr(objArr, attrCheck="value", isDate=false) {
+    let maxIndex = -1;
+    for(let i=0; i < objArr.length; i++) {
+        let obj = objArr[i];
+        if(!obj[attrCheck]) {
+            continue;
+        }
+        if(maxIndex < 0) {
+            maxIndex = i;
+            continue;
+        }
+
+        if(isDate) {
+            let date1 = new Date(objArr[maxIndex][attrCheck]);
+            let date2 = new Date(obj[attrCheck]);
+            if(date1 <= date2) {
+                maxIndex = i;
+            }
+        }
+        else {
+           if(objArr[maxIndex][attrCheck] <= obj[attrCheck]) {
+                maxIndex = i;
+           }
+        }
+    }
+    return maxIndex < 0 ? null : objArr[maxIndex];
+}
+
+function dateComparator(dateX, dateY) {
+    let date1 = new Date(dateX);
+    let date2 = new Date(dateY);
+    if(date1 < date2) {
+        return -1;
+    }
+    else {
+        return 1;
+    }
+}
+
 export { findAttribute, parseID, formatStr, formatDate, formatTemp, getAttrByInpID,
-getImageFromURL }
+getImageFromURL, getElemByMaxAttr, dateComparator }
