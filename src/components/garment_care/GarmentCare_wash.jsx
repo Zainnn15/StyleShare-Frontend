@@ -43,29 +43,33 @@ export default function GarmentWash() {
     const sendGarmentDetails = async () => {
         try {
             const garmentData = {
-                washDate,
-                careWash: JSON.stringify(careWash),
-                careDry: JSON.stringify(careDry),
-                careDryC: JSON.stringify(careDryC),
-                careIron: JSON.stringify(careIron),
-                useIron,
-                ironDuration,
-                isVentilated,
-                ventilatedTime,
+                washDate: washDate,
+                careWash: careWash, // No JSON.stringify
+                careDry: careDry, // No JSON.stringify
+                careDryC: useDryC ? careDryC : {}, // Conditionally add if useDryC is true
+                careIron: useIron ? careIron : {}, // Conditionally add if useIron is true
+                useDryC: useDryC,
+                useIron: useIron,
+                ironDuration: ironDuration,
+                isVentilated: isVentilated,
+                ventilatedTime: ventilatedTime,
+                userId: user.id,
             };
-
-        // Spread garmentData at the same level as userId
-        const {data} = await axios.post('/addgarmentdetails', {...garmentData, userId: user.id});
-
-        if (data.error) {
-            toast.error(data.error);
-        } else {
-            toast.success(data.message);
-        }
+    
+            const {data} = await axios.post('/addgarmentdetails', garmentData);
+    
+            console.log('Data from the backend:', data);
+    
+            if (data.error) {
+                toast.error(data.error);
+            } else {
+                toast.success(data.message);
+            }
         } catch (error) {
-        console.log('Error sending garment details to the backend:', error);
+            console.log('Error sending garment details to the backend:', error);
         }
     };
+    
 
     // Call the sendGarmentDetails function when the form is submitted
     const handleSubmit = (e) => {

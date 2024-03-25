@@ -21,7 +21,7 @@ import { findAttribute } from "../../constants/functions/valueHandlers";
 
 const GarmentMeasurement = () => {
     changeTitle("Garment Measurement")
-    const { navigate } = useNavigate();
+    const navigate  = useNavigate();
     const { user } = useContext(UserContext);
     const {garment} = useContext(GarmentContext);
     const [formData, setFormData] = useState({
@@ -93,6 +93,7 @@ const GarmentMeasurement = () => {
         const payload = {
             userId: user.id,
             clothingType: formData.clothingType, // Send the whole object
+            garmentSizeType: formData.garmentSizeType, // Ensure this is included
             garmentSize: formData.garmentSize,
             garmentFit: formData.garmentFit,
             garmentMeasurements,

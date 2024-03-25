@@ -65,45 +65,57 @@ export default function GarmentTear() {
   
     const sendGarmentDetails = async () => {
         const formData = new FormData();
+    
+        // Prepare washShrinkMeasurements if washShrink is selected
+        if (wearTear.washShrink) {
+            const washShrinkMeasurements = measuresData.map((measure, index) => ({
+              measureType: measures[index].value,
+              value: measure.value,
+              unit: measure.unit
+            }));
+
+            const updatedTearExtra = {
+                ...tearExtra,
+                washShrinkMeasurements // This will add the measurements array under the key "washShrinkMeasurements"
+              };
+              formData.append('tearExtra', JSON.stringify(updatedTearExtra));
+            } else {
+              // If washShrink is not checked, append the existing tearExtra object
+              formData.append('tearExtra', JSON.stringify(tearExtra));
+            }
+    
+        // Append the rest of the data
         formData.append('tearDate', tearDate);
         formData.append('wantRepair', wantRepair);
         formData.append('wearTear', JSON.stringify(wearTear));
-        formData.append('tearExtra', JSON.stringify(tearExtra));
         formData.append('repairRequest', JSON.stringify(repairRequest));
         formData.append('repairOther', repairOther);
-    if (twistingImg) formData.append('twistingImg', twistingImg);
-    if (spandexShrinkImg) formData.append('spandexShrinkImg', spandexShrinkImg);
-    if (printFadeImg) formData.append('printFadeImg', printFadeImg);
-    if (holeImg) formData.append('holeImg', holeImg);
-    if (stainImg) formData.append('stainImg', stainImg);
     
-        // Append images and other file inputs dynamically
-        Object.entries(tearExtra).forEach(([key, value]) => {
-          if (value instanceof File) {
-            formData.append(key, value);
-          }
-        });
-    
+        // Append images and files
+        if (twistingImg) formData.append('twistingImg', twistingImg);
+        if (spandexShrinkImg) formData.append('spandexShrinkImg', spandexShrinkImg);
+        if (printFadeImg) formData.append('printFadeImg', printFadeImg);
+        if (holeImg) formData.append('holeImg', holeImg);
+        if (stainImg) formData.append('stainImg', stainImg);
         formData.append('userId', user.id);
     
         try {
-          const { data } = await axios.post('/addgarmentdetails', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          });
+            const { data } = await axios.post('/addgarmentdetails', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
     
-          if (data.error) {
-            toast.error(data.error);
-          } else {
-            toast.success('Garment details updated successfully');
-            navigate("/garment-care"); // Adjust as needed
-          }
+            if (data.error) {
+                toast.error(data.error);
+            } else {
+                toast.success('Garment details updated successfully');
+                navigate("/garment-care");
+            }
         } catch (error) {
-          console.error('Error sending garment details:', error);
-          toast.error('An error occurred while updating garment details.');
+            console.error('Error sending garment details:', error);
+            toast.error('An error occurred while updating garment details.');
         }
     };
+    
     
     function getCategory(val) {
         const category = GARMENT_TYPES.find(option => option.value === val)?.cat;
