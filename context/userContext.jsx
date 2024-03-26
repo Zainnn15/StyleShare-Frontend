@@ -4,21 +4,29 @@ import { createContext, useState, useEffect } from 'react';
 
 export const UserContext = createContext({});
 
-export function UserContextProvider({children}) {
-    const [user, setUser] = useState(null);
-    useEffect(() => {
-      if(!user) {
-        axios.get('/profile').then(({data}) => {
-            setUser(data);
-      })
-    }
-    }, [])
+export const UserContextProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+        try {
+            const response = await axios.get('/profile', { withCredentials: true });
+            setUser(response.data);
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+            setUser(null); // Ensure user is set to null if there's an error or no session
+        } finally {
+            setLoading(false); // Set loading to false after the attempt to fetch user data
+        }
+    };
 
-    return (
-        <UserContext.Provider value={{user, setUser}}>
-            {children}
-        </UserContext.Provider>
-        
-    )
-}
+    fetchUserData();
+}, []);
+
+return (
+    <UserContext.Provider value={{ user, setUser, loading }}>
+        {!loading && children}
+    </UserContext.Provider>
+);
+};
