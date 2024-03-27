@@ -17,14 +17,14 @@ export function GroupContextProvider({ children }) {
   // Fetch user's groups and open groups
   useEffect(() => {
     const fetchUserGroups = async () => {
-      try {
-        if (user && user.id) {
-          const response = await axios.get(`/getGroups/${user.id}`);
-          setUserGroups(response.data.userGroups);
+        if (user && user._id) { // Use _id if that's what your database uses
+          try {
+            const { data } = await axios.get(`/getGroups/${user._id}`, { withCredentials: true });
+            setUserGroups(data); // Assuming this endpoint returns the structure you expect
+          } catch (error) {
+            console.error('Error fetching user groups:', error);
+          }
         }
-      } catch (error) {
-        console.error('Error fetching user groups:', error);
-      }
     };
 
     const fetchOpenGroups = async () => {

@@ -3,32 +3,34 @@ import '../../styles/main.scss';
 import { Link } from "react-router-dom";
 import { useContext } from 'react';
 import { GarmentContext } from "../../../context/garmentContext.jsx";
-
+import { UserContext } from "../../../context/userContext.jsx";
 import logo from '../../assets/icons/logo192.png';
 import menu from '../../assets/icons/menu.png';
 import profile from '../../assets/images/profile_default.jpg';
+import { useNavigate } from 'react-router-dom';
 
 import CircleBtn from "./CircleBtn.jsx";
 import { getImageFromURL } from '../../constants/functions/valueHandlers.js';
 
 const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
+    const navigate = useNavigate();
+    const { setUser } = useContext(UserContext);
     const {garment} = useContext(GarmentContext);
       // logout function
-    const handleLogout = async () => {
+      const handleLogout = async () => {
         try {
-        // Make a request to your backend logout endpoint, e.g., using fetch or axios
-        await fetch('http://localhost:8000/logout', {
-            method: 'GET',
-            credentials: 'include', // Include credentials for cookies to be sent
-        });
+            await fetch('http://localhost:8000/logout', {
+                method: 'GET',
+                credentials: 'include', // Include credentials for cookies to be sent
+            });
 
-        // Clear any local state or user information in your frontend
-        // For example, if you're using context, reset the user context
+            // Clear any local state or user information in your frontend
+            setUser(null); // Assuming setUser is the function to update the user context
 
-        // Redirect to the home page by changing the window location
-        window.location.href = '/';
+            // Use navigate to go to the home page instead of window.location to keep SPA behavior
+            navigate('/');
         } catch (error) {
-        console.error('Logout error:', error);
+            console.error('Logout error:', error);
         }
     };
 

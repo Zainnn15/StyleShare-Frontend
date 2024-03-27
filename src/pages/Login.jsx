@@ -1,7 +1,8 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../context/userContext'; // Adjust path as needed
 
 import logo from '../assets/icons/logo192.png';
 import ScreenHeader from '../components/common/ScreenHeader';
@@ -9,62 +10,72 @@ import CircleImg from '../components/common/CircleImg';
 
 export default function Login() {
     const navigate = useNavigate();
-    const [data , setData] = useState({
-        email: '',
-        password: ''
-    });
+    const { setUser } = useContext(UserContext); // Assuming you have a context to manage user state
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const {email, password} = data;
         try {
-            const {data} = await axios.post('/login',{email, password})  
+            const { data } = await axios.post('/login', { email, password }, { withCredentials: true });
             if(data.error) {
                 toast.error(data.error);
             } else {
-                setData({});
+                setUser(data); // Update user state on successful login
+                navigate('/dashboard');
             }
         } catch (error) {
-            console.log(error);
+            console.error("Login error:", error);
+            toast.error('Login failed. Please try again.');
         }
-    }
+    };
 
+    // Check if user is already logged in
     useEffect(() => {
-        if (Object.keys(data).length === 0) {
-          // Navigate only when the data has been cleared
-          navigate('/dashboard');
-        }
-      }, [data, navigate]);
-  return (
-    <div>
-        <ScreenHeader isLogin={false} linkName={"Register"}/>
-        <div className='container main'>                
-            <form onSubmit={handleSubmit}>
-                <div className='container-small'>
-                    <div className='container-col'>
-                    <CircleImg iconUrl={logo} width="30%"/>
-                    </div>
-                    <div>
-                        <label className="container-title">Login</label>
-                        <hr/>
-                    </div>    
-                    <br/>
-                    <div>
-                        <label htmlFor="email">Email</label>
-                        <input type="email" id="email" value={data.email} 
-                            onChange={(e) => setData({...data, email: e.target.value})}
-                        />
-                        <label htmlFor="password">Password</label>
-                        <input type="password" id="password" value={data.password} 
-                            onChange={(e) => setData({...data, password: e.target.value})}
-                        />
-                    </div>
-                    <br/>
-                    <button className='button-form' type="submit" style={{width:"100%"}}>Login</button>
-                </div>
+        const verifyUser = async () => {
+            try {
+                const { data } = await axios.get('/profile', { withCredentials: true });
+                if (data) {
+                    setUser(data); // Set user context upon successful profile fetch
+                    navigate('/dashboard');
+                }
+            } catch (error) {
+                console.error("Error verifying user:", error);
+            }
+        };
 
-            </form>
+        verifyUser();
+    }, [navigate, setUser]);
+
+    return (
+        <div>
+            <ScreenHeader isLogin={false} linkName={"Register"}/>
+            <div className='container main'>                
+                <form onSubmit={handleSubmit}>
+                    <div className='container-small'>
+                        <div className='container-col'>
+                            <CircleImg iconUrl={logo} width="30%"/>
+                        </div>
+                        <div>
+                            <label className="container-title">Login</label>
+                            <hr/>
+                        </div>    
+                        <br/>
+                        <div>
+                            <label htmlFor="email">Email</label>
+                            <input type="email" id="email" value={email} 
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                            <label htmlFor="password">Password</label>
+                            <input type="password" id="password" value={password} 
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+                        <br/>
+                        <button className='button-form' type="submit" style={{width:"100%"}}>Login</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-  )
+    );
 }

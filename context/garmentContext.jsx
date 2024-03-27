@@ -10,12 +10,20 @@ export function GarmentContextProvider({ children }) {
   const [garment, setGarment] = useState(null);
 
   useEffect(() => {
-    if (user && !garment) { // Check if user is available before making the request
-      axios.get(`/getGarmentDetails/${user.id}`).then(({ data }) => {
-        setGarment(data);
-      });
+    // Adjusted to check for user and user._id (or user.id based on your setup)
+    if (user && user._id) { // Ensure you're checking the correct property
+      axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true }) // Adjusted to user._id
+        .then(({ data }) => {
+          setGarment(data);
+        })
+        .catch(error => {
+          console.error("Error fetching garment details:", error);
+          setGarment(null); // Clear garment data on error
+        });
+    } else {
+      setGarment(null); // Clear garment data if user is not logged in
     }
-  }, [user, garment]);
+  }, [user]); // Dependency array includes user to re-run effect when user changes
 
   return (
     <GarmentContext.Provider value={{ garment, setGarment }}>
