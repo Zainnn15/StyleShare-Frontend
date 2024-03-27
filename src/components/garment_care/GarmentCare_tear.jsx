@@ -97,7 +97,7 @@ export default function GarmentTear() {
         if (printFadeImg) formData.append('printFadeImg', printFadeImg);
         if (holeImg) formData.append('holeImg', holeImg);
         if (stainImg) formData.append('stainImg', stainImg);
-        formData.append('userId', user.id);
+        formData.append('userId', user._id);
     
         try {
             const { data } = await axios.post('/addgarmentdetails', formData, {

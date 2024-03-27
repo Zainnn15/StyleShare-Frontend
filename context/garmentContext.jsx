@@ -1,33 +1,38 @@
 /* eslint-disable react/prop-types */
+import { useContext, useState, useEffect, createContext, useCallback } from 'react';
 import axios from 'axios';
-import { createContext, useState, useEffect, useContext } from 'react';
-import { UserContext } from './userContext';
+import { UserContext } from './userContext'; // Ensure the path is correct based on your project structure
 
-export const GarmentContext = createContext({});
+export const GarmentContext = createContext();
 
-export function GarmentContextProvider({ children }) {
-  const { user } = useContext(UserContext); // Get user object from UserContext
-  const [garment, setGarment] = useState(null);
+export const GarmentContextProvider = ({ children }) => {
+    const { user, loading: userLoading } = useContext(UserContext);
+    const [garment, setGarment] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Adjusted to check for user and user._id (or user.id based on your setup)
-    if (user && user._id) { // Ensure you're checking the correct property
-      axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true }) // Adjusted to user._id
-        .then(({ data }) => {
-          setGarment(data);
-        })
-        .catch(error => {
-          console.error("Error fetching garment details:", error);
-          setGarment(null); // Clear garment data on error
-        });
-    } else {
-      setGarment(null); // Clear garment data if user is not logged in
-    }
-  }, [user]); // Dependency array includes user to re-run effect when user changes
+    const fetchGarmentDetails = useCallback(async () => {
+        // Wait until user is loaded and ensure there's a user object
+        if (!userLoading && user && user._id) {
+            try {
+                const response = await axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true });
+                setGarment(response.data); // Adjust based on actual response structure
+            } catch (error) {
+                console.error('Error fetching garment details:', error);
+                setGarment(null);
+            } finally {
+                setLoading(false);
+            }
+        }
+    }, [user, userLoading]);
 
-  return (
-    <GarmentContext.Provider value={{ garment, setGarment }}>
-      {children}
-    </GarmentContext.Provider>
-  );
-}
+    useEffect(() => {
+        setLoading(true); // Optional: Reset loading state on user change
+        fetchGarmentDetails();
+    }, [fetchGarmentDetails]);
+
+    return (
+        <GarmentContext.Provider value={{ garment, setGarment, loading }}>
+            {children}
+        </GarmentContext.Provider>
+    );
+};

@@ -174,48 +174,68 @@ const GarmentDetails = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
     
+        // Ensure you are checking the correct identifier as per your user object
+        if (!user || !user._id) { // Assuming your user object has an _id property
+            console.error("User ID is not available.");
+            toast.error("Unable to identify user. Please make sure you are logged in.");
+            return;
+        }
+    
         const uploadFormData = new FormData();
         // Directly append file objects
         if (formData.fileFront) uploadFormData.append('fileFront', formData.fileFront);
         if (formData.fileBack) uploadFormData.append('fileBack', formData.fileBack);
     
-        // Append other form data, stringifying only where necessary
-        const fieldsToDirectlyAppend = ['purchaseLocation', 'purchaseMethod', 'purchaseDate', 'garmentType', 'garmentDescription', 'garmentCountry', 'garmentCost', 'garmentDiscount', 'garmentOgCost', 'hasLining', 'hasPadding', 'willSubmit'];
+        // Append other form data
+        const fieldsToDirectlyAppend = [
+            'purchaseLocation', 'purchaseMethod', 'purchaseDate', 'garmentType', 
+            'garmentDescription', 'garmentCountry', 'garmentCost', 'garmentDiscount', 
+            'garmentOgCost', 'hasLining', 'hasPadding'
+        ];
         
         fieldsToDirectlyAppend.forEach(field => {
             uploadFormData.append(field, formData[field]);
         });
     
+        // For the willSubmit boolean, convert to string
+        uploadFormData.append("willSubmit", formData.willSubmit.toString());
+    
         // For complex objects or arrays, ensure they are stringified
-        const complexFields = ['compositionMain', 'compositionLining', 'compositionPadding', 'instructionWash', 'instructionDry', 'instructionTumble', 'instructionDryC', 'instructionIron', 'instructionBleach'];
+        const complexFields = [
+            'compositionMain', 'compositionLining', 'compositionPadding', 
+            'instructionWash', 'instructionDry', 'instructionTumble', 
+            'instructionDryC', 'instructionIron', 'instructionBleach'
+        ];
         complexFields.forEach(field => {
             uploadFormData.append(field, JSON.stringify(formData[field]));
         });
     
-        // Additional handling for user ID and willSubmit flag
-        uploadFormData.append('userId', user.id);
-        uploadFormData.append('willSubmit', formData.willSubmit ? "true" : "false");
+        // Append user ID correctly
+        uploadFormData.append("userId", user._id); // Adjust based on your user object's structure
     
         try {
-            const { data } = await axios.post('/addgarmentdetails', uploadFormData, {
+            const response = await axios.post('/addgarmentdetails', uploadFormData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
+                withCredentials: true, // Correct placement for withCredentials
             });
+    
+            const { data } = response;
     
             if (data.error) {
                 toast.error(data.error);
             } else {
-                // Clear form data on success
+                // Reset form data upon successful submission
                 setFormData({
-                    // Reset all fields here similarly to initial state
+                    // Reset all fields to their initial state
                 });
-                toast.success(data.message);
-                navigate('/dashboard');
+                toast.success("Garment details added successfully!");
+                navigate('/dashboard'); // Or any other path as needed
             }
         } catch (error) {
             console.error('Submission error:', error);
-            toast.error('An error occurred while submitting the form.');
+            toast.error("An error occurred while submitting the form.");
         }
     };
     

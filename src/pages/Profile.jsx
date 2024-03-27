@@ -18,10 +18,10 @@ import { getImageFromURL } from "../constants/functions/valueHandlers";
 import defaultProfile from "../assets/images/profile_default.jpg";
 
 export default function Profile() {
-    const {user} = useContext(UserContext);
+  const { user, loading: userLoading } = useContext(UserContext);
+  const { garment, loading: garmentLoading } = useContext(GarmentContext);
     const {userGroups} = useContext(GroupContext);
-    const {garment} = useContext(GarmentContext);
-    const [profile, setProfile] = useState(null);
+    const [setProfile] = useState(null);
     const [selectedDays, setSelectedDays] = useState([]);
     const [selectedTimes, setSelectedTimes] = useState([
       { day: 0, start: "", end: "" },
@@ -33,7 +33,7 @@ export default function Profile() {
       { day: 6, start: "", end: "" },
     ]);
     const [editMode, setEditMode] = useState(false);
-    const [garmentDetails, setGarmentDetails] = useState(null); //used for?
+    const [setGarmentDetails] = useState(null); //used for?
     const [tabPage, setTabPage] = useState(0);
     const [selectedCampus, setSelectedCampus] = useState('');
     const [customCampus, setCustomCampus] = useState('');
@@ -73,7 +73,7 @@ export default function Profile() {
 
     // Preparing the payload for the backend
     const payload = {
-        userId: user.id,
+      userId: user._id,
         selectedDays,
         selectedTimes: selectedTimes.filter(t => t.start && t.end),
         campuses: selectedCampus.includes('Other') ? selectedCampus.filter(c => c !== 'Other') : selectedCampus,
@@ -89,25 +89,27 @@ export default function Profile() {
 };
 
     useEffect(() => {
-      if (!profile && garmentDetails === null) {
+      if (!userLoading && user && user._id) {
         // Fetch user profile
-        fetch('/profile', { cache: 'no-store' })
-        .then((res) => res.json())
-        .then((data) => {
-          setProfile(data);
+        Axios.get('/profile', { withCredentials: true })
+        .then((response) => {
+          const data = response.data;
+          setProfile(data); // Assuming this sets user-specific profile details
           setSelectedDays(data?.SenecaDays || []);
-          setSelectedTimes(data?.SenecaTimes.filter(time => time.start && time.end) || []); // Correct filtering logic
+          setSelectedTimes(data?.SenecaTimes.filter(time => time.start && time.end) || []);
         })
         .catch((error) => console.error('Error fetching user profile:', error));
     
         // Fetch garment details based on the user ID
-        fetch(`/getGarmentDetails/${user.id}`, { cache: 'no-store' })
-        .then((res) => res.json())
-        .then((garmentData) => {
-          console.log('Garment Details:', garmentData); // Log garment details to console
-          setGarmentDetails(garmentData);
-        })
-        .catch((error) => console.error('Error fetching garment details:', error));
+        Axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true })
+      .then((response) => {
+        const garmentData = response.data;
+        console.log('Garment Details:', garmentData);
+        setGarmentDetails(garmentData); // Assuming this sets specific garment details
+        // No need to sort here as we'll handle sorting directly where the data is rendered to ensure reactivity
+      })
+      .catch((error) => console.error('Error fetching garment details:', error));
+
       }
 
       //sort by date
@@ -148,7 +150,15 @@ export default function Profile() {
             });
         }
       }
-    }, []);
+    }, [user, userLoading]);
+
+    if (userLoading || garmentLoading) {
+      return <div>Loading...</div>; // Show loading state while data is being fetched
+    }
+  
+    if (!user || !garment) {
+      return <div>No user or garment data available.</div>; // Show a message or redirect if data is not available
+    }
     
     function handleChangeSchedule() {
       if(editMode === true) {
@@ -268,8 +278,6 @@ export default function Profile() {
                       </li>
                     )
                   );
-                //}
-               // return null; // Don't render if it's not the specified day
               })}
           </ul>
         </div>

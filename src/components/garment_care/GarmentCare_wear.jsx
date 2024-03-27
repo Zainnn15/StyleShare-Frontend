@@ -24,7 +24,7 @@ export default function GarmentWear() {
         const formData = new FormData();
         formData.append('wearDate', wearDate);
         formData.append('wearTime', wearTime);
-        formData.append('userId', user.id);
+        formData.append('userId', user._id);
         if (WearFront) formData.append('WearFront', WearFront);
         if (WearBack) formData.append('WearBack', WearBack);
 

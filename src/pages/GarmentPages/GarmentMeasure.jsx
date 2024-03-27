@@ -78,27 +78,36 @@ const GarmentMeasurement = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
     
-        // Construct garmentMeasurements array
+        if (!user || !user._id) {
+            console.error("User ID is not available.");
+            toast.error("Unable to identify user. Please make sure you are logged in.");
+            return;
+        }
+    
         const garmentMeasurements = measures.map((measureType, index) => {
-            const value = parseFloat(document.getElementById("measure_" + measureType.value + "_" + index).value);
-            const unit = document.getElementById("unit_" + measureType.value + "_" + index).value;
+            const valueElement = document.getElementById(`measure_${measureType.value}_${index}`);
+            const unitElement = document.getElementById(`unit_${measureType.value}_${index}`);
             return {
                 measureType: measureType.label,
-                value,
-                unit,
+                value: parseFloat(valueElement ? valueElement.value : '0'),
+                unit: unitElement ? unitElement.value : 'cm',
             };
-        });
+        }).filter(measure => measure.value > 0); // Ensure only measurements with valid values are included
+
+        const clothingType = {
+            value: formData.clothingType.value,
+            label: findAttribute(GARMENT_TYPES, formData.clothingType.value).label,
+        };
     
-        // Construct the payload with all necessary data
+        // Construct the payload
         const payload = {
-            userId: user.id,
-            clothingType: formData.clothingType, // Send the whole object
-            garmentSizeType: formData.garmentSizeType, // Ensure this is included
+            userId: user._id,
+            clothingType,
+            garmentSizeType: formData.garmentSizeType,
             garmentSize: formData.garmentSize,
             garmentFit: formData.garmentFit,
-            garmentMeasurements,
+            garmentMeasurements: JSON.stringify(garmentMeasurements), // Stringify for correct format
         };
-        
     
         try {
             const response = await axios.post('/addgarmentdetails', payload, {
@@ -107,7 +116,6 @@ const GarmentMeasurement = () => {
                 },
             });
     
-            // Handle response
             if (response.data.error) {
                 toast.error(response.data.error);
             } else {
@@ -119,6 +127,7 @@ const GarmentMeasurement = () => {
             toast.error('An error occurred while updating garment details.');
         }
     };
+    
     
     
 

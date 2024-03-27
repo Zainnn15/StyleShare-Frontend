@@ -53,7 +53,7 @@ export default function GarmentWash() {
                 ironDuration: ironDuration,
                 isVentilated: isVentilated,
                 ventilatedTime: ventilatedTime,
-                userId: user.id,
+                userId: user._id,
             };
     
             const {data} = await axios.post('/addgarmentdetails', garmentData);

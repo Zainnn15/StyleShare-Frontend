@@ -1,6 +1,8 @@
 /* eslint-disable react/prop-types */
-import axios from 'axios';
+// UserContext.js
+// UserContext.js
 import { createContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 export const UserContext = createContext({});
 
@@ -9,24 +11,28 @@ export const UserContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-        try {
-            const response = await axios.get('/profile', { withCredentials: true });
-            setUser(response.data);
-        } catch (error) {
-            console.error("Error fetching user data:", error);
-            setUser(null); // Ensure user is set to null if there's an error or no session
-        } finally {
-            setLoading(false); // Set loading to false after the attempt to fetch user data
+    const checkSession = async () => {
+      setLoading(true); // Ensures loading is true at the start of the session check
+      try {
+        const response = await axios.get('/checkSession', { withCredentials: true });
+        // Assuming the backend directly returns the user object if the session is valid
+        if (response.data) {
+          setUser(response.data); // Adjust according to your response structure
         }
+      } catch (error) {
+        console.error('Session check failed:', error);
+        setUser(null);
+      } finally {
+        setLoading(false); // Ensures loading is set to false after the session check is complete
+      }
     };
 
-    fetchUserData();
-}, []);
+    checkSession();
+  }, []);
 
-return (
+  return (
     <UserContext.Provider value={{ user, setUser, loading }}>
-        {!loading && children}
+      {children}
     </UserContext.Provider>
-);
+  );
 };
