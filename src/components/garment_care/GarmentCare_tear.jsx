@@ -20,7 +20,7 @@ import selectImg from '../../assets/icons/select_img.png';
 import img_twisting from '../../assets/images/twisting.png';
 import img_shrinking from '../../assets/images/spandex_shrink.png';
 import img_pilling from '../../assets/images/pilling.png';
-
+import emailjs from '@emailjs/browser';
 
 export default function GarmentTear() {
     const navigate = useNavigate();
@@ -98,7 +98,24 @@ export default function GarmentTear() {
         if (holeImg) formData.append('holeImg', holeImg);
         if (stainImg) formData.append('stainImg', stainImg);
         formData.append('userId', user.id);
-    
+
+        var message = `A new repair request has been made from the garment website. The details are as follows: `;
+
+        repairRequest.looseButton ? message += `a button is loose, ` : "";
+        repairRequest.brokenZipper ? message += `the zipper is broken, ` : "";
+        repairRequest.lostString ? message += `a string has been lost, ` : "";
+        repairRequest.looseHem ? message += `the hem is loose, ` : "";
+        repairRequest.other ? message += `other: ${repairOther}.` : "";
+
+        emailjs.send('service_xapjkvh', 'template_tvq1krn', {
+            user: user.name,
+            message,
+        }, "mp89PFZ4F0j1qLwHA").then(() => {
+            console.log('Email sent successfully');
+        }, function(error) {
+            console.log('Email not sent ' + error);
+        });
+
         try {
             const { data } = await axios.post('/addgarmentdetails', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
@@ -157,7 +174,6 @@ export default function GarmentTear() {
             // Potentially call a more detailed validation check here that logs specific failures
             return; // Stop execution if validation fails
         }
-    
         console.log('Validation passed, proceeding with sending garment details.');
         sendGarmentDetails();
     }
