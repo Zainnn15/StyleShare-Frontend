@@ -17,15 +17,23 @@ export function GroupContextProvider({ children }) {
   // Fetch user's groups and open groups
   useEffect(() => {
     const fetchUserGroups = async () => {
-        if (user && user._id) { // Use _id if that's what your database uses
+      if (user && user._id) {
           try {
-            const { data } = await axios.get(`/getGroups/${user._id}`, { withCredentials: true });
-            setUserGroups(data); // Assuming this endpoint returns the structure you expect
+              const response = await axios.get(`/getGroups/${user._id}`, { withCredentials: true });
+              if (response.data.message === "User is not part of any group") {
+                  setUserGroups(null); // No group to display
+                  setJoinedGroup(null);
+              } else {
+                  setUserGroups(response.data.userGroup); // Assuming this is your response structure
+                  setJoinedGroup(response.data.userGroup); // Update context with current group
+              }
           } catch (error) {
-            console.error('Error fetching user groups:', error);
+              console.error('Error fetching user groups:', error);
+              setUserGroups(null);
+              setJoinedGroup(null);
           }
-        }
-    };
+      }
+  };
 
     const fetchOpenGroups = async () => {
       try {

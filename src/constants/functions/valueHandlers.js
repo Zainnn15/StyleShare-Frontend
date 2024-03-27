@@ -66,7 +66,11 @@ function getAttrByInpID(dataID, mapObj, listAttr="img", listObj=careInstructions
 }
 
 function getImageFromURL(imgName) {
-    let srcName = imgHostURL + imgName.replace(/\\/g,'/');
+    if (!imgName) {
+        // Return a default image or null if no image name is provided
+        return 'path/to/default-image.jpg'; // Adjust the default image path as necessary
+    }
+    let srcName = imgHostURL + imgName.replace(/\\/g, '/');
     return srcName;
 }
 

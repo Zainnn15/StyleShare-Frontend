@@ -36,12 +36,13 @@ function GarmentExchange() {
     const [tabPage, setTabPage] = useState(0);
 
     useEffect(() => {
-        if (user.id) {
+        if (user?._id) {
             fetchExchangeRequests();
         }
+    }, [user?._id]);
 
         //sort by date
-        userGroups.members && 
+        /*userGroups.members && 
         userGroups.members.forEach((member)=>{
             if(member.garments && member.garments.length > 0) {
                 for(let garment of member.garments) {
@@ -84,7 +85,7 @@ function GarmentExchange() {
             }
         });
 
-    }, [user.id]);
+    }, [user._id]);*/
 
     const openReservationModal = (recipientId, recipientGarmentId) => {
         setSelectedGarmentDetails({ recipientId, recipientGarmentId });
@@ -98,21 +99,39 @@ function GarmentExchange() {
     };
 
     const fetchExchangeRequests = async () => {
+        if (!user?._id) return; // Early return if user._id is not valid
+    
         try {
-            const response = await axios.get(`/listExchangeRequests/${user.id}`);
-            setExchangeRequests(response.data.exchangeRequests);
-            // Update sentRequests state based on fetched exchange requests to prevent sending duplicate requests
-            const updatedSentRequests = response.data.exchangeRequests.reduce((acc, request) => {
-                const key = `${request.recipientId._id}_${request.recipientGarmentId._id}`;
-                acc[key] = true;
+            const response = await axios.get(`/listExchangeRequests/${user._id}`);
+            const fetchedExchangeRequests = response.data.exchangeRequests;
+    
+            if (!Array.isArray(fetchedExchangeRequests)) {
+                console.error("Fetched exchange requests is not an array.");
+                return;
+            }
+    
+            // Filter requests to include only those where the current user is either the sender or the recipient
+            const relevantExchangeRequests = fetchedExchangeRequests.filter(request =>
+                request.senderId === user._id || request.recipientId._id === user._id
+            );
+    
+            setExchangeRequests(relevantExchangeRequests);
+    
+            const updatedSentRequests = fetchedExchangeRequests.reduce((acc, request) => {
+                if (request.senderId._id === user._id) { // Checks if the current user sent the request
+                    const key = `${request.recipientId._id}_${request.recipientGarmentId._id}`;
+                    acc[key] = true;
+                }
                 return acc;
             }, {});
+    
             setSentRequests(updatedSentRequests);
         } catch (error) {
             console.error('Failed to fetch exchange requests:', error);
-            setExchangeRequests([]);
         }
     };
+    
+    
 
     const sendExchangeRequest = async (recipientId, recipientGarmentId) => {
         const requestKey = `${recipientId}_${recipientGarmentId}`;
@@ -123,9 +142,9 @@ function GarmentExchange() {
 
         try {
             await axios.post('/createExchangeRequest', {
-                userId: user.id,
+                userId: user._id,
                 recipientId,
-                userGarmentId: userGroups?.members.find(member => member._id === user.id)?.garments[0]?._id,
+                userGarmentId: userGroups?.members.find(member => member._id === user._id)?.garments[0]?._id,
                 recipientGarmentId,
                 pickupDate: reservationDetails.pickupDate, // Updated to match backend expectations
                 pickupTime: reservationDetails.pickupTime, // Updated to match backend expectations
@@ -140,7 +159,9 @@ function GarmentExchange() {
 
     const handleExchangeResponse = async (exchangeRequestId, status) => {
         try {
+            // Include userId in the body of the POST request
             await axios.post('/updateExchangeRequestStatus', {
+                userId: user._id, // Assuming 'user' is from UserContext and contains _id
                 exchangeRequestId,
                 status,
             });
@@ -170,42 +191,40 @@ function GarmentExchange() {
                     {userGroups?.members?.map((member) => (
 
                     <div key={member._id}>
-                        {member.garments && member.garments.length > 0 ? (   
-                            <div>
-                                {member.garments.map((garment) => (
-                                    <div key={garment._id}>
-                                        <Card
-                                        height='33em'
-                                        imgUrl={getImageFromURL(member.garments[0].fileFront)}
-                                        imgClassName={"container-card-img"}
-                                        title={<p className="center text-purpleLight text-midLg">{member.username}</p>}
-                                        titleClassName={"container-row clickable bg-purpleDark"}
-                                        description={
-                                            <div>
-                                                <p className="card-text">Type: {findAttribute(GARMENT_TYPES, garment.garmentType)}</p>
-                                                <p className="card-text">Description: {garment.garmentDescription}</p>
-                                                <p className="card-text">Country: {garment.garmentCountry}</p> 
-                                            </div>
-                                        }
-                                        DescClassName={"container-card-description"}
-                                        footer={member._id === user.id ? <p>Your Garment</p> : 
-                                            <button className='button-regular'
-                                                onClick={() => openReservationModal(member._id, garment._id)}
-                                                disabled={sentRequests[`${member._id}_${garment._id}`]}
-                                            >
-                                                Send Exchange Request
-                                            </button>
-                                        }
-                                        isBtn={false}
-                                        footerClassName={"center"}
-                                        handleImgPress={()=>handleCardPress(garment)}
-                                        handleTitlePress={()=>handleCardPress(garment)}
-                                        handleDescPress={()=>handleCardPress(garment)}
-                                    />
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
+                       {member.garments && member.garments.length > 0 ? (   
+                        member.garments.map((garment) => (
+                <div key={garment?._id || Math.random()}>
+                    <Card
+                height='33em'
+                imgUrl={getImageFromURL(garment?.fileFront || 'fallbackImagePath')}
+                imgClassName={"container-card-img"}
+                title={<p className="center text-purpleLight text-midLg">{member.username}</p>}
+                titleClassName={"container-row clickable bg-purpleDark"}
+                description={
+                    <div>
+                        <p className="card-text">Type: {findAttribute(GARMENT_TYPES, garment?.garmentType)}</p>
+                        <p className="card-text">Description: {garment?.garmentDescription || 'Description not available'}</p>
+                        <p className="card-text">Country: {garment?.garmentCountry || 'Country not available'}</p> 
+                    </div>
+                }
+                DescClassName={"container-card-description"}
+                footer={member._id === user._id ? <p>Your Garment</p> : 
+                    <button className='button-regular'
+                        onClick={() => openReservationModal(member._id, garment?._id)}
+                        disabled={sentRequests[`${member._id}_${garment?._id}`]}
+                    >
+                        Send Exchange Request
+                    </button>
+                }
+                isBtn={false}
+                footerClassName={"center"}
+                handleImgPress={() => handleCardPress(garment)}
+                handleTitlePress={() => handleCardPress(garment)}
+                handleDescPress={() => handleCardPress(garment)}
+            />
+        </div>
+    ))
+) : (
                             <Card
                                 height='33em'
                                 imgUrl={notApplicable}
@@ -225,14 +244,14 @@ function GarmentExchange() {
                 <hr/>
                 <h3>Exchange Requests</h3>
                 <hr/>
-{exchangeRequests.length > 0 ? (
+                {exchangeRequests.length > 0 ? (
     <div className='container-grid-3-md gap m2-v'>
         {exchangeRequests.map((request) => (
             <div key={request._id} className="container-border clear-box">
-                <p><strong>From:</strong> {request.senderId.username} <strong>To:</strong> {request.recipientId.username}</p>
-                <p><strong>Your Garment:</strong> {request.userGarmentId.garmentDescription}</p>
-                <p><strong>Exchange For:</strong> {request.recipientGarmentId.garmentDescription}</p>
-                {request.status === 'pending' && user.id === request.recipientId._id && (
+                <p><strong>From:</strong> {request.senderId?.username || 'Unknown User'} <strong>To:</strong> {request.recipientId?.username || 'Unknown User'}</p>
+                <p><strong>Your Garment:</strong> {request.userGarmentId?.garmentDescription || 'Garment not found'}</p>
+                <p><strong>Exchange For:</strong> {request.recipientGarmentId?.garmentDescription || 'Garment not found'}</p>
+                {request.status === 'pending' && user._id === request.recipientId?._id && (
                     <>
                         <button onClick={() => handleExchangeResponse(request._id, 'accepted')}>Accept</button>
                         <button onClick={() => handleExchangeResponse(request._id, 'rejected')}>Reject</button>
@@ -254,6 +273,7 @@ function GarmentExchange() {
 ) : (
     <p className='center'>No exchange requests</p>
 )}
+
             </div>
             
 

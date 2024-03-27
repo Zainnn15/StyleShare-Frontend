@@ -15,41 +15,31 @@ export default function Group() {
     const [chatInput, setChatInput] = useState('');
     const [chatHistory, setChatHistory] = useState([]);
 
-    const fetchChatHistory = async (groupId) => {
+      // Fetching chat history when joinedGroup changes
+      useEffect(() => {
         if (joinedGroup && joinedGroup._id) {
-            try {
-                console.log('Fetching chat history from server');
-                const response = await axios.get(`http://localhost:8000/getChatHistory/${groupId}`);
-                console.log('Received chat history from server:', response.data);
-                setChatHistory(response.data);
-            } catch (error) {
-                console.error("Failed to fetch chat history", error);
-            }
+            fetchChatHistory(joinedGroup._id);
         } else {
-            console.log('joinedGroup is not available for fetching chat history');
+            setChatHistory([]); // Clear chat history if no group is joined
+        }
+    }, [joinedGroup]);
+
+    const fetchChatHistory = async (groupId) => {
+        try {
+            const response = await axios.get(`http://localhost:8000/getChatHistory/${groupId}`);
+            setChatHistory(response.data);
+        } catch (error) {
+            console.error("Failed to fetch chat history", error);
+            toast.error("Failed to fetch chat history.");
         }
     };
-
-    useEffect(() => {
-        const fetchChatHistoryIfNeeded = async () => {
-            if (joinedGroup && joinedGroup._id) {
-                console.log('Fetching chat history on joinedGroup change');
-                fetchChatHistory(joinedGroup._id);
-            } else {
-                console.log('joinedGroup is not available on state change');
-                setChatHistory([]); // Clear the chat history if joinedGroup is not available
-            }
-        };
-    
-        fetchChatHistoryIfNeeded();
-    }, [joinedGroup]);
     
     // Handle joining a group by code
     const handleJoinByCode = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post('/joinGroupByCode', {
-                userId: user.id,
+                userId: user._id,
                 joinCode
             });
             toast.success("Joined group successfully!");
@@ -62,48 +52,37 @@ export default function Group() {
    // Function to send a new chat message
    const handleSendChat = async (e) => {
     e.preventDefault();
-    if (!chatInput.trim()) return; // Prevent sending empty messages
+    if (!chatInput.trim()) return;
     try {
-        const response = await axios.post('http://localhost:8000/postMessage', {
+        const response = await axios.post('/postMessage', {
             groupId: joinedGroup._id,
-            userId: user.id,
-            message: chatInput
+            userId: user._id, // Ensure this is correct
+            message: chatInput,
         });
-        setChatHistory([...chatHistory, response.data]); // Add the new message to the chat history
-        setChatInput(''); // Clear the chat input field
+        setChatHistory([...chatHistory, response.data]); // Append new message to chat history
+        setChatInput(''); // Clear input after sending
     } catch (error) {
         console.error("Failed to send chat message", error);
+        toast.error("Failed to send chat message.");
     }
 };
 
 
 
-    const handleLeaveGroup = async () => {
-        try {
-            // Assuming you have an API endpoint to remove a user from a group
-            const response = await axios.post('/leaveGroup', {
-                userId: user.id, // User ID
-                groupId: joinedGroup?._id // Group ID to leave
-            });
-    
-            // Check response for success/failure
-            if (response.data.success) {
-                toast.success("Left group successfully!");
-                
-                // Update state or context to reflect the change
-                setJoinedGroup(null); // Assuming you want to clear the current group context
-                // Fetch updated groups or perform other UI updates as needed
-            } else {
-                toast.error("Failed to leave group.");
-            }
-        } catch (error) {
-            console.error("Error leaving group:", error);
-            toast.error("Failed to leave group.");
-        }
-    };
-
-   
-
+const handleLeaveGroup = async () => {
+    try {
+        const response = await axios.post('/leaveGroup', {
+            userId: user._id,
+            groupId: joinedGroup?._id
+        });
+        // Assuming success if no exception is thrown
+        toast.success(response.data.message || "Left group successfully!");
+        setJoinedGroup(null); 
+    } catch (error) {
+        console.error("Error leaving group:", error.response?.data?.error || "Failed to leave group.");
+        toast.error(error.response?.data?.error || "Failed to leave group.");
+    }
+};
     return (
         <div>
         <ScreenHeaderIn />
@@ -134,7 +113,7 @@ export default function Group() {
             </div>
           </form>
 
-                {userGroups && userGroups.members && (
+          {userGroups && userGroups.members && (
     <div className="container-content">
         <h2>Group Members and Their Garments</h2>
         {userGroups.members.map((member) => (
@@ -143,14 +122,14 @@ export default function Group() {
                     <label className="text-b">Member: </label>
                     {`${member.username} - Email: ${member.email}`}
                 </p>
-                {member.garments && member.garments.length > 0 ? (  // Ensure this matches the new structure
-                    member.garments.map((garment) => (  // This should iterate over 'garments', not 'garmentDetails'
+                {member.garments && member.garments.length > 0 ? (
+                    member.garments.map((garment) => (
                         <div key={garment._id} className="garment-details">
                             <p>Type: {garment.garmentType}</p>
                             <p>Description: {garment.garmentDescription}</p>
                             <p>Country: {garment.garmentCountry}</p>
-                            <img src={`http://localhost:8000/${garment.fileFront.replace(/\\/g, '/')}`} alt="Garment" style={{ width: '100px', height: '100px' }} />
-                            {/* Add more garment details as needed */}
+                            <img src={`http://localhost:8000/${garment.fileFront?.replace(/\\/g, '/') || 'default-image-path.jpg'}`} alt="Garment" style={{ width: '100px', height: '100px' }} />
+                            {/* Provide a default image path if fileFront is undefined */}
                         </div>
                     ))
                 ) : (
