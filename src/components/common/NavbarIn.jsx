@@ -7,7 +7,7 @@ export default function NavbarIn() {
   const handleLogout = async () => {
     try {
       // Make a request to your backend logout endpoint, e.g., using fetch or axios
-      await fetch('http://localhost:8000/logout', {
+      await fetch('https://garment-backend.onrender.com/logout', {
         method: 'GET',
         credentials: 'include', // Include credentials for cookies to be sent
       });

@@ -26,7 +26,7 @@ export default function Group() {
 
     const fetchChatHistory = async (groupId) => {
         try {
-            const response = await axios.get(`http://localhost:8000/getChatHistory/${groupId}`);
+            const response = await axios.get(`https://garment-backend.onrender.com/getChatHistory/${groupId}`);
             setChatHistory(response.data);
         } catch (error) {
             console.error("Failed to fetch chat history", error);
@@ -128,7 +128,7 @@ const handleLeaveGroup = async () => {
                             <p>Type: {garment.garmentType}</p>
                             <p>Description: {garment.garmentDescription}</p>
                             <p>Country: {garment.garmentCountry}</p>
-                            <img src={`http://localhost:8000/${garment.fileFront?.replace(/\\/g, '/') || 'default-image-path.jpg'}`} alt="Garment" style={{ width: '100px', height: '100px' }} />
+                            <img src={`https://garment-backend.onrender.com/${garment.fileFront?.replace(/\\/g, '/') || 'default-image-path.jpg'}`} alt="Garment" style={{ width: '100px', height: '100px' }} />
                             {/* Provide a default image path if fileFront is undefined */}
                         </div>
                     ))
