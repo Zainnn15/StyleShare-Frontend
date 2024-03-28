@@ -51,30 +51,39 @@ export default function Login() {
         <div>
             <ScreenHeader isLogin={false} linkName={"Register"}/>
             <div className='container main'>                
-                <form onSubmit={handleSubmit}>
-                    <div className='container-small'>
-                        <div className='container-col'>
-                            <CircleImg iconUrl={logo} width="30%"/>
-                        </div>
-                        <div>
-                            <label className="container-title">Login</label>
-                            <hr/>
-                        </div>    
-                        <br/>
-                        <div>
-                            <label htmlFor="email">Email</label>
-                            <input type="email" id="email" value={email} 
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <label htmlFor="password">Password</label>
-                            <input type="password" id="password" value={password} 
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </div>
-                        <br/>
-                        <button className='button-form' type="submit" style={{width:"100%"}}>Login</button>
-                    </div>
-                </form>
+            <form onSubmit={handleSubmit} autoComplete="off">
+    <div className='container-small'>
+        <div className='container-col'>
+            <CircleImg iconUrl={logo} width="30%"/>
+        </div>
+        <div>
+            <label className="container-title">Login</label>
+            <hr/>
+        </div>    
+        <br/>
+        <div>
+            <label htmlFor="email">Email</label>
+            <input 
+                type="email" 
+                id="email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="off" // Disabling autocomplete for this field
+            />
+            <label htmlFor="password">Password</label>
+            <input 
+                type="password" 
+                id="password" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="new-password" // Specially for passwords, this helps prevent autofill
+            />
+        </div>
+        <br/>
+        <button className='button-form' type="submit" style={{width:"100%"}}>Login</button>
+    </div>
+</form>
+
             </div>
         </div>
     );
