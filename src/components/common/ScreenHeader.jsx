@@ -97,7 +97,7 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
                     <div>
                         <div className="container-header-profile" id="profile_dropdown">
                             <Link to="/login">Profile</Link>
-                            <Link to="/settings">Settings</Link>
+                            {/* <Link to="/settings">Settings</Link> */}
                             <Link to="/login">Group</Link>
                             <Link to ="/login">Login</Link>
                             <Link to ="/register">Sign up</Link>

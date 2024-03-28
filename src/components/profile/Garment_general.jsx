@@ -12,7 +12,7 @@ const Garment_general = ({garment}) => {
         if(garment.wearInfo && garment.wearInfo.length > 0) {
           setMaxWearInfo(getElemByMaxAttr(garment.wearInfo, "wearDate", true));
         }
-      }, []);
+      }, [garment]);
 
     return(
         <div className='m1'>

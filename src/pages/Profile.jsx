@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../context/userContext";
-import { GarmentContext } from "../../context/garmentContext";
+//import { GarmentContext } from "../../context/garmentContext";
 import { GroupContext } from "../../context/groupContext";
 import Axios from "axios";
 
@@ -19,7 +19,7 @@ import defaultProfile from "../assets/images/profile_default.jpg";
 
 export default function Profile() {
   const { user, loading: userLoading } = useContext(UserContext);
-  const { garment, loading: garmentLoading } = useContext(GarmentContext);
+  //const { garment, loading: garmentLoading } = useContext(GarmentContext);
     const {userGroups} = useContext(GroupContext);
     const [setProfile] = useState(null);
     const [selectedDays, setSelectedDays] = useState([]);
@@ -33,7 +33,7 @@ export default function Profile() {
       { day: 6, start: "", end: "" },
     ]);
     const [editMode, setEditMode] = useState(false);
-    const [setGarmentDetails] = useState(null); //used for?
+    const [garment, setGarment] = useState(null); 
     const [tabPage, setTabPage] = useState(0);
     const [selectedCampus, setSelectedCampus] = useState('');
     const [customCampus, setCustomCampus] = useState('');
@@ -105,58 +105,62 @@ export default function Profile() {
       .then((response) => {
         const garmentData = response.data;
         console.log('Garment Details:', garmentData);
-        setGarmentDetails(garmentData); // Assuming this sets specific garment details
+        //setGarmentDetails(garmentData); // Assuming this sets specific garment details
+        setGarment(garmentData); // Assuming this sets specific garment details
         // No need to sort here as we'll handle sorting directly where the data is rendered to ensure reactivity
       })
       .catch((error) => console.error('Error fetching garment details:', error));
 
       }
 
-      //sort by date
-      if(garment) {
-        //sort wearInfo by date
-        if(garment.wearInfo) {
-            garment.wearInfo.sort((obj1, obj2)=>{
-                if(obj1.wearDate < obj2.wearDate) {
-                    return -1;
-                }
-                else {
-                    return 1;
-                }
-            });
-        }
+    //   //sort by date
+    //   if(garment) {
+    //     //sort wearInfo by date
+    //     if(garment.wearInfo) {
+    //         garment.wearInfo.sort((obj1, obj2)=>{
+    //             if(obj1.wearDate < obj2.wearDate) {
+    //                 return -1;
+    //             }
+    //             else {
+    //                 return 1;
+    //             }
+    //         });
+    //     }
 
-        //sort washCareInstructions by date
-        if(garment.washCareInstructions) {
-            garment.washCareInstructions.sort((obj1, obj2)=>{
-                if(obj1.washDate < obj2.washDate) {
-                    return -1;
-                }
-                else {
-                    return 1;
-                }
-            });
-        }
+    //     //sort washCareInstructions by date
+    //     if(garment.washCareInstructions) {
+    //         garment.washCareInstructions.sort((obj1, obj2)=>{
+    //             if(obj1.washDate < obj2.washDate) {
+    //                 return -1;
+    //             }
+    //             else {
+    //                 return 1;
+    //             }
+    //         });
+    //     }
 
-        //sort tearInfo by date
-        if(garment.tearInfo) {
-            garment.tearInfo.sort((obj1, obj2)=>{
-                if(obj1.tearDate < obj2.tearDate) {
-                    return -1;
-                }
-                else {
-                    return 1;
-                }
-            });
-        }
-      }
+    //     //sort tearInfo by date
+    //     if(garment.tearInfo) {
+    //         garment.tearInfo.sort((obj1, obj2)=>{
+    //             if(obj1.tearDate < obj2.tearDate) {
+    //                 return -1;
+    //             }
+    //             else {
+    //                 return 1;
+    //             }
+    //         });
+    //     }
+    //   }
+
     }, [user, userLoading]);
 
-    if (userLoading || garmentLoading) {
+    //if (userLoading || garmentLoading) {
+    if (userLoading) {
       return <div>Loading...</div>; // Show loading state while data is being fetched
     }
   
-    if (!user || !garment) {
+    //if (!user || !garment) {
+    if (!user) {
       return <div>No user or garment data available.</div>; // Show a message or redirect if data is not available
     }
     
@@ -200,7 +204,7 @@ export default function Profile() {
       setSelectedTimes(temp);
     };
 
-    console.log(garment);
+    //console.log(garment);
 
   return (
     <div>

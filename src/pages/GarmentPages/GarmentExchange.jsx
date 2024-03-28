@@ -175,7 +175,7 @@ function GarmentExchange() {
         setGarmentModalID(garment);
     }
 
-
+    //console.log(userGroups.members)
 
     return (
         <div>
@@ -252,10 +252,10 @@ function GarmentExchange() {
                 <p><strong>Your Garment:</strong> {request.userGarmentId?.garmentDescription || 'Garment not found'}</p>
                 <p><strong>Exchange For:</strong> {request.recipientGarmentId?.garmentDescription || 'Garment not found'}</p>
                 {request.status === 'pending' && user._id === request.recipientId?._id && (
-                    <>
-                        <button onClick={() => handleExchangeResponse(request._id, 'accepted')}>Accept</button>
-                        <button onClick={() => handleExchangeResponse(request._id, 'rejected')}>Reject</button>
-                    </>
+                    <div className='container-row space-evenly'>
+                        <button className="button-accept" onClick={() => handleExchangeResponse(request._id, 'accepted')}>Accept</button>
+                        <button className="button-reject" onClick={() => handleExchangeResponse(request._id, 'rejected')}>Reject</button>
+                    </div>
                 )}
                 <p><strong>Status: </strong>{request.status.charAt(0).toUpperCase() + request.status.slice(1)}</p>
                 {request.pickupDate && (

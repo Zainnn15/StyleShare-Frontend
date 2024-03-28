@@ -122,7 +122,7 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
                     <div>
                         <div className="container-header-profile" id="profile_dropdown">
                             <Link to="/userprofile">Profile</Link>
-                            <Link to="/garment-care">Settings</Link>
+                            {/* <Link to="/garment-care">Settings</Link> */}
                             <Link to="/group">Group</Link>
                             <div onClick={handleLogout}>
                                 <label>Sign Out</label>

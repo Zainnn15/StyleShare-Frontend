@@ -6,14 +6,19 @@ import ScreenHeaderIn from '../components/common/ScreenHeaderIn';
 import '../styles/main.scss';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
+import { findAttribute, getImageFromURL } from '../constants/functions/valueHandlers';
+import { useNavigate } from 'react-router-dom';
+import { GARMENT_TYPES } from '../constants/data/options';
 
 export default function Group() {
+    const navigate = useNavigate();
     const [joinCode, setJoinCode] = useState('');
     const { user } = useContext(UserContext);
     const { garment } = useContext(GarmentContext);
     const { userGroups, setJoinedGroup, joinedGroup} = useContext(GroupContext);
     const [chatInput, setChatInput] = useState('');
     const [chatHistory, setChatHistory] = useState([]);
+    const [tabPage, setTabPage] = useState(0);
 
       // Fetching chat history when joinedGroup changes
       useEffect(() => {
@@ -23,6 +28,18 @@ export default function Group() {
             setChatHistory([]); // Clear chat history if no group is joined
         }
     }, [joinedGroup]);
+
+    // Fetching chat history when joinedGroup changes
+    useEffect(() => {
+        if (tabPage == 1) {
+            var ChatDivArr = document.getElementsByClassName('container-chat-history');
+            if(ChatDivArr.length > 0) {
+                var height = ChatDivArr[0].scrollHeight;
+                ChatDivArr[0].scrollTop = height;
+            }
+            
+        }
+    }, [tabPage, chatInput]);
 
     const fetchChatHistory = async (groupId) => {
         try {
@@ -83,124 +100,211 @@ const handleLeaveGroup = async () => {
         toast.error(error.response?.data?.error || "Failed to leave group.");
     }
 };
+
     return (
         <div>
         <ScreenHeaderIn />
         <div className="container main">
-          <form onSubmit={handleJoinByCode}>
-            <div className="container-small">
-              <div>
-                <label className="container-title">Enter Group Code to Join</label>
-                <hr />
-              </div>
-              <br />
+        {!userGroups && (
+            <form onSubmit={handleJoinByCode}>
+                <div className="container-small">
+                    <div>
+                        <label className="container-title">Enter Group Code to Join</label>
+                        <hr />
+                    </div>
+                    <br />
   
-              <div>
-                <label htmlFor="groupCode">Group Code:</label>
-                <input
-                  id="joinCode"
-                  type="text"
-                  value={joinCode}
-                  onChange={(e) => setJoinCode(e.target.value)}
-                  required
-                />
-              </div>
-              <br />
+                    <div>
+                        <label htmlFor="groupCode">Group Code:</label>
+                        <input
+                        id="joinCode"
+                        type="text"
+                        value={joinCode}
+                        onChange={(e) => setJoinCode(e.target.value)}
+                        required
+                        />
+                    </div>
+                    <br />
   
-              <button className="button-form" type="submit" style={{ width: '100%' }}>
-                Join Group
-              </button>
-            </div>
-          </form>
+                    <button className="button-form" type="submit" style={{ width: '100%' }}>
+                        Join Group
+                    </button>
+                </div>
+            </form>
+        )}
 
-          {userGroups && userGroups.members && (
-    <div className="container-content">
-        <h2>Group Members and Their Garments</h2>
-        {userGroups.members.map((member) => (
-            <div key={member._id} className="member-garments">
-                <p>
-                    <label className="text-b">Member: </label>
-                    {`${member.username} - Email: ${member.email}`}
-                </p>
-                {member.garments && member.garments.length > 0 ? (
-                    member.garments.map((garment) => (
-                        <div key={garment._id} className="garment-details">
-                            <p>Type: {garment.garmentType}</p>
-                            <p>Description: {garment.garmentDescription}</p>
-                            <p>Country: {garment.garmentCountry}</p>
-                            <img src={`http://localhost:8000/${garment.fileFront?.replace(/\\/g, '/') || 'default-image-path.jpg'}`} alt="Garment" style={{ width: '100px', height: '100px' }} />
-                            {/* Provide a default image path if fileFront is undefined */}
+        {userGroups && userGroups.members && (
+            <div>
+                <div className="container-content popup">
+                <h2>{userGroups.group_name}</h2>
+                <hr/>
+
+                <div className='container-row space-between'>
+                    <div className='container-content'>
+                        {user && joinedGroup && (
+                            <div>
+                                <p>
+                                    <label className="text-b">Joined User: </label>
+                                    <label className='tab'></label>
+                                    {user.username}
+                                </p>
+                            </div>
+                        )}
+
+                        {userGroups && userGroups.members && (
+                            <div>
+                                <p>
+                                    <label className="text-b">Number of Members: </label>
+                                    {`${userGroups.members.length}/${userGroups.max_members}`}
+                                </p>
+                            </div>
+                        )}
+                    </div>
+
+                    <div>
+                        <button className='button-reject' onClick={handleLeaveGroup}>Leave Group</button>
+                    </div>
+
+                </div>
+                
+                </div>
+                <div className="container-border page-tab">
+                    <div className="container-tab">
+                        <div id="tab0" className="container-tab-group active" 
+                        onClick={()=>{
+                            let e_active = document.getElementById(`tab${tabPage}`);
+                            if(e_active) {
+                            e_active.classList.toggle("active", false);
+                            }
+                            setTabPage(0);
+                            let e_div = document.getElementById(`tab0`)
+                            if(e_div) {
+                            e_div.classList.toggle("active", true);
+                            }
+                        }}
+                        >
+                        <p className="text-purpleLight">Members</p>
                         </div>
-                    ))
-                ) : (
-                    <p>No garments listed.</p>
-                )}
+                        <div id="tab1" className="container-tab-group"
+                        onClick={()=>{
+                            let e_active = document.getElementById(`tab${tabPage}`);
+                            if(e_active) {
+                            e_active.classList.toggle("active", false);
+                            }
+                            setTabPage(1);
+                            let e_div = document.getElementById(`tab1`)
+                            if(e_div) {
+                            e_div.classList.toggle("active", true);
+                            }
+
+                        }}
+                        >
+                        <p className="text-purpleLight">Chat</p> 
+                        </div>
+                    </div>
+
+                {
+                    tabPage === 0 && (
+                        <div className='m1'>
+                            <h3>Group Members and Their Garments</h3>
+                            <hr/>
+                            <div className='container-grid-3-md gap m2'>
+                            {userGroups.members.map((member) => (
+                                <div key={member._id} className="member-garments">
+                                    <div className='container-border clickable' onClick={()=>{navigate("/garment-exchange")}}>
+                                        <p className='center text-midLg'>
+                                            <label className="text-b">{member.username}</label>
+                                            {
+                                                member.username === user.username &&
+                                                <label> (You)</label>
+                                            }
+                                        </p>
+                                        <div className='container-col'>
+                                            <div className='container-profile-img'>
+                                                <img src={getImageFromURL(member.garments[0].fileFront) || `'default-image-path.jpg'}`} alt="Garment"/>
+                                            </div>
+                                        </div>
+                                        
+                                        {member.garments && member.garments.length > 0 ? (
+                                            member.garments.map((garment) => (
+                                                <div key={garment._id} className="garment-details">
+                                                    <p><strong>Type: </strong>{findAttribute(GARMENT_TYPES, garment.garmentType)}</p>
+                                                    <p><strong>Description: </strong>{garment.garmentDescription}</p>
+                                                    <p><strong>Country: </strong>{garment.garmentCountry}</p>
+                                                    {/* Provide a default image path if fileFront is undefined */}
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <p>No garments listed.</p>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                            </div>
+
+
+                        </div>
+                    )
+                }
+
+                {
+                    tabPage === 1 && (
+                        <div>
+                            {garment && joinedGroup && (
+                                <div>
+
+                                    <div className="chat-container m1">
+                                        <h3>Group Chat</h3>
+                                        <hr/>
+                                        <div className="container-chat-history">
+                                            {chatHistory.map((msg, index) => (
+                                            <div key={index} className="container-chat-message">
+                                                <div className={
+                                                    (msg.user.username === user.username ? 'container-chat-message-group user' : 
+                                                        'container-chat-message-group')
+                                                    }
+                                                >
+                                                    <div className="container-chat-message-header">
+                                                        <span className="username text-b">{msg.user.username}</span>
+                                                        <label className='tab'></label>
+                                                        <small>
+                                                            <span className="timestamp">{new Date(msg.createdAt).toLocaleString()}</span>
+                                                        </small>
+                                                    </div>
+                                                    <div className="message-content">{msg.message}</div>
+                                                </div>
+                                                <div id='div_to_scroll'>
+                                                </div>
+                                            </div>
+                                            ))}
+                                        </div>
+                                        <br/>
+                                        <form onSubmit={handleSendChat}>
+                                            <div className='container-chat-input'>
+                                                <input
+                                                className='p1'
+                                                type="text"
+                                                value={chatInput}
+                                                onChange={(e) => setChatInput(e.target.value)}
+                                                placeholder="Type a message..."
+                                                />
+                                                <button className='button-regular' type="submit">Send</button>
+                                            </div>
+                                        </form>
+                                        
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )
+                }
+
+                </div>
             </div>
-        ))}
+        )}
+                
     </div>
-)}
 
-                {userGroups && userGroups.members && (
-                    <div className="container-content">
-                        <p>
-                            <label className="text-b">Joined Group: </label>
-                            {`${userGroups.group_name} - Members: ${userGroups.members.length}/${userGroups.max_members}`}
-                        </p>
-                    </div>
-                )}
-
-                {user && joinedGroup && (
-                    <div className="container-content">
-                        <p>
-                            <label className="text-b">Joined User: </label>
-                            {`${user.name} - Username: ${user.username} - Email: ${user.email}`}
-                        </p>
-                    </div>
-                )}
-
-                {userGroups && userGroups.members && (
-                    <div className="container-content">
-                        <p>
-                            <label className="text-b">Other Joined Persons: </label>
-                            {userGroups.members.map(member => member.username).filter(username => username !== user.username).join(', ')}
-                        </p>
-                    </div>
-                )}
-
-                {garment && joinedGroup && (
-                    <div className="container-content">
-                        <p>
-                            <label className="text-b">Joined Garment: </label>
-                            {`Type: ${garment.garmentType}, Description: ${garment.garmentDescription}, Country: ${garment.garmentCountry}`}
-                        </p>
-                    </div>
-                )}
-
-                <button onClick={handleLeaveGroup}>Leave Group</button>
-            </div>
-            <div className="chat-container">
-  <h3>Group Chat</h3>
-  <div className="chat-history">
-    {chatHistory.map((msg, index) => (
-      <div key={index} className="chat-message">
-        <div className="message-header">
-          <span className="username">{msg.user.username}</span>
-          <span className="timestamp">{new Date(msg.createdAt).toLocaleString()}</span>
-        </div>
-        <div className="message-content">{msg.message}</div>
-      </div>
-    ))}
   </div>
-  <form onSubmit={handleSendChat}>
-    <input
-      type="text"
-      value={chatInput}
-      onChange={(e) => setChatInput(e.target.value)}
-      placeholder="Type a message..."
-    />
-    <button type="submit">Send</button>
-  </form>
-</div>
-  </div>
-    );
+);
 }

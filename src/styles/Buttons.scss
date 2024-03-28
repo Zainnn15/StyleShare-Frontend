@@ -131,13 +131,20 @@ button:active {
     }
 }
 
-.button-upload {
+.button-accept {
     background-color: Colors.$purpleBlue;
     padding: 1em;
     color: Colors.$purpleLight;
 }
-.button-upload:hover {
+.button-accept:hover {
     background-color: hoverColor(Colors.$purpleBlue);
 }
 
-
+.button-reject {
+    background-color: Colors.$error;
+    padding: 1em;
+    color: Colors.$purpleLight;
+}
+.button-reject:hover {
+    background-color: hoverColor(Colors.$error);
+}
