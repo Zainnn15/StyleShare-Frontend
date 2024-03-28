@@ -88,12 +88,12 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
             <div className="container-header">
                 <div className="container-row">
                     <Link className="container-header-button" to="/dashboard">
-                        <CircleBtn iconUrl={logo} className={"button-header"} width={"100%"} />
+                        <CircleBtn iconUrl={logo} className={"button-header"} width={"30px"} height={"30px"} />
                     </Link>
                     {  
                         isLogin &&
                         <div className="container-header-button popup">
-                        <CircleBtn iconUrl={menu} className={"button-header"} width={"80%"} 
+                        <CircleBtn iconUrl={menu} className={"button-header"} width={"30px"} height={"30px"} 
                             handlePress={openMenuDropdown}
                         />
                         </div>
@@ -103,7 +103,7 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
                     isLogin &&
                     <div className="container-header-button popup">
                     <CircleBtn iconUrl={garment ? getImageFromURL(garment.fileFront) : profile} 
-                        className={"button-header"} width={"35px"} height={"35px"}
+                        className={"button-header"} width={"30px"} height={"30px"}
                         handlePress={openProfileDropdown}
                     />
                     </div>
