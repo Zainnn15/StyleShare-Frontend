@@ -99,23 +99,25 @@ export default function GarmentTear() {
         if (stainImg) formData.append('stainImg', stainImg);
         formData.append('userId', user._id);
 
-        var message = `A new repair request has been made from the garment website. The details are as follows: `;
+        if (repairRequest.looseButton || repairRequest.brokenZipper || repairRequest.lostString || repairRequest.looseHem || repairRequest.other) {
+            var message = `A new repair request has been made from the garment website. The details are as follows: `;
 
-        repairRequest.looseButton ? message += `a button is loose, ` : "";
-        repairRequest.brokenZipper ? message += `the zipper is broken, ` : "";
-        repairRequest.lostString ? message += `a string has been lost, ` : "";
-        repairRequest.looseHem ? message += `the hem is loose, ` : "";
-        repairRequest.other ? message += `other: ${repairOther}.` : "";
-
-        emailjs.send('service_xapjkvh', 'template_tvq1krn', {
-            user: user.name,
-            message,
-        }, "mp89PFZ4F0j1qLwHA").then(() => {
-            console.log('Email sent successfully');
-        }, function(error) {
-            console.log('Email not sent ' + error);
-        });
-
+            repairRequest.looseButton ? message += `a button is loose, ` : "";
+            repairRequest.brokenZipper ? message += `the zipper is broken, ` : "";
+            repairRequest.lostString ? message += `a string has been lost, ` : "";
+            repairRequest.looseHem ? message += `the hem is loose, ` : "";
+            repairRequest.other ? message += `other: ${repairOther}.` : "";
+    
+            emailjs.send('service_xapjkvh', 'template_tvq1krn', {
+                user: user.name,
+                message,
+            }, "mp89PFZ4F0j1qLwHA").then(() => {
+                console.log('Email sent successfully');
+            }, function(error) {
+                console.log('Email not sent ' + error);
+            });
+        }
+        
         try {
             const { data } = await axios.post('/addgarmentdetails', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
