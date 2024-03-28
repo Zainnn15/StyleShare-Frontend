@@ -99,37 +99,17 @@ function GarmentExchange() {
     };
 
     const fetchExchangeRequests = async () => {
-        if (!user?._id) return; // Early return if user._id is not valid
-    
         try {
-            const response = await axios.get(`/listExchangeRequests/${user._id}`);
-            const fetchedExchangeRequests = response.data.exchangeRequests;
-    
-            if (!Array.isArray(fetchedExchangeRequests)) {
-                console.error("Fetched exchange requests is not an array.");
-                return;
-            }
-    
-            // Filter requests to include only those where the current user is either the sender or the recipient
-            const relevantExchangeRequests = fetchedExchangeRequests.filter(request =>
-                request.senderId === user._id || request.recipientId._id === user._id
-            );
-    
-            setExchangeRequests(relevantExchangeRequests);
-    
-            const updatedSentRequests = fetchedExchangeRequests.reduce((acc, request) => {
-                if (request.senderId._id === user._id) { // Checks if the current user sent the request
-                    const key = `${request.recipientId._id}_${request.recipientGarmentId._id}`;
-                    acc[key] = true;
-                }
-                return acc;
-            }, {});
-    
-            setSentRequests(updatedSentRequests);
+          const response = await axios.get(`/listExchangeRequests/${user._id}`);
+          const fetchedExchangeRequests = response.data.exchangeRequests;
+          console.log("Fetched exchangeRequests:", fetchedExchangeRequests); // Confirm the fetched data
+          setExchangeRequests(fetchedExchangeRequests);
+          console.log("State updated with:", fetchedExchangeRequests); // Confirm state update
         } catch (error) {
-            console.error('Failed to fetch exchange requests:', error);
+          console.error('Failed to fetch exchange requests:', error);
         }
-    };
+      };
+    
     
     
 
@@ -245,34 +225,36 @@ function GarmentExchange() {
                 <h3>Exchange Requests</h3>
                 <hr/>
                 {exchangeRequests.length > 0 ? (
-    <div className='container-grid-3-md gap m2-v'>
-        {exchangeRequests.map((request) => (
-            <div key={request._id} className="container-border clear-box">
-                <p><strong>From:</strong> {request.senderId?.username || 'Unknown User'} <strong>To:</strong> {request.recipientId?.username || 'Unknown User'}</p>
-                <p><strong>Your Garment:</strong> {request.userGarmentId?.garmentDescription || 'Garment not found'}</p>
-                <p><strong>Exchange For:</strong> {request.recipientGarmentId?.garmentDescription || 'Garment not found'}</p>
-                {request.status === 'pending' && user._id === request.recipientId?._id && (
-                    <>
-                        <button onClick={() => handleExchangeResponse(request._id, 'accepted')}>Accept</button>
-                        <button onClick={() => handleExchangeResponse(request._id, 'rejected')}>Reject</button>
-                    </>
-                )}
-                <p><strong>Status: </strong>{request.status.charAt(0).toUpperCase() + request.status.slice(1)}</p>
-                {request.pickupDate && (
-                    <p><strong>Pickup Date: </strong>{request.pickupDate}</p>
-                )}
-                {request.pickupTime && (
-                    <p><strong>Pickup Time: </strong>{request.pickupTime}</p>
-                )}
-                {request.pickupLocation && (
-                    <p><strong>Pickup Location: </strong>{request.pickupLocation}</p>
-                )}
-            </div>
-        ))}
-    </div>
-) : (
-    <p className='center'>No exchange requests</p>
-)}
+                <div className='container-grid-3-md gap m2-v'>
+                    {exchangeRequests.map((request) => (
+                        <div key={request._id} className="container-border clear-box">
+                            <p><strong>From:</strong> {request.senderId?.username || 'Unknown User'} <strong>To:</strong> {request.recipientId?.username || 'Unknown User'}</p>
+                            {/* Updated lines to use the new properties */}
+                            <p><strong>Your Garment:</strong> {request.userGarmentDescription}</p>
+                            <p><strong>Exchange For:</strong> {request.recipientGarmentDescription}</p>
+                            {request.status === 'pending' && user._id === request.recipientId?._id && (
+                                <>
+                                    <button onClick={() => handleExchangeResponse(request._id, 'accepted')}>Accept</button>
+                                    <button onClick={() => handleExchangeResponse(request._id, 'rejected')}>Reject</button>
+                                </>
+                            )}
+                            <p><strong>Status:</strong> {request.status.charAt(0).toUpperCase() + request.status.slice(1)}</p>
+                            {request.pickupDate && (
+                                <p><strong>Pickup Date:</strong> {request.pickupDate}</p>
+                            )}
+                            {request.pickupTime && (
+                                <p><strong>Pickup Time:</strong> {request.pickupTime}</p>
+                            )}
+                            {request.pickupLocation && (
+                                <p><strong>Pickup Location:</strong> {request.pickupLocation}</p>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <p className='center'>No exchange requests</p>
+            )}
+
 
             </div>
             
