@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../context/userContext";
-import { GarmentContext } from "../../context/garmentContext";
+//import { GarmentContext } from "../../context/garmentContext";
 import { GroupContext } from "../../context/groupContext";
 import Axios from "axios";
 
@@ -19,9 +19,9 @@ import defaultProfile from "../assets/images/profile_default.jpg";
 
 export default function Profile() {
   const { user, loading: userLoading } = useContext(UserContext);
-  const { garment, loading: garmentLoading } = useContext(GarmentContext);
+  //const { garment, loading: garmentLoading } = useContext(GarmentContext);
     const {userGroups} = useContext(GroupContext);
-    const [profile, setProfile] = useState(null);
+    const [setProfile] = useState(null);
     const [selectedDays, setSelectedDays] = useState([]);
     const [selectedTimes, setSelectedTimes] = useState([
       { day: 0, start: "", end: "" },
@@ -33,7 +33,7 @@ export default function Profile() {
       { day: 6, start: "", end: "" },
     ]);
     const [editMode, setEditMode] = useState(false);
-    const [garmentDetails, setGarmentDetails] = useState(null);
+    const [garment, setGarment] = useState(null); 
     const [tabPage, setTabPage] = useState(0);
     const [selectedCampus, setSelectedCampus] = useState('');
     const [customCampus, setCustomCampus] = useState('');
@@ -88,45 +88,79 @@ export default function Profile() {
     }
 };
 
-const sortGarmentDetails = (garmentData) => {
-  // Perform sorting logic here, then return the sorted data
-  // Note: Avoid direct mutation of garmentData, create a new sorted copy instead
-  return {
-    ...garmentData,
-    wearInfo: garmentData.wearInfo?.sort((a, b) => new Date(a.wearDate) - new Date(b.wearDate)),
-    washCareInstructions: garmentData.washCareInstructions?.sort((a, b) => new Date(a.washDate) - new Date(b.washDate)),
-    tearInfo: garmentData.tearInfo?.sort((a, b) => new Date(a.tearDate) - new Date(b.tearDate)),
-  };
-};
-
-useEffect(() => {
-  const fetchProfileAndGarmentDetails = async () => {
-    if (!userLoading && user && user._id) {
-      try {
+    useEffect(() => {
+      if (!userLoading && user && user._id) {
         // Fetch user profile
-        const profileResponse = await Axios.get('/profile', { withCredentials: true });
-        setProfile(profileResponse.data);
-        setSelectedDays(profileResponse.data?.SenecaDays || []);
-        setSelectedTimes(profileResponse.data?.SenecaTimes.filter(time => time.start && time.end) || []);
+        Axios.get('/profile', { withCredentials: true })
+        .then((response) => {
+          const data = response.data;
+          setProfile(data); // Assuming this sets user-specific profile details
+          setSelectedDays(data?.SenecaDays || []);
+          setSelectedTimes(data?.SenecaTimes.filter(time => time.start && time.end) || []);
+        })
+        .catch((error) => console.error('Error fetching user profile:', error));
+    
+        // Fetch garment details based on the user ID
+        Axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true })
+      .then((response) => {
+        const garmentData = response.data;
+        console.log('Garment Details:', garmentData);
+        //setGarmentDetails(garmentData); // Assuming this sets specific garment details
+        setGarment(garmentData); // Assuming this sets specific garment details
+        // No need to sort here as we'll handle sorting directly where the data is rendered to ensure reactivity
+      })
+      .catch((error) => console.error('Error fetching garment details:', error));
 
-        // Fetch garment details
-        const garmentResponse = await Axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true });
-        const sortedGarmentDetails = sortGarmentDetails(garmentResponse.data);
-        setGarmentDetails(sortedGarmentDetails);
-      } catch (error) {
-        console.error('Error fetching user profile or garment details:', error);
       }
-    }
-  };
 
-  fetchProfileAndGarmentDetails();
-}, [user, userLoading]); // Dependencies array was missing
+    //   //sort by date
+    //   if(garment) {
+    //     //sort wearInfo by date
+    //     if(garment.wearInfo) {
+    //         garment.wearInfo.sort((obj1, obj2)=>{
+    //             if(obj1.wearDate < obj2.wearDate) {
+    //                 return -1;
+    //             }
+    //             else {
+    //                 return 1;
+    //             }
+    //         });
+    //     }
 
-    if (userLoading || garmentLoading) {
+    //     //sort washCareInstructions by date
+    //     if(garment.washCareInstructions) {
+    //         garment.washCareInstructions.sort((obj1, obj2)=>{
+    //             if(obj1.washDate < obj2.washDate) {
+    //                 return -1;
+    //             }
+    //             else {
+    //                 return 1;
+    //             }
+    //         });
+    //     }
+
+    //     //sort tearInfo by date
+    //     if(garment.tearInfo) {
+    //         garment.tearInfo.sort((obj1, obj2)=>{
+    //             if(obj1.tearDate < obj2.tearDate) {
+    //                 return -1;
+    //             }
+    //             else {
+    //                 return 1;
+    //             }
+    //         });
+    //     }
+    //   }
+
+    }, [user, userLoading]);
+
+    //if (userLoading || garmentLoading) {
+    if (userLoading) {
       return <div>Loading...</div>; // Show loading state while data is being fetched
     }
   
-    if (!user || !garment) {
+    //if (!user || !garment) {
+    if (!user) {
       return <div>No user or garment data available.</div>; // Show a message or redirect if data is not available
     }
     
@@ -170,7 +204,7 @@ useEffect(() => {
       setSelectedTimes(temp);
     };
 
-    console.log(garment);
+    //console.log(garment);
 
   return (
     <div>

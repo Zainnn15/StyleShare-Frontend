@@ -71,7 +71,7 @@ export default function GarmentTear() {
             const washShrinkMeasurements = measuresData.map((measure, index) => ({
               measureType: measures[index].value,
               value: measure.value,
-              unit: measure.unit
+              unit: measure.unit === "" ? "cm" : measure.unit
             }));
 
             const updatedTearExtra = {

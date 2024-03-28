@@ -25,17 +25,13 @@ const GarmentMeasurement = () => {
     const { user } = useContext(UserContext);
     const {garment} = useContext(GarmentContext);
     const [formData, setFormData] = useState({
-      clothingType: {value:garment.garmentType, label: findAttribute(GARMENT_TYPES, garment.garmentType)},
+        clothingType: {value:garment.garmentType, label: findAttribute(GARMENT_TYPES, garment.garmentType)},
         garmentSizeType: '',
         garmentSize: '',
         garmentFit: '',
     });
     const options = GARMENT_TYPES;
-    const measureTypes = getSetByCategory(getCategory(garment.garmentType));
-    const [measures, setMeasures] = useState([
-        ...measureTypes
-    ]);
-
+    const [measures, setMeasures] = useState([...getSetByCategory(getCategory(garment.garmentType))]);
 
     const selectType = (event) => {
         // clear previous
@@ -148,6 +144,8 @@ const GarmentMeasurement = () => {
                     <label className="container-title">Add Garment Measurement</label>
                     <hr/>
                 </div>
+
+        {garment && garment.garmentType && (
                 <form onSubmit={handleSubmit}>
                 <div>
             <div className='container-prompt' onClick={selectID("clothingType")}>
@@ -322,6 +320,7 @@ const GarmentMeasurement = () => {
             )}
         </div>
                 </form>
+        )}
             </div>
         </div>
     );

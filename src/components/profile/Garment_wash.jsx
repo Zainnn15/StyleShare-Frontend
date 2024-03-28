@@ -121,7 +121,7 @@ const Garment_wash = ({garment}) => {
                             }
 
                             {
-                                care.useIron ? (
+                                care.ironDuration ? (
                                     <div>
                                         <div>
                                             <p>
@@ -147,7 +147,7 @@ const Garment_wash = ({garment}) => {
                                 )
                             }
 
-                            {
+                            {/* {
                                 care.careBleach &&
                                 care.careBleach.Bleach !== "" ? (
                                     <div>
@@ -196,10 +196,10 @@ const Garment_wash = ({garment}) => {
                                         </div>
                                     </div> 
                                 )
-                            }
+                            } */}
 
                             {
-                                care.isVentilated ? (
+                                care.ventilatedTime ? (
                                     <div>
                                         <div>
                                             <p>

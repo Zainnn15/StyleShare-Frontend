@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { repairRequests } from '../../constants/data/lists';
+import { measurementTypes, repairRequests } from '../../constants/data/lists';
 import { findAttribute, formatDate, getImageFromURL } from '../../constants/functions/valueHandlers';
 import '../../styles/main.scss';
 
@@ -9,7 +9,7 @@ const Garment_tear = ({garment}) => {
         {
             garment && garment.tearInfo && 
             garment.tearInfo.map((tear)=>{
-            return (
+            return (tear.tearDate && (
                 <div key={tear._id}>
                     <label className="container-subtitle-2">{formatDate(tear.tearDate)}</label>
                     <div className='container-border clear-box'>
@@ -106,6 +106,19 @@ const Garment_tear = ({garment}) => {
                                         <p>
                                             <label className="text-b text-u">Shrink from Wash</label>
                                         </p>
+                                        {   
+                                            tear.tearExtra.washShrinkMeasurements.map((measure)=>{
+                                                return (
+                                                    <div key={"shrink_"+measure.measureType}>
+                                                        <p>
+                                                            <label className="tab"></label>
+                                                            <label className="text-b">{findAttribute(measurementTypes, measure.measureType)}:<label className="tab"></label></label>
+                                                            <label>{measure.value} {measure.unit}</label>
+                                                        </p>
+                                                    </div>
+                                                )
+                                            })
+                                        }
                                     </div>
                                 )
                             }
@@ -238,7 +251,7 @@ const Garment_tear = ({garment}) => {
                                             <label>{tear.tearExtra.stainArea}</label>
                                         </p>
                                         {
-                                            tear.stainSourceKnow === 1 && (
+                                            tear.tearExtra.stainSourceKnow === "stainSourceKnow_yes" && (
                                                 <p>
                                                     <label className="tab"></label>
                                                     <label className="text-b">Source:<label className="tab"></label></label>
@@ -328,7 +341,7 @@ const Garment_tear = ({garment}) => {
                     </div>
                     <br/>
                 </div>
-            )})
+            ))})
         }
         
     </div>
