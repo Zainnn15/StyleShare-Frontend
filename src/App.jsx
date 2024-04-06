@@ -20,7 +20,7 @@ import UserSearch from './pages/UserSearch';
 import GarmentDetails from './pages/GarmentPages/GarmentDetails';
 import GarmentExchange from './pages/GarmentPages/GarmentExchange';
 
-axios.defaults.baseURL = 'https://garment-backend.onrender.com/';
+axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
 
 function App() {
