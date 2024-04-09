@@ -228,7 +228,7 @@ const GarmentDetails = () => {
             } else {
                 // Reset form data upon successful submission
                 setFormData({
-                    // Reset all fields to their initial state
+                  
                 });
                 toast.success("Garment details added successfully!");
                 navigate('/dashboard'); // Or any other path as needed

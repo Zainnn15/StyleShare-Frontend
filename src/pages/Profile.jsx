@@ -113,45 +113,6 @@ export default function Profile() {
 
       }
 
-    //   //sort by date
-    //   if(garment) {
-    //     //sort wearInfo by date
-    //     if(garment.wearInfo) {
-    //         garment.wearInfo.sort((obj1, obj2)=>{
-    //             if(obj1.wearDate < obj2.wearDate) {
-    //                 return -1;
-    //             }
-    //             else {
-    //                 return 1;
-    //             }
-    //         });
-    //     }
-
-    //     //sort washCareInstructions by date
-    //     if(garment.washCareInstructions) {
-    //         garment.washCareInstructions.sort((obj1, obj2)=>{
-    //             if(obj1.washDate < obj2.washDate) {
-    //                 return -1;
-    //             }
-    //             else {
-    //                 return 1;
-    //             }
-    //         });
-    //     }
-
-    //     //sort tearInfo by date
-    //     if(garment.tearInfo) {
-    //         garment.tearInfo.sort((obj1, obj2)=>{
-    //             if(obj1.tearDate < obj2.tearDate) {
-    //                 return -1;
-    //             }
-    //             else {
-    //                 return 1;
-    //             }
-    //         });
-    //     }
-    //   }
-
     }, [user, userLoading]);
 
     //if (userLoading || garmentLoading) {
