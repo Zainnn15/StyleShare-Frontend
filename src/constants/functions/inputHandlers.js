@@ -159,5 +159,14 @@ function loadImg(imgName, file) {
     }
 }
 
+function scrollToID(idName) {
+    let elem = document.getElementById(idName);
+    if(!elem) {
+        return;
+    }
+    elem.scrollIntoView();
+    window.scrollBy(0,-60);
+}
+
 export { checkOnID, selectID, clickID, signOut, changeTitle, addErrorMessage, addErrorMessageByID,
-    validate, validateInpName, validatePage, validateSelect, readURL, loadImg };
+    validate, validateInpName, validatePage, validateSelect, readURL, loadImg, scrollToID };

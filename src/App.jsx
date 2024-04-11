@@ -16,6 +16,7 @@ import GarmentCare from './pages/GarmentPages/GarmentCare';
 import GarmentWear from './components/garment_care/GarmentCare_wear';
 import GarmentWash from './components/garment_care/GarmentCare_wash';
 import GarmentTear from './components/garment_care/GarmentCare_tear';
+import GarmentFeel from './components/garment_care/GarmentCare_feel';
 import UserSearch from './pages/UserSearch';
 import GarmentDetails from './pages/GarmentPages/GarmentDetails';
 import GarmentExchange from './pages/GarmentPages/GarmentExchange';
@@ -41,6 +42,7 @@ function App() {
             <Route path='/garment-wear' element={<GarmentWear />} />
             <Route path='/garment-wash' element={<GarmentWash />} />
             <Route path='/garment-tear' element={<GarmentTear />} />
+            <Route path='/garment-feel' element={<GarmentFeel />} />
             <Route path='/usersearch' element={<UserSearch />} />
             <Route path='/garment-details' element={<GarmentDetails />} />
             <Route path='/garment-exchange' element={<GarmentExchange />} />

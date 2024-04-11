@@ -133,7 +133,7 @@ export default function GarmentWear() {
 
             <br/>
             <div className='container-input'>
-                <button className="button-form full" type="submit" onClick={handleSubmit}>
+                <button className="button-form full" type="submit" onClick={validateAndSubmit}>
                     Save
                 </button>
             </div>

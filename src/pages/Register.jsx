@@ -5,7 +5,7 @@ import {useNavigate} from 'react-router-dom';
 import ScreenHeader from '../components/common/ScreenHeader';
 import CircleImg from '../components/common/CircleImg';
 
-import logo from '../assets/icons/logo192.png';
+import logo from '../assets/icons/logo.jpg';
 
 export default function Register() {
     const navigate = useNavigate();

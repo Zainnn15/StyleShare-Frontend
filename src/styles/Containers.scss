@@ -107,6 +107,28 @@ $screen-xl-min: 1200px;
         grid-template-columns: 1fr 1fr 1fr;
     }
 }
+@mixin grid-4-md {
+    @include grid;
+    // small devices
+    @include sm {
+        grid-template-columns: 1fr 1fr;
+    }
+    // medium devices
+    @include md {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+}
+@mixin grid-4-lg {
+    @include grid;
+    // medium devices
+    @include md {
+        grid-template-columns: 1fr 1fr;
+    }
+    // large devices
+    @include lg {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+}
 
 @mixin input {
     flex-wrap: wrap;
@@ -517,6 +539,12 @@ $screen-xl-min: 1200px;
 }
 .container-grid-3-lg {
     @include grid-3-lg;
+}
+.container-grid-4-md {
+    @include grid-4-md;
+}
+.container-grid-4-lg {
+    @include grid-4-lg;
 }
 .gap {
     gap: 1em;

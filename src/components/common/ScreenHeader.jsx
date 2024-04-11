@@ -2,7 +2,7 @@
 import '../../styles/main.scss';
 import { Link } from "react-router-dom";
 
-import logo from '../../assets/icons/logo192.png';
+import logo from '../../assets/icons/logo.jpg';
 import menu from '../../assets/icons/menu.png';
 import profile from '../../assets/images/profile_default.jpg';
 

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import '../../styles/main.scss';
 
-const Card = ({ imgUrl, title, status, description, footer, handlePress, handleImgPress, handleTitlePress, handleDescPress, handleFooterPress, width="16em", height="32em", imgWidth="16em", imgHeight="16em", titleHeight="4em", descHeight="8em", imgClassName, titleClassName, DescClassName, footerClassName, isBtn=true }) => {
+const Card = ({ imgUrl, title, status, description, footer, handlePress, handleImgPress, handleTitlePress, handleDescPress, handleFooterPress, width="14em", height="32em", imgWidth="14em", imgHeight="16em", titleHeight="4em", descHeight="8em", imgClassName, titleClassName, DescClassName, footerClassName, isBtn=true }) => {
     return(
         <div className='container-card' style={{width:width, height:height}} onClick={handlePress}>
             {

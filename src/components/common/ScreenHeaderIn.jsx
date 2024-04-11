@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useContext } from 'react';
 import { GarmentContext } from "../../../context/garmentContext.jsx";
 import { UserContext } from "../../../context/userContext.jsx";
-import logo from '../../assets/icons/logo192.png';
+import logo from '../../assets/icons/logo.jpg';
 import menu from '../../assets/icons/menu.png';
 import profile from '../../assets/images/profile_default.jpg';
 import { useNavigate } from 'react-router-dom';

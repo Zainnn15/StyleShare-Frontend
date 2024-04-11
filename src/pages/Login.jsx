@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/userContext'; // Adjust path as needed
 
-import logo from '../assets/icons/logo192.png';
+import logo from '../assets/icons/logo.jpg';
 import ScreenHeader from '../components/common/ScreenHeader';
 import CircleImg from '../components/common/CircleImg';
 
