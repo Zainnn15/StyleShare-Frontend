@@ -155,7 +155,7 @@ function GarmentExchange() {
         setGarmentModalID(garment);
     }
 
-
+    console.log(userGroups);
 
     return (
         <div>
@@ -170,39 +170,40 @@ function GarmentExchange() {
                 <div className="container-care gap m2-v">
                     {userGroups?.members?.map((member) => (
 
-                    <div key={member._id}>
+                    <div key={member._id} className='container-card-list' style={{width:"14em"}}>
                        {member.garments && member.garments.length > 0 ? (   
-                        member.garments.map((garment) => (
+                        member.garments.map((garment, index) => (
                 <div key={garment?._id || Math.random()}>
                     <Card
-                height='33em'
-                imgUrl={getImageFromURL(garment?.fileFront || 'fallbackImagePath')}
-                imgClassName={"container-card-img"}
-                title={<p className="center text-purpleLight text-midLg">{member.username}</p>}
-                titleClassName={"container-row clickable bg-purpleDark"}
-                description={
-                    <div>
-                        <p className="card-text">Type: {findAttribute(GARMENT_TYPES, garment?.garmentType)}</p>
-                        <p className="card-text">Description: {garment?.garmentDescription || 'Description not available'}</p>
-                        <p className="card-text">Country: {garment?.garmentCountry || 'Country not available'}</p> 
-                    </div>
-                }
-                DescClassName={"container-card-description"}
-                footer={member._id === user._id ? <p>Your Garment</p> : 
-                    <button className='button-regular'
-                        onClick={() => openReservationModal(member._id, garment?._id)}
-                        disabled={sentRequests[`${member._id}_${garment?._id}`]}
-                    >
-                        Send Exchange Request
-                    </button>
-                }
-                isBtn={false}
-                footerClassName={"center"}
-                handleImgPress={() => handleCardPress(garment)}
-                handleTitlePress={() => handleCardPress(garment)}
-                handleDescPress={() => handleCardPress(garment)}
-            />
-        </div>
+                        height='33em'
+                        imgUrl={getImageFromURL(garment?.fileFront || 'fallbackImagePath')}
+                        imgClassName={"container-card-img"}
+                        title={<label className="center text-purpleLight text-midLg">{member.username}</label>}
+                        status={<label className="center text-purpleLight">{index+1}/{member.garments.length}</label>}
+                        titleClassName={"container-row clickable bg-purpleDark space-evenly"}
+                        description={
+                            <div>
+                                <p className="card-text">Type: {findAttribute(GARMENT_TYPES, garment?.garmentType)}</p>
+                                <p className="card-text">Description: {garment?.garmentDescription || 'Description not available'}</p>
+                                <p className="card-text">Country: {garment?.garmentCountry || 'Country not available'}</p> 
+                            </div>
+                        }
+                        DescClassName={"container-card-description"}
+                        footer={member._id === user._id ? <p>Your Garment</p> : 
+                            <button className='button-regular'
+                                onClick={() => openReservationModal(member._id, garment?._id)}
+                                disabled={sentRequests[`${member._id}_${garment?._id}`]}
+                            >
+                                Send Exchange Request
+                            </button>
+                        }
+                        isBtn={false}
+                        footerClassName={"center"}
+                        handleImgPress={() => handleCardPress(garment)}
+                        handleTitlePress={() => handleCardPress(garment)}
+                        handleDescPress={() => handleCardPress(garment)}
+                    />
+                </div>
     ))
 ) : (
                             <Card

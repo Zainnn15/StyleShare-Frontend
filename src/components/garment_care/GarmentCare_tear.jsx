@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../../styles/main.scss';
 import { toast } from 'react-hot-toast';
 import ScreenHeaderIn from "../../components/common/ScreenHeaderIn";
@@ -11,7 +11,7 @@ import { measurementTypes } from '../../constants/data/lists';
 import axios from 'axios';
 import { useContext } from 'react';
 import { UserContext } from '../../../context/userContext';
-import { GarmentContext } from '../../../context/garmentContext';
+//import { GarmentContext } from '../../../context/garmentContext';
 import { useNavigate } from 'react-router-dom';
 import PopupImg from '../common/PopupImg';
 import CircleBtn from '../common/CircleBtn';
@@ -21,15 +21,20 @@ import img_twisting from '../../assets/images/twisting.png';
 import img_shrinking from '../../assets/images/spandex_shrink.png';
 import img_pilling from '../../assets/images/pilling.png';
 import emailjs from '@emailjs/browser';
+import { findAttribute, formatDate } from '../../constants/functions/valueHandlers';
 
 export default function GarmentTear() {
     const navigate = useNavigate();
-    const { user } = useContext(UserContext);
-    const { garment } = useContext(GarmentContext);
+    //const { user } = useContext(UserContext);
+    //const { garment } = useContext(GarmentContext);
+    const { user, loading: userLoading } = useContext(UserContext);
+    const [setProfile] = useState(null);
+    const [garment, setGarment] = useState(null); 
+    const [garmentList, setGarmentList] = useState([]);
     const [tearDate, setTearDate] = useState('');
     const [wantRepair, setWantRepair] = useState(false);
-    const measureTypes = garment ? getSetByCategory(getCategory(garment?.garmentType)) : [];
-    const [measures] = useState([...measureTypes]);
+    //const measureTypes = garment ? getSetByCategory(getCategory(garment?.garmentType)) : [];
+    const [measures, setMeasures] = useState([]);
     const [twistingImg, setTwistingImg] = useState(null);
     const [spandexShrinkImg, setSpandexShrinkImg] = useState(null);
     const [printFadeImg, setPrintFadeImg] = useState(null);
@@ -62,6 +67,57 @@ export default function GarmentTear() {
       "other": "",
     });
     const [repairOther, setRepairOther] = useState('');
+
+    //get user and garment data
+    useEffect(() => {
+        if (!userLoading && user && user._id) {
+          // Fetch user profile
+          axios.get('/profile', { withCredentials: true })
+          .then((response) => {
+            const data = response.data;
+            setProfile(data); // Assuming this sets user-specific profile details
+          })
+          .catch((error) => console.error('Error fetching user profile:', error));
+      
+          // Fetch garment details based on the user ID
+          axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true })
+        .then((response) => {
+          const garmentData = response.data;
+          //console.log('Garment Details:', garmentData);
+          //setGarmentDetails(garmentData); // Assuming this sets specific garment details
+          if(Array.isArray(garmentData) && garmentData.length > 0) {
+            setGarmentList(garmentData);
+            setGarment(garmentData[0]);
+            return garmentData[0];
+          }
+          else {
+            setGarmentList([...garmentData]); // Assuming this sets specific garment details
+            setGarment(garmentData);
+            return garmentData;
+          }
+          // No need to sort here as we'll handle sorting directly where the data is rendered to ensure reactivity
+          
+        })
+        .then((data) => {
+            //initialize garment
+            if(data) {
+                let measureTypes = getSetByCategory(getCategory(data.garmentType));
+                setMeasures([...measureTypes]);
+            }
+          })
+        .catch((error) => console.error('Error fetching garment details:', error));
+  
+        }
+  
+      }, [user, userLoading]);
+      //if (userLoading || garmentLoading) {
+      if (userLoading) {
+        return <div>Loading...</div>; // Show loading state while data is being fetched
+      }
+      //if (!user || !garment) {
+      if (!user) {
+        return <div>No user or garment data available.</div>; // Show a message or redirect if data is not available
+      }
   
     const sendGarmentDetails = async () => {
         const formData = new FormData();
@@ -190,6 +246,33 @@ export default function GarmentTear() {
         </div>
         <form onSubmit={validateAndSubmit}>
             <div className='container-content'>
+
+                <div>
+                    <p className="container-subtitle-2">Selected Garment</p>
+                    <select
+                        onChange={(e)=>{
+                        if(e.target.value < garmentList.length) {
+                            let data = garmentList[e.target.value];
+                            setGarment(data);
+                            let measureTypes = getSetByCategory(getCategory(data.garmentType));
+                            setMeasures([...measureTypes]);
+                        }
+                        }}
+                    >
+                        {
+                        garmentList && garmentList.length > 0 &&
+                        garmentList.map((garmentOpt, index) => {
+                            return (
+                            <option key={"garmentOpt_"+index} value={index}>
+                                {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} ({formatDate(garmentOpt.purchaseDate)})
+                            </option>
+                            )
+                        }) 
+                        }
+                    </select>
+                </div>
+                <br/>
+
                 <label className='text-b'>Date of Tear:</label>
                 <label className='tab'></label>
                 <input type='date' value={tearDate} onChange={(e)=>setTearDate(e.target.value)} required/>

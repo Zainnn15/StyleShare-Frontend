@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../../styles/main.scss';
 import { toast } from 'react-hot-toast';
 import ScreenHeaderIn from "../../components/common/ScreenHeaderIn";
@@ -10,10 +10,16 @@ import axios from 'axios';
 import { useContext } from 'react';
 import { UserContext } from '../../../context/userContext';
 import { useNavigate } from "react-router-dom";
+import { findAttribute, formatDate } from '../../constants/functions/valueHandlers';
+import { GARMENT_TYPES } from '../../constants/data/options';
 
 export default function GarmentWash() {
     const navigate = useNavigate();
-    const {user} = useContext(UserContext);
+    //const {user} = useContext(UserContext);
+    const { user, loading: userLoading } = useContext(UserContext);
+    const [setProfile] = useState(null);
+    const [garment, setGarment] = useState(null); 
+    const [garmentList, setGarmentList] = useState([]);
     const [washDate, setWashDate] = useState('');
     const [careWash, setCareWash] = useState({
         "Method":"",
@@ -38,6 +44,50 @@ export default function GarmentWash() {
     const [ironDuration, setIronDuration] = useState('');
     const [isVentilated, setIsVentilated] = useState(false);
     const [ventilatedTime, setVentilatedTime] = useState('');
+
+    //get user and garment data
+    useEffect(() => {
+        if (!userLoading && user && user._id) {
+          // Fetch user profile
+          axios.get('/profile', { withCredentials: true })
+          .then((response) => {
+            const data = response.data;
+            setProfile(data); // Assuming this sets user-specific profile details
+          })
+          .catch((error) => console.error('Error fetching user profile:', error));
+      
+          // Fetch garment details based on the user ID
+          axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true })
+        .then((response) => {
+          const garmentData = response.data;
+          //console.log('Garment Details:', garmentData);
+          //setGarmentDetails(garmentData); // Assuming this sets specific garment details
+          if(Array.isArray(garmentData) && garmentData.length > 0) {
+            setGarmentList(garmentData);
+            setGarment(garmentData[0]);
+            return garmentData[0];
+          }
+          else {
+            setGarmentList([...garmentData]); // Assuming this sets specific garment details
+            setGarment(garmentData);
+            return garmentData;
+          }
+          // No need to sort here as we'll handle sorting directly where the data is rendered to ensure reactivity
+          
+        })
+        .catch((error) => console.error('Error fetching garment details:', error));
+  
+        }
+  
+      }, [user, userLoading]);
+      //if (userLoading || garmentLoading) {
+      if (userLoading) {
+        return <div>Loading...</div>; // Show loading state while data is being fetched
+      }
+      //if (!user || !garment) {
+      if (!user) {
+        return <div>No user or garment data available.</div>; // Show a message or redirect if data is not available
+      }
 
     // Function to send the garment details to the backend
     const sendGarmentDetails = async () => {
@@ -100,6 +150,31 @@ export default function GarmentWash() {
             </div>
             <form onSubmit={validateAndSubmit}>
                 <div className='container-content'>
+
+                <div>
+                    <p className="container-subtitle-2">Selected Garment</p>
+                    <select
+                        onChange={(e)=>{
+                        if(e.target.value < garmentList.length) {
+                            let data = garmentList[e.target.value];
+                            setGarment(data);
+                        }
+                        }}
+                    >
+                        {
+                        garmentList && garmentList.length > 0 &&
+                        garmentList.map((garmentOpt, index) => {
+                            return (
+                            <option key={"garmentOpt_"+index} value={index}>
+                                {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} ({formatDate(garmentOpt.purchaseDate)})
+                            </option>
+                            )
+                        }) 
+                        }
+                    </select>
+                </div>
+                <br/>
+
                     <div id={"washDate_error"} style={{textAlign:"center"}}></div>
                     <label className='text-b'>Wash Date:</label>
                     <label className='tab'></label>

@@ -224,19 +224,24 @@ const handleLeaveGroup = async () => {
                                                 <img src={getImageFromURL(member.garments[0].fileFront) || `'default-image-path.jpg'}`} alt="Garment"/>
                                             </div>
                                         </div>
+                                        <br/>
                                         
-                                        {member.garments && member.garments.length > 0 ? (
-                                            member.garments.map((garment) => (
-                                                <div key={garment._id} className="garment-details">
-                                                    <p><strong>Type: </strong>{findAttribute(GARMENT_TYPES, garment.garmentType)}</p>
-                                                    <p><strong>Description: </strong>{garment.garmentDescription}</p>
-                                                    <p><strong>Country: </strong>{garment.garmentCountry}</p>
-                                                    {/* Provide a default image path if fileFront is undefined */}
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <p>No garments listed.</p>
-                                        )}
+                                        <div className='container-card-list' style={{maxWidth:"14em"}}>
+                                            {member.garments && member.garments.length > 0 ? (
+                                                member.garments.map((garment, index) => (
+                                                    <div key={garment._id} className="garment-details container-border">
+                                                        <p className='center'><strong>{index+1}/{member.garments.length}</strong></p>
+                                                        <p><strong>Type: </strong>{findAttribute(GARMENT_TYPES, garment.garmentType)}</p>
+                                                        <p><strong>Description: </strong>{garment.garmentDescription}</p>
+                                                        <p><strong>Country: </strong>{garment.garmentCountry}</p>
+                                                        {/* Provide a default image path if fileFront is undefined */}
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <p>No garments listed.</p>
+                                            )}
+                                        </div>
+                                        
                                     </div>
                                 </div>
                             ))}

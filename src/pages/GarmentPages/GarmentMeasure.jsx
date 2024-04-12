@@ -216,37 +216,37 @@ const GarmentMeasurement = () => {
         <form onSubmit={handleSubmit}>
         <div>
             <div>
-            <p className="container-subtitle-2">Selected Garment</p>
-            <select
-                onChange={(e)=>{
-                if(e.target.value < garmentList.length) {
-                    let data = garmentList[e.target.value];
-                    setGarment(data);
-                              //initialize garment
-                    setFormData({
-                        ...formData, 
-                        clothingType: {value:data.garmentType, label: findAttribute(GARMENT_TYPES, data.garmentType)}
-                    });
-                    setMeasures([...getSetByCategory(getCategory(data.garmentType))]);
-                    if (measures.length === 0) {
-                        const category = getCategory(data.garmentType);
-                        const newMeasures = getSetByCategory(category);
-                        setMeasures(newMeasures);
+                <p className="container-subtitle-2">Selected Garment</p>
+                <select
+                    onChange={(e)=>{
+                    if(e.target.value < garmentList.length) {
+                        let data = garmentList[e.target.value];
+                        setGarment(data);
+                                //initialize garment
+                        setFormData({
+                            ...formData, 
+                            clothingType: {value:data.garmentType, label: findAttribute(GARMENT_TYPES, data.garmentType)}
+                        });
+                        setMeasures([...getSetByCategory(getCategory(data.garmentType))]);
+                        if (measures.length === 0) {
+                            const category = getCategory(data.garmentType);
+                            const newMeasures = getSetByCategory(category);
+                            setMeasures(newMeasures);
+                        }
                     }
-                }
-                }}
-            >
-                {
-                garmentList && garmentList.length > 0 &&
-                garmentList.map((garmentOpt, index) => {
-                    return (
-                    <option key={"garmentOpt_"+index} value={index}>
-                        {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} ({formatDate(garmentOpt.purchaseDate)})
-                    </option>
-                    )
-                }) 
-                }
-            </select>
+                    }}
+                >
+                    {
+                    garmentList && garmentList.length > 0 &&
+                    garmentList.map((garmentOpt, index) => {
+                        return (
+                        <option key={"garmentOpt_"+index} value={index}>
+                            {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} ({formatDate(garmentOpt.purchaseDate)})
+                        </option>
+                        )
+                    }) 
+                    }
+                </select>
             </div>
             <div className='container-prompt' onClick={selectID("clothingType")}>
                 <p>Select clothing type</p>

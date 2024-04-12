@@ -592,7 +592,7 @@ $screen-xl-min: 1200px;
     .container-card-title {
         @include container-row;
         justify-content: space-between;
-        padding: 0.5em;
+        padding: 0 0.5em;
         background-color: Colors.$purpleDark;
         color: Colors.$purpleLight;
         cursor: pointer;
@@ -764,4 +764,11 @@ $screen-xl-min: 1200px;
         gap: 0.1em;
 
     }
+}
+
+.container-card-list {
+    @include container-row;
+    justify-content: flex-start;
+    gap: 1em;
+    overflow: auto;
 }
