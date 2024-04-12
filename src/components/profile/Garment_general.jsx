@@ -92,6 +92,7 @@ const Garment_general = ({garment}) => {
                 </div>
                 
                 {
+                    garment.wearInfo && garment.wearInfo.length > 0 && 
                     maxWearInfo !== "" && maxWearInfo.wearDate && (
                         <div>
                             <p>
@@ -106,6 +107,7 @@ const Garment_general = ({garment}) => {
                     )
                 }
                 {
+                    garment.wearInfo && garment.wearInfo.length > 0 && 
                     maxWearInfo !== "" && maxWearInfo.wearDate && (
                         <div>
                             <p>

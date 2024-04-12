@@ -14,8 +14,9 @@ import Measure from "../components/profile/Garment_measure";
 import Wear from "../components/profile/Garment_wear";
 import Wash from "../components/profile/Garment_wash";
 import Tear from "../components/profile/Garment_tear";
-import { getImageFromURL } from "../constants/functions/valueHandlers";
+import { findAttribute, formatDate, getImageFromURL } from "../constants/functions/valueHandlers";
 import defaultProfile from "../assets/images/profile_default.jpg";
+import { GARMENT_TYPES } from "../constants/data/options";
 
 export default function Profile() {
   const { user, loading: userLoading } = useContext(UserContext);
@@ -34,6 +35,7 @@ export default function Profile() {
     ]);
     const [editMode, setEditMode] = useState(false);
     const [garment, setGarment] = useState(null); 
+    const [garmentList, setGarmentList] = useState([]);
     const [tabPage, setTabPage] = useState(0);
     const [selectedCampus, setSelectedCampus] = useState('');
     const [customCampus, setCustomCampus] = useState('');
@@ -106,8 +108,14 @@ export default function Profile() {
         const garmentData = response.data;
         console.log('Garment Details:', garmentData);
         //setGarmentDetails(garmentData); // Assuming this sets specific garment details
-        setGarment(garmentData); // Assuming this sets specific garment details
-        // No need to sort here as we'll handle sorting directly where the data is rendered to ensure reactivity
+        if(Array.isArray(garmentData) && garmentData.length > 0) {
+          setGarmentList(garmentData);
+          setGarment(garmentData[0]);
+        }
+        else {
+          setGarmentList([...garmentData]); // Assuming this sets specific garment details
+          setGarment(garmentData);
+        }
       })
       .catch((error) => console.error('Error fetching garment details:', error));
 
@@ -165,7 +173,7 @@ export default function Profile() {
       setSelectedTimes(temp);
     };
 
-    //console.log(garment);
+    console.log(garment);
 
   return (
     <div>
@@ -342,6 +350,28 @@ export default function Profile() {
           <h3>Garment Details</h3>
           <hr/>
         </div>
+        <div>
+          <p className="container-subtitle-2">Selected Garment</p>
+          <select
+            onChange={(e)=>{
+              if(e.target.value < garmentList.length) {
+                setGarment(garmentList[e.target.value]);
+              }
+            }}
+          >
+            {
+              garmentList && garmentList.length > 0 &&
+              garmentList.map((garmentOpt, index) => {
+                return (
+                  <option key={"garmentOpt_"+index} value={index}>
+                    {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} ({formatDate(garmentOpt.purchaseDate)})
+                  </option>
+                )
+              }) 
+            }
+          </select>
+        </div>
+        <br/>
         <div className="container-border page-tab">
           <div className="container-tab">
             <div id="tab0" className="container-tab-group active" 

@@ -16,22 +16,86 @@ import PopupImg from "../../components/common/PopupImg";
 import CircleBtn from "../../components/common/CircleBtn";
 import { useNavigate } from "react-router-dom";
 //comment out to enable selecting of garment
-import { GarmentContext } from "../../../context/garmentContext";
-import { findAttribute } from "../../constants/functions/valueHandlers";
+//import { GarmentContext } from "../../../context/garmentContext";
+import { findAttribute, formatDate } from "../../constants/functions/valueHandlers";
+import Axios from "axios";
 
 const GarmentMeasurement = () => {
     changeTitle("Garment Measurement")
     const navigate  = useNavigate();
-    const { user } = useContext(UserContext);
-    const {garment} = useContext(GarmentContext);
+    const { user, loading: userLoading } = useContext(UserContext);
+    const [setProfile] = useState(null);
+    const [garment, setGarment] = useState(null); 
+    const [garmentList, setGarmentList] = useState([]);
+    //const { user } = useContext(UserContext);
+    //const {garment} = useContext(GarmentContext);
     const [formData, setFormData] = useState({
-        clothingType: {value:garment.garmentType, label: findAttribute(GARMENT_TYPES, garment.garmentType)},
+        clothingType: '',
         garmentSizeType: '',
         garmentSize: '',
         garmentFit: '',
     });
     const options = GARMENT_TYPES;
-    const [measures, setMeasures] = useState([...getSetByCategory(getCategory(garment.garmentType))]);
+    const [measures, setMeasures] = useState([]);
+
+    //get user and garment data
+    useEffect(() => {
+        if (!userLoading && user && user._id) {
+          // Fetch user profile
+          Axios.get('/profile', { withCredentials: true })
+          .then((response) => {
+            const data = response.data;
+            setProfile(data); // Assuming this sets user-specific profile details
+          })
+          .catch((error) => console.error('Error fetching user profile:', error));
+      
+          // Fetch garment details based on the user ID
+          Axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true })
+        .then((response) => {
+          const garmentData = response.data;
+          //console.log('Garment Details:', garmentData);
+          //setGarmentDetails(garmentData); // Assuming this sets specific garment details
+          if(Array.isArray(garmentData) && garmentData.length > 0) {
+            setGarmentList(garmentData);
+            setGarment(garmentData[0]);
+            return garmentData[0];
+          }
+          else {
+            setGarmentList([...garmentData]); // Assuming this sets specific garment details
+            setGarment(garmentData);
+            return garmentData;
+          }
+          // No need to sort here as we'll handle sorting directly where the data is rendered to ensure reactivity
+          
+        })
+        .then((data) => {
+          //initialize garment
+          if(data) {
+            setFormData({
+                ...formData, 
+                clothingType: {value:data.garmentType, label: findAttribute(GARMENT_TYPES, data.garmentType)}
+            });
+            setMeasures([...getSetByCategory(getCategory(data.garmentType))]);
+            if (measures.length === 0) {
+                const category = getCategory(data.garmentType);
+                const newMeasures = getSetByCategory(category);
+                setMeasures(newMeasures);
+            }
+          }
+        })
+        .catch((error) => console.error('Error fetching garment details:', error));
+  
+        }
+  
+      }, [user, userLoading]);
+      //if (userLoading || garmentLoading) {
+      if (userLoading) {
+        return <div>Loading...</div>; // Show loading state while data is being fetched
+      }
+      //if (!user || !garment) {
+      if (!user) {
+        return <div>No user or garment data available.</div>; // Show a message or redirect if data is not available
+      }
 
     const selectType = (event) => {
         // clear previous
@@ -127,15 +191,18 @@ const GarmentMeasurement = () => {
     
     
 
-    useEffect(() => {
-        if (measures.length === 0) {
-          const category = getCategory(garment.garmentType);
-          const newMeasures = getSetByCategory(category);
-          setMeasures(newMeasures);
-        }
-        // This effect should run only when `garment.garmentType` changes,
-        // hence it's included in the dependency array.
-      }, [garment.garmentType]);
+    // useEffect(() => {
+    //     if (measures.length === 0) {
+    //       const category = getCategory(garment.garmentType);
+    //       const newMeasures = getSetByCategory(category);
+    //       setMeasures(newMeasures);
+    //     }
+    //     // This effect should run only when `garment.garmentType` changes,
+    //     // hence it's included in the dependency array.
+    //   }, [garment.garmentType]);
+
+    //console.log(garment);
+
     return (
         <div>
             <ScreenHeaderIn />
@@ -146,8 +213,41 @@ const GarmentMeasurement = () => {
                 </div>
 
         {garment && garment.garmentType && (
-                <form onSubmit={handleSubmit}>
-                <div>
+        <form onSubmit={handleSubmit}>
+        <div>
+            <div>
+            <p className="container-subtitle-2">Selected Garment</p>
+            <select
+                onChange={(e)=>{
+                if(e.target.value < garmentList.length) {
+                    let data = garmentList[e.target.value];
+                    setGarment(data);
+                              //initialize garment
+                    setFormData({
+                        ...formData, 
+                        clothingType: {value:data.garmentType, label: findAttribute(GARMENT_TYPES, data.garmentType)}
+                    });
+                    setMeasures([...getSetByCategory(getCategory(data.garmentType))]);
+                    if (measures.length === 0) {
+                        const category = getCategory(data.garmentType);
+                        const newMeasures = getSetByCategory(category);
+                        setMeasures(newMeasures);
+                    }
+                }
+                }}
+            >
+                {
+                garmentList && garmentList.length > 0 &&
+                garmentList.map((garmentOpt, index) => {
+                    return (
+                    <option key={"garmentOpt_"+index} value={index}>
+                        {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} ({formatDate(garmentOpt.purchaseDate)})
+                    </option>
+                    )
+                }) 
+                }
+            </select>
+            </div>
             <div className='container-prompt' onClick={selectID("clothingType")}>
                 <p>Select clothing type</p>
             </div>
