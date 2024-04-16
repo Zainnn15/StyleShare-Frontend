@@ -3,7 +3,7 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/userContext'; // Adjust path as needed
-
+import { Link } from 'react-router-dom';
 import logo from '../assets/icons/logo.jpg';
 import ScreenHeader from '../components/common/ScreenHeader';
 import CircleImg from '../components/common/CircleImg';
@@ -78,6 +78,12 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="new-password" // Specially for passwords, this helps prevent autofill
             />
+            <div>
+  {/* Existing login form code */}
+  <div className="forgetPassword">
+  <Link to="/forgetPassword">Forgot Password?</Link>
+  </div>
+</div>
         </div>
         <br/>
         <button className='button-form' type="submit" style={{width:"100%"}}>Login</button>

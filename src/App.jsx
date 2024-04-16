@@ -20,6 +20,8 @@ import GarmentFeel from './components/garment_care/GarmentCare_feel';
 import UserSearch from './pages/UserSearch';
 import GarmentDetails from './pages/GarmentPages/GarmentDetails';
 import GarmentExchange from './pages/GarmentPages/GarmentExchange';
+import ForgetPassword from './pages/ForgetPassword';
+import ResetPassword from './pages/ResetPassword';
 
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
@@ -46,6 +48,8 @@ function App() {
             <Route path='/usersearch' element={<UserSearch />} />
             <Route path='/garment-details' element={<GarmentDetails />} />
             <Route path='/garment-exchange' element={<GarmentExchange />} />
+            <Route path='/forgetPassword' element={<ForgetPassword />} />
+            <Route path='/resetPassword/:token' element={<ResetPassword />} />
           </Routes>
         </GroupContextProvider>
       </GarmentContextProvider>
