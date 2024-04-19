@@ -3,6 +3,7 @@ import { UserContext } from "../../context/userContext";
 //import { GarmentContext } from "../../context/garmentContext";
 import { GroupContext } from "../../context/groupContext";
 import Axios from "axios";
+import Modal from 'react-modal'; // Assuming you are using react-modal for modal dialogs
 
 import '../styles/main.scss';
 
@@ -14,9 +15,11 @@ import Measure from "../components/profile/Garment_measure";
 import Wear from "../components/profile/Garment_wear";
 import Wash from "../components/profile/Garment_wash";
 import Tear from "../components/profile/Garment_tear";
-import { findAttribute, formatDate } from "../constants/functions/valueHandlers";
+import Feel from "../components/profile/Garment_feel";
+import { findAttribute, formatDate, getImageFromURL } from "../constants/functions/valueHandlers";
 import defaultProfile from "../assets/images/profile_default.jpg";
 import { GARMENT_TYPES } from "../constants/data/options";
+import { clickID } from "../constants/functions/inputHandlers";
 
 export default function Profile() {
   const { user, loading: userLoading } = useContext(UserContext);
@@ -40,6 +43,8 @@ export default function Profile() {
     const [tabPage, setTabPage] = useState(0);
     const [selectedCampus, setSelectedCampus] = useState('');
     const [customCampus, setCustomCampus] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
 
     const weekDays = [
       { value: 0, label: "Sunday", short: "Sun" },
@@ -65,6 +70,7 @@ export default function Profile() {
 
     const handleCampusChange = (event) => {
       const selectedOptions = Array.from(event.target.selectedOptions, option => option.value);
+      //const selectedOptions = event.target.value;
       setSelectedCampus(selectedOptions);
       console.log("Selected campuses updated:", selectedOptions); // Debug: Check what's being set
     };
@@ -82,6 +88,7 @@ export default function Profile() {
     
       if (selectedImage) {
         formData.append('profilePicture', selectedImage);
+        setIsModalOpen(false);
       }
     
       try {
@@ -104,6 +111,9 @@ export default function Profile() {
           setProfile(data); // Assuming this sets user-specific profile details
           setSelectedDays(data?.SenecaDays || []);
           setSelectedTimes(data?.SenecaTimes.filter(time => time.start && time.end) || []);
+
+          //set selectedImage
+          setSelectedImage(user.profilePicture);
         })
         .catch((error) => console.error('Error fetching user profile:', error));
     
@@ -182,7 +192,7 @@ export default function Profile() {
       setSelectedTimes(temp);
     };
 
-    console.log(garment);
+    console.log(user);
 
   return (
     <div>
@@ -193,12 +203,8 @@ export default function Profile() {
               <hr/>
           </div>
           <div className="container-row space-evenly wrap container-border greeting">
-            <div className="container-profile-img">
-           <img src={selectedImage ? URL.createObjectURL(selectedImage) : defaultProfile} alt="profile" />
-            <form onSubmit={handleUpdateProfile}>
-            <input type="file" name="profilePicture" onChange={handleFileChange} />
-              <button type="submit">Update Profile</button>
-            </form>
+            <div className="container-profile-img clickable" onClick={()=>{setIsModalOpen(true)}}>
+              <img src={user.profilePicture ? getImageFromURL(user.profilePicture) : defaultProfile} alt="profile"/>
             </div>        
             <h3>Welcome, {user.name}</h3>
           </div>        
@@ -245,11 +251,21 @@ export default function Profile() {
                 </div>
             )}
               <div className="container-border clear-box">
-              <p>Days going to Seneca: {selectedDays.map(dayNum => dayMapping[dayNum]).join(", ")}</p>
+              <p>Available Times at
+                <strong>
+                {
+                  user.campuses[0] === "[\"Other\"]" ? 
+                    ' ' + user.customCampuses[0] : 
+                    ' Seneca ' + user.campuses[0] }
+                </strong>:
+                {
+                //selectedDays.map(dayNum => dayMapping[dayNum]).join(", ")
+                }
+              </p>
         <div id="user_schedule">
           <ul>
-            {selectedTimes.length > 0 &&
-              selectedTimes.map((schedule, index) => {
+            {user.SenecaTimes.length > 0 &&
+              user.SenecaTimes.map((schedule, index) => {
                 // Display information for a specific day (e.g., Thursday)
                 //if (schedule.day === 4) {
                   return (
@@ -492,6 +508,21 @@ export default function Profile() {
             >
               <p className="text-purpleLight">Tear</p>
             </div>
+            <div id="tab7" className="container-tab-group"
+              onClick={()=>{
+                let e_active = document.getElementById(`tab${tabPage}`);
+                if(e_active) {
+                  e_active.classList.toggle("active", false);
+                }
+                setTabPage(7);
+                let e_div = document.getElementById(`tab7`)
+                if(e_div) {
+                  e_div.classList.toggle("active", true);
+                }
+              }}
+            >
+              <p className="text-purpleLight">Feel</p>
+            </div>
           </div>
 
           {
@@ -550,9 +581,54 @@ export default function Profile() {
             )
           }
 
+          {
+            tabPage === 7 &&
+            garment &&
+            garment.garmentFeels &&
+            garment.garmentFeels.length > 0 && (
+              <Feel garment={garment}/>
+            )
+          }
+
         </div>
         
       </div>
+
+      {/* Reservation Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        contentLabel="Reservation Details"
+        style={{
+            content: {
+                top: '20%',
+                left: '50%',
+                right: 'auto',
+                bottom: 'auto',
+                transform: 'translate(-50%, 0)',
+                backgroundColor: "#F8E7E7",
+                maxHeight: '65%',
+            },
+        }}
+    >
+        <h3>Upload Profile Picture</h3>
+        <form onSubmit={(e)=>e.preventDefault()}>
+            <div className="container-col">
+              <div className="container-profile-img clickable" onClick={()=>{clickID('uploadProfile')}}>
+                <img src={selectedImage ? URL.createObjectURL(selectedImage) : defaultProfile} alt="profile"
+                />
+              </div> 
+              <div>
+                <label><strong>Upload Photo: </strong></label>
+                <br/><br/>
+                <input id='uploadProfile' 
+                  type="file" name="profilePicture" onChange={handleFileChange} style={{width:'80%'}}/>
+              </div>
+            </div>
+            <br/>
+            <button className="button-regular full" onClick={handleUpdateProfile}>Submit</button>
+        </form>
+    </Modal>
     </div>
   )
 

@@ -101,6 +101,8 @@ const handleLeaveGroup = async () => {
     }
 };
 
+//console.log(userGroups.members);
+
     return (
         <div>
         <ScreenHeaderIn />
@@ -221,7 +223,7 @@ const handleLeaveGroup = async () => {
                                         </p>
                                         <div className='container-col'>
                                             <div className='container-profile-img'>
-                                                <img src={getImageFromURL(member.garments[0].fileFront) || `'default-image-path.jpg'}`} alt="Garment"/>
+                                                <img src={getImageFromURL(member.profilePicture) || `'default-image-path.jpg'}`} alt="Garment"/>
                                             </div>
                                         </div>
                                         <br/>

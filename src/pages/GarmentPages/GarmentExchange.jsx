@@ -16,7 +16,7 @@ import Care from '../../components/profile/Garment_care'
 import Wear from '../../components/profile/Garment_wear'
 import Wash from '../../components/profile/Garment_wash'
 import Tear from '../../components/profile/Garment_tear'
-
+import Feel from '../../components/profile/Garment_feel'
 
 Modal.setAppElement('#root'); // Set this to your application root element
 
@@ -455,6 +455,21 @@ function GarmentExchange() {
                                         >
                                         <p className="text-purpleLight">Tear</p>
                                         </div>
+                                        <div id="tab7" className="container-tab-group"
+                                        onClick={()=>{
+                                            let e_active = document.getElementById(`tab${tabPage}`);
+                                            if(e_active) {
+                                            e_active.classList.toggle("active", false);
+                                            }
+                                            setTabPage(7);
+                                            let e_div = document.getElementById(`tab7`)
+                                            if(e_div) {
+                                            e_div.classList.toggle("active", true);
+                                            }
+                                        }}
+                                        >
+                                        <p className="text-purpleLight">Feel</p>
+                                        </div>
                                     </div>
 
                                     {
@@ -510,6 +525,15 @@ function GarmentExchange() {
                                         garmentModalID.tearInfo &&
                                         garmentModalID.tearInfo.length > 0 && (
                                         <Tear garment={garmentModalID}/>
+                                        )
+                                    }
+
+                                    {
+                                        tabPage === 7 &&
+                                        garmentModalID &&
+                                        garmentModalID.garmentFeels &&
+                                        garmentModalID.garmentFeels.length > 0 && (
+                                        <Feel garment={garmentModalID}/>
                                         )
                                     }
 
