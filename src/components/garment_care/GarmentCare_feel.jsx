@@ -73,92 +73,85 @@ export default function GarmentFeel() {
       }
 
     // Function to send the garment details to the backend
-    const sendGarmentDetails = async () => {
-        navigate('/garment-care');
-
-        // const formData = new FormData();
-        // formData.append('wearDate', wearDate);
-        // formData.append('wearTime', wearTime);
-        // formData.append('userId', user._id);
-        // if (WearFront) formData.append('WearFront', WearFront);
-        // if (WearBack) formData.append('WearBack', WearBack);
-
-        // try {
-        //     const { data } = await axios.post('/addgarmentdetails', formData, {
-        //         headers: {
-        //             'Content-Type': 'multipart/form-data',
-        //         },
-        //     });
-
-        //     if (data.error) {
-        //         toast.error(data.error);
-        //     } else {
-        //         toast.success(data.message);
-        //         navigate('/garment-care');
-        //     }
-        // } catch (error) {
-        //     console.error('Error sending garment wear details:', error);
-        //     toast.error('Failed to send garment wear details.');
-        // }
+    // Function to send the garment details to the backend
+const sendGarmentDetails = async () => {
+    // Construct the data object with the "Garment Feel" data
+    const garmentFeelData = {
+        userId: user._id, // Assuming you have the user ID available from the UserContext
+        feelDate,
+        feelComfyExp,
+        feelHasComment,
+        feelComment: feelHasComment !== 'No comments' ? feelComment : undefined,
+        feelInOccasion,
+        feelOccasion: feelInOccasion === 'Yes' ? feelOccasion : undefined,
+        feelOccasionExp: feelInOccasion === 'Yes' ? feelOccasionExp : undefined,
+        feelHasOccur,
+        feelOccur: feelHasOccur === 'Yes' ? feelOccur : undefined,
     };
 
-
-    // Call the sendGarmentDetails function when the form is submitted
-    const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent default form submission behavior
-        await sendGarmentDetails(); // Send the garment details
-      };
-
-
-    //handle submit button
-    function validateAndSubmit(e) {
-        let querySelect = "input[type='text'],input[type='date']";
-        if(!validatePage(querySelect)) {
-            return false;
-        }
-
-        //validate comfy exp
-        if(feelComfyExp === '') {
-            e.preventDefault();
-            addErrorMessageByID("feelComfyExp_error", "Select an option");
-            scrollToID("feelComfyExp_error");
-            return false;
-        }
-
-        //validate has comment
-        if(feelHasComment === '') {
-            e.preventDefault();
-            addErrorMessageByID("feelHasComment_error", "Select an option");
-            scrollToID("feelHasComment_error");
-            return false;
-        }
-        
-        //validate special occasion
-        if(feelInOccasion === '') {
-            addErrorMessageByID("feelInOccasion_error", "Select an option");
-            scrollToID("feelInOccasion_error");
-            e.preventDefault();
-            return false;
-        }
-        //validate special occasion exp
-        if(feelInOccasion === 'Yes' && feelOccasionExp === '') {
-            e.preventDefault();
-            addErrorMessageByID("feelOccasionExp_error", "Select an option");
-            scrollToID("feelOccasionExp_error");
-            return false;
-        }
-
-        //validate occurrence
-        if(feelHasOccur === '') {
-            e.preventDefault();
-            addErrorMessageByID("feelHasOccur_error", "Select an option");
-            scrollToID("feelHasOccur_error");
-            return false;
-        }
-
-        handleSubmit(e);
-        return true;
+    // Include the garment ID if you are updating an existing garment
+    if (garment) {
+        garmentFeelData.garmentId = garment._id;
     }
+
+    try {
+        // Send a POST request to the backend
+        const response = await axios.post('/addgarmentdetails', garmentFeelData, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        });
+        if (response.data) {
+            toast.success('Garment Feel saved successfully!');
+            navigate('/garment-care'); // Redirect after successful saving
+        }
+    } catch (error) {
+        console.error('Error submitting garment feel:', error);
+        toast.error('Failed to save Garment Feel. Please try again.');
+    }
+};
+
+
+
+    function validateAndSubmit(e) {
+    e.preventDefault(); // Always call preventDefault in submit handlers
+    let querySelect = "input[type='text'],input[type='date'],input[type='radio']:checked";
+    if (!validatePage(querySelect)) {
+        return false;
+    }
+
+    // Validation blocks
+    if (feelComfyExp === '') {
+        addErrorMessageByID("feelComfyExp_error", "Select an option");
+        scrollToID("feelComfyExp_error");
+        return false;
+    }
+    if (feelHasComment === '') {
+        addErrorMessageByID("feelHasComment_error", "Select an option");
+        scrollToID("feelHasComment_error");
+        return false;
+    }
+    if (feelInOccasion === '') {
+        addErrorMessageByID("feelInOccasion_error", "Select an option");
+        scrollToID("feelInOccasion_error");
+        return false;
+    }
+    if (feelInOccasion === 'Yes' && feelOccasionExp === '') {
+        addErrorMessageByID("feelOccasionExp_error", "Select an option");
+        scrollToID("feelOccasionExp_error");
+        return false;
+    }
+    if (feelHasOccur === '') {
+        addErrorMessageByID("feelHasOccur_error", "Select an option");
+        scrollToID("feelHasOccur_error");
+        return false;
+    }
+
+    // If all validations pass, submit the data
+    sendGarmentDetails();
+}
+
 
     return (
     <div>

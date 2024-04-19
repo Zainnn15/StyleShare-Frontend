@@ -29,7 +29,7 @@ export default function GarmentTear() {
     //const { garment } = useContext(GarmentContext);
     const { user, loading: userLoading } = useContext(UserContext);
     const [setProfile] = useState(null);
-    const [garment, setGarment] = useState(null); 
+    const [setGarment] = useState(null); 
     const [garmentList, setGarmentList] = useState([]);
     const [tearDate, setTearDate] = useState('');
     const [wantRepair, setWantRepair] = useState(false);

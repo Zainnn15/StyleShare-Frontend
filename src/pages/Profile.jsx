@@ -14,7 +14,7 @@ import Measure from "../components/profile/Garment_measure";
 import Wear from "../components/profile/Garment_wear";
 import Wash from "../components/profile/Garment_wash";
 import Tear from "../components/profile/Garment_tear";
-import { findAttribute, formatDate, getImageFromURL } from "../constants/functions/valueHandlers";
+import { findAttribute, formatDate } from "../constants/functions/valueHandlers";
 import defaultProfile from "../assets/images/profile_default.jpg";
 import { GARMENT_TYPES } from "../constants/data/options";
 
@@ -23,6 +23,7 @@ export default function Profile() {
   //const { garment, loading: garmentLoading } = useContext(GarmentContext);
     const {userGroups} = useContext(GroupContext);
     const [setProfile] = useState(null);
+    const [selectedImage, setSelectedImage] = useState(null);
     const [selectedDays, setSelectedDays] = useState([]);
     const [selectedTimes, setSelectedTimes] = useState([
       { day: 0, start: "", end: "" },
@@ -63,37 +64,41 @@ export default function Profile() {
     const weeks = weekDays.filter((day) => day.value > 0 && day.value < 6);
 
     const handleCampusChange = (event) => {
-      // Convert the HTMLOptionsCollection into an array and filter selected options
-      const selectedOptions = Array.from(event.target.options).filter(option => option.selected);
-      // Map over selected options to create an array of values
-      const selectedValues = selectedOptions.map(option => option.value);
-      setSelectedCampus(selectedValues);
-  };
-
-  const handleUpdateProfile = async () => {
-    // Validation logic...
-
-    // Preparing the payload for the backend
-    const payload = {
-      userId: user._id,
-        selectedDays,
-        selectedTimes: selectedTimes.filter(t => t.start && t.end),
-        campuses: selectedCampus.includes('Other') ? selectedCampus.filter(c => c !== 'Other') : selectedCampus,
-        customCampus: selectedCampus.includes('Other') ? customCampus : '',
+      const selectedOptions = Array.from(event.target.selectedOptions, option => option.value);
+      setSelectedCampus(selectedOptions);
+      console.log("Selected campuses updated:", selectedOptions); // Debug: Check what's being set
     };
-
-    try {
-        const response = await Axios.post('/updateProfile', payload);
-        console.log(response.data);
-    } catch (error) {
-        console.error(error);
-    }
-};
-
+    
+    const handleUpdateProfile = async (e) => {
+      e.preventDefault();
+      const formData = new FormData();
+      formData.append('userId', user._id);
+    
+      // Use JSON.stringify to ensure the array is sent as a single JSON string
+      formData.set('selectedDays', JSON.stringify(selectedDays));
+      formData.set('selectedTimes', JSON.stringify(selectedTimes));
+      formData.set('campuses', JSON.stringify(selectedCampus));  // Ensure that campuses are sent as a JSON array
+      formData.append('customCampus', customCampus);
+    
+      if (selectedImage) {
+        formData.append('profilePicture', selectedImage);
+      }
+    
+      try {
+        const response = await Axios.post('/updateProfile', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+          withCredentials: true,
+        });
+        console.log('Profile updated:', response.data);
+      } catch (error) {
+        console.error('Error updating profile:', error);
+      }
+    };
+    
     useEffect(() => {
-      if (!userLoading && user && user._id) {
+      if (user && user._id) {
         // Fetch user profile
-        Axios.get('/profile', { withCredentials: true })
+        Axios.get(`/profile/${user._id}`, { withCredentials: true })
         .then((response) => {
           const data = response.data;
           setProfile(data); // Assuming this sets user-specific profile details
@@ -122,6 +127,10 @@ export default function Profile() {
       }
 
     }, [user, userLoading]);
+
+    const handleFileChange = (event) => {
+      setSelectedImage(event.target.files[0]);
+    };
 
     //if (userLoading || garmentLoading) {
     if (userLoading) {
@@ -185,7 +194,11 @@ export default function Profile() {
           </div>
           <div className="container-row space-evenly wrap container-border greeting">
             <div className="container-profile-img">
-              <img src={garment ? getImageFromURL(garment.fileFront) : defaultProfile} alt="profile"/>    
+           <img src={selectedImage ? URL.createObjectURL(selectedImage) : defaultProfile} alt="profile" />
+            <form onSubmit={handleUpdateProfile}>
+            <input type="file" name="profilePicture" onChange={handleFileChange} />
+              <button type="submit">Update Profile</button>
+            </form>
             </div>        
             <h3>Welcome, {user.name}</h3>
           </div>        
