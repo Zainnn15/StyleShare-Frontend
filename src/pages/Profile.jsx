@@ -15,7 +15,7 @@ import Measure from "../components/profile/Garment_measure";
 import Wear from "../components/profile/Garment_wear";
 import Wash from "../components/profile/Garment_wash";
 import Tear from "../components/profile/Garment_tear";
-import Feel from "../components/profile/Garment_feel";
+//import Feel from "../components/profile/Garment_feel";
 import { findAttribute, formatDate, getImageFromURL } from "../constants/functions/valueHandlers";
 import defaultProfile from "../assets/images/profile_default.jpg";
 import { GARMENT_TYPES } from "../constants/data/options";
@@ -578,15 +578,6 @@ export default function Profile() {
             garment.tearInfo &&
             garment.tearInfo.length > 0 && (
               <Tear garment={garment}/>
-            )
-          }
-
-          {
-            tabPage === 7 &&
-            garment &&
-            garment.garmentFeels &&
-            garment.garmentFeels.length > 0 && (
-              <Feel garment={garment}/>
             )
           }
 

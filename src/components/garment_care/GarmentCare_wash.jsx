@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast';
 import ScreenHeaderIn from "../../components/common/ScreenHeaderIn";
 import { CARE_DRYC_METHODS, CARE_DRY_METHODS, CARE_IRON_METHODS, CARE_WASH_METHODS, WASH_TEMP_C, WASH_TEMP_F } from '../../constants/data/options';
 import InfoPopup from '../../components/common/InfoPopup';
-import { addErrorMessageByID, validatePage } from '../../constants/functions/inputHandlers';
+import { addErrorMessageByID } from '../../constants/functions/inputHandlers';
 import axios from 'axios';
 import { useContext } from 'react';
 import { UserContext } from '../../../context/userContext';
@@ -89,57 +89,40 @@ export default function GarmentWash() {
         return <div>No user or garment data available.</div>; // Show a message or redirect if data is not available
       }
 
-    // Function to send the garment details to the backend
-    const sendGarmentDetails = async () => {
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const formData = {
+            garmentId: garment._id,
+            washCareInstructions: [{
+                washDate,
+                careWash,
+                careDry,
+                careDryC: useDryC ? careDryC : {},
+                careIron: useIron ? careIron : {},
+                useDryC,
+                useIron,
+                ironDuration,
+                isVentilated,
+                ventilatedTime,
+            }],
+            userId: user._id,
+        };
+        
         try {
-            const garmentData = {
-                washDate: washDate,
-                careWash: careWash, // No JSON.stringify
-                careDry: careDry, // No JSON.stringify
-                careDryC: useDryC ? careDryC : {}, // Conditionally add if useDryC is true
-                careIron: useIron ? careIron : {}, // Conditionally add if useIron is true
-                useDryC: useDryC,
-                useIron: useIron,
-                ironDuration: ironDuration,
-                isVentilated: isVentilated,
-                ventilatedTime: ventilatedTime,
-                userId: user._id,
-            };
-    
-            const {data} = await axios.post('/addgarmentdetails', garmentData);
-    
-            console.log('Data from the backend:', data);
-    
+            const { data } = await axios.post('/addGarmentDetails', formData);
             if (data.error) {
                 toast.error(data.error);
             } else {
-                toast.success(data.message);
+                toast.success('Garment wash details updated successfully');
+                navigate('/dashboard'); // Redirect on success
             }
         } catch (error) {
-            console.log('Error sending garment details to the backend:', error);
+            console.error('Error sending garment details:', error);
+            toast.error('Failed to update garment details.');
         }
     };
     
-
-    // Call the sendGarmentDetails function when the form is submitted
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        sendGarmentDetails();
-        navigate("/garment-care");
-    };
-
-    
-    //handle submit button
-    function validateAndSubmit(e) {
-        let querySelect = "input[type='text'],input[type='number'],input[type='date'],select";
-        if(!validatePage(querySelect)) {
-            return false;
-        }
-        
-        handleSubmit(e);
-        return true;
-    }
-
     return (
         <div>
         <ScreenHeaderIn />
@@ -148,30 +131,21 @@ export default function GarmentWash() {
                 <label className="container-title">Garment Wash</label>
                 <hr/>
             </div>
-            <form onSubmit={validateAndSubmit}>
+            <form onSubmit={handleSubmit}>
                 <div className='container-content'>
 
                 <div>
                     <p className="container-subtitle-2">Selected Garment</p>
-                    <select
-                        onChange={(e)=>{
-                        if(e.target.value < garmentList.length) {
-                            let data = garmentList[e.target.value];
-                            setGarment(data);
-                        }
-                        }}
-                    >
-                        {
-                        garmentList && garmentList.length > 0 &&
-                        garmentList.map((garmentOpt, index) => {
-                            return (
-                            <option key={"garmentOpt_"+index} value={index}>
-                                {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} ({formatDate(garmentOpt.purchaseDate)})
-                            </option>
-                            )
-                        }) 
-                        }
-                    </select>
+                    <select onChange={(e) => {
+                            const selectedIndex = e.target.value;
+                            setGarment(garmentList[selectedIndex]);
+                        }} value={garmentList.findIndex(g => g === garment)}>
+                            {garmentList.map((item, index) => (
+                                <option key={item._id} value={index}>
+                                    {findAttribute(GARMENT_TYPES, item.garmentType)} ({formatDate(item.purchaseDate)})
+                                </option>
+                            ))}
+                        </select>
                 </div>
                 <br/>
 
@@ -623,7 +597,7 @@ export default function GarmentWash() {
             <br/>
 
             <div className='container-input'>
-                <button className="button-form full" type="submit" onClick={validateAndSubmit}>
+                <button className="button-form full" type="submit">
                     Save
                 </button>
             </div>

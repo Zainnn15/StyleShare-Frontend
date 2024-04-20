@@ -8,8 +8,8 @@ import { useContext } from 'react';
 import { UserContext } from '../../../context/userContext';
 import { useNavigate } from "react-router-dom";
 import {addErrorMessageByID, scrollToID, selectID, validate, validatePage } from '../../constants/functions/inputHandlers';
-import { findAttribute, formatDate } from '../../constants/functions/valueHandlers';
-import { GARMENT_TYPES } from '../../constants/data/options';
+import { formatDate } from '../../constants/functions/valueHandlers';
+
 
 export default function GarmentFeel() {
     const navigate = useNavigate();
@@ -73,45 +73,43 @@ export default function GarmentFeel() {
       }
 
     // Function to send the garment details to the backend
-    // Function to send the garment details to the backend
-const sendGarmentDetails = async () => {
-    // Construct the data object with the "Garment Feel" data
-    const garmentFeelData = {
-        userId: user._id, // Assuming you have the user ID available from the UserContext
-        feelDate,
-        feelComfyExp,
-        feelHasComment,
-        feelComment: feelHasComment !== 'No comments' ? feelComment : undefined,
-        feelInOccasion,
-        feelOccasion: feelInOccasion === 'Yes' ? feelOccasion : undefined,
-        feelOccasionExp: feelInOccasion === 'Yes' ? feelOccasionExp : undefined,
-        feelHasOccur,
-        feelOccur: feelHasOccur === 'Yes' ? feelOccur : undefined,
-    };
-
-    // Include the garment ID if you are updating an existing garment
-    if (garment) {
-        garmentFeelData.garmentId = garment._id;
-    }
-
-    try {
-        // Send a POST request to the backend
-        const response = await axios.post('/addgarmentdetails', garmentFeelData, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            withCredentials: true
-        });
-        if (response.data) {
-            toast.success('Garment Feel saved successfully!');
-            navigate('/garment-care'); // Redirect after successful saving
+    const sendGarmentDetails = async () => {
+        const garmentFeelData = {
+            userId: user._id,
+            garmentId: garment._id,
+            garmentFeels: [{
+                feelDate,
+                feelComfyExp,
+                feelHasComment,
+                feelComment: feelHasComment !== 'No comments' ? feelComment : undefined,
+                feelInOccasion,
+                feelOccasion: feelInOccasion === 'Yes' ? feelOccasion : undefined,
+                feelOccasionExp: feelInOccasion === 'Yes' ? feelOccasionExp : undefined,
+                feelHasOccur,
+                feelOccur: feelHasOccur === 'Yes' ? feelOccur : undefined,
+            }]
+        };
+    
+        try {
+            const response = await axios.post('/addgarmentdetails', garmentFeelData, {
+                headers: { 'Content-Type': 'application/json' },
+                withCredentials: true
+            });
+            // Check for a specific success indicator in the response, or check the status code
+            if (response.data.success || response.status === 200) {
+                toast.success('Garment Feel saved successfully!');
+                navigate('/garment-care'); // Navigate on success
+            } else {
+                // If the success flag isn't set, and there's an error message, throw an error to catch it below
+                throw new Error(response.data.error || 'Unknown error occurred.');
+            }
+        } catch (error) {
+            console.error('Error submitting garment feel:', error);
+            // Display the error message from the server if it exists or a generic error message
+            toast.error(error.response?.data?.error || 'Failed to save Garment Feel. Please try again.');
         }
-    } catch (error) {
-        console.error('Error submitting garment feel:', error);
-        toast.error('Failed to save Garment Feel. Please try again.');
-    }
-};
-
+    };
+    
 
 
     function validateAndSubmit(e) {
@@ -166,25 +164,18 @@ const sendGarmentDetails = async () => {
 
             <div>
                 <p className="container-subtitle-2">Selected Garment</p>
-                <select
-                    onChange={(e)=>{
-                    if(e.target.value < garmentList.length) {
-                        let data = garmentList[e.target.value];
-                        setGarment(data);
-                    }
-                    }}
-                >
-                    {
-                    garmentList && garmentList.length > 0 &&
-                    garmentList.map((garmentOpt, index) => {
-                        return (
-                        <option key={"garmentOpt_"+index} value={index}>
-                            {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} ({formatDate(garmentOpt.purchaseDate)})
-                        </option>
-                        )
-                    }) 
-                    }
-                </select>
+                <select onChange={(e) => {
+    const index = parseInt(e.target.value, 10);
+    if (index >= 0 && index < garmentList.length) {
+        setGarment(garmentList[index]);
+    }
+}} value={garment ? garmentList.findIndex(g => g._id === garment._id) : ''}>
+    {garmentList.map((garmentOpt, index) => (
+        <option key={garmentOpt._id} value={index}>
+            {garmentOpt.garmentType} ({formatDate(garmentOpt.purchaseDate)})
+        </option>
+    ))}
+</select>
             </div>
             <br/>
 
@@ -482,7 +473,7 @@ const sendGarmentDetails = async () => {
 
             <br/>
             <div className='container-input'>
-                <button className="button-form full" type="submit" onClick={validateAndSubmit}>
+                <button className="button-form full" type="submit">
                     Save
                 </button>
             </div>

@@ -16,7 +16,7 @@ import Care from '../../components/profile/Garment_care'
 import Wear from '../../components/profile/Garment_wear'
 import Wash from '../../components/profile/Garment_wash'
 import Tear from '../../components/profile/Garment_tear'
-import Feel from '../../components/profile/Garment_feel'
+//import Feel from '../../components/profile/Garment_feel'
 
 Modal.setAppElement('#root'); // Set this to your application root element
 

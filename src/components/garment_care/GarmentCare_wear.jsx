@@ -8,10 +8,9 @@ import axios from 'axios';
 import { useContext } from 'react';
 import { UserContext } from '../../../context/userContext';
 import { useNavigate } from "react-router-dom";
-import {clickID, validatePage } from '../../constants/functions/inputHandlers';
+import {clickID } from '../../constants/functions/inputHandlers';
 import selectImg from '../../assets/icons/select_img.png';
-import { findAttribute, formatDate } from '../../constants/functions/valueHandlers';
-import { GARMENT_TYPES } from '../../constants/data/options';
+import { formatDate } from '../../constants/functions/valueHandlers';
 
 export default function GarmentWear() {
     const navigate = useNavigate();
@@ -69,52 +68,44 @@ export default function GarmentWear() {
         return <div>No user or garment data available.</div>; // Show a message or redirect if data is not available
       }
 
-    // Function to send the garment details to the backend
-    const sendGarmentDetails = async () => {
+      const sendGarmentDetails = async () => {
         const formData = new FormData();
         formData.append('wearDate', wearDate);
         formData.append('wearTime', wearTime);
         formData.append('userId', user._id);
+        formData.append('garmentId', garment._id);
         if (WearFront) formData.append('WearFront', WearFront);
         if (WearBack) formData.append('WearBack', WearBack);
-
+    
         try {
-            const { data } = await axios.post('/addgarmentdetails', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+            const response = await axios.post('/addgarmentdetails', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
             });
-
-            if (data.error) {
-                toast.error(data.error);
-            } else {
-                toast.success(data.message);
+    
+            if (response.data && response.data.garmentDetail) {
+                toast.success('Garment Wear details updated successfully');
+                setGarment(response.data.garmentDetail);
                 navigate('/garment-care');
+            } else {
+                throw new Error('Unexpected response format or error');
             }
         } catch (error) {
             console.error('Error sending garment wear details:', error);
             toast.error('Failed to send garment wear details.');
         }
     };
-
-
-    // Call the sendGarmentDetails function when the form is submitted
-    const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent default form submission behavior
-        await sendGarmentDetails(); // Send the garment details
-      };
-
-
-    //handle submit button
-    function validateAndSubmit(e) {
-        let querySelect = "input";
-        if(!validatePage(querySelect)) {
-            return false;
+    
+    
+    const validateAndSubmit = (e) => {
+        e.preventDefault();
+    
+        if (!wearDate || !wearTime || !WearFront || !WearBack) {
+            toast.error('Please fill in all fields correctly.');
+            return;
         }
-        handleSubmit(e);
-        return true;
-    }
-
+    
+        sendGarmentDetails();
+    };
     return (
     <div>
         <ScreenHeaderIn />
@@ -129,24 +120,24 @@ export default function GarmentWear() {
             <div>
                 <p className="container-subtitle-2">Selected Garment</p>
                 <select
-                    onChange={(e)=>{
-                    if(e.target.value < garmentList.length) {
-                        let data = garmentList[e.target.value];
-                        setGarment(data);
-                    }
-                    }}
-                >
-                    {
-                    garmentList && garmentList.length > 0 &&
-                    garmentList.map((garmentOpt, index) => {
-                        return (
-                        <option key={"garmentOpt_"+index} value={index}>
-                            {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} ({formatDate(garmentOpt.purchaseDate)})
-                        </option>
-                        )
-                    }) 
-                    }
-                </select>
+                            onChange={(e) => {
+                                const index = parseInt(e.target.value, 10);
+                                if (index >= 0 && index < garmentList.length) {
+                                    const selectedGarment = garmentList[index];
+                                    setGarment(selectedGarment);  // Updates the state with the selected garment
+                                }
+                            }}
+                            value={garment ? garmentList.findIndex(g => g._id === garment._id) : ''}
+                        >
+                            {garmentList.map((garmentOpt, index) => (
+                                <option key={garmentOpt._id} value={index}>
+                                    {garmentOpt.garmentType} ({formatDate(garmentOpt.purchaseDate)})
+                                </option>
+                            ))}
+                        </select>
+
+
+
             </div>
             <br/>
 
@@ -208,7 +199,7 @@ export default function GarmentWear() {
 
             <br/>
             <div className='container-input'>
-                <button className="button-form full" type="submit" onClick={validateAndSubmit}>
+                <button className="button-form full" type="submit">
                     Save
                 </button>
             </div>

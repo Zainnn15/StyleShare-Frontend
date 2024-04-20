@@ -21,19 +21,15 @@ import img_twisting from '../../assets/images/twisting.png';
 import img_shrinking from '../../assets/images/spandex_shrink.png';
 import img_pilling from '../../assets/images/pilling.png';
 import emailjs from '@emailjs/browser';
-import { findAttribute, formatDate } from '../../constants/functions/valueHandlers';
+import { formatDate } from '../../constants/functions/valueHandlers';
 
 export default function GarmentTear() {
     const navigate = useNavigate();
-    //const { user } = useContext(UserContext);
-    //const { garment } = useContext(GarmentContext);
     const { user, loading: userLoading } = useContext(UserContext);
-    const [setProfile] = useState(null);
-    const [setGarment] = useState(null); 
+    const [garment, setGarment] = useState(null);
     const [garmentList, setGarmentList] = useState([]);
     const [tearDate, setTearDate] = useState('');
     const [wantRepair, setWantRepair] = useState(false);
-    //const measureTypes = garment ? getSetByCategory(getCategory(garment?.garmentType)) : [];
     const [measures, setMeasures] = useState([]);
     const [twistingImg, setTwistingImg] = useState(null);
     const [spandexShrinkImg, setSpandexShrinkImg] = useState(null);
@@ -42,112 +38,80 @@ export default function GarmentTear() {
     const [stainImg, setStainImg] = useState(null);
     const [measuresData, setMeasuresData] = useState([]);
     const [wearTear, setWearTear] = useState({
-      'colorFade': 0,
-      'pilling': 0,
-      'shapeLoss': 0,
-      'twisting': 0,
-      'washShrink': 0,
-      'washDiscolor': 0,
-      'spandexShrink': 0,
-      'printFade': 0,
-      'hole': 0,
-      'labelItching': 0,
-      'looseButton':0,
-      'stain': 0,
-      'other': 0,
+        'colorFade': 0,
+        'pilling': 0,
+        'shapeLoss': 0,
+        'twisting': 0,
+        'washShrink': 0,
+        'washDiscolor': 0,
+        'spandexShrink': 0,
+        'printFade': 0,
+        'hole': 0,
+        'labelItching': 0,
+        'looseButton': 0,
+        'stain': 0,
+        'other': 0,
     });
-    const [tearExtra, setTearExtra] = useState({
-      
-    });
+    const [tearExtra, setTearExtra] = useState({});
     const [repairRequest, setRepairRequest] = useState({
-      "looseButton": "",
-      "brokenZipper": "",
-      "lostString": "",
-      "looseHem": "",
-      "other": "",
+        "looseButton": "",
+        "brokenZipper": "",
+        "lostString": "",
+        "looseHem": "",
+        "other": "",
     });
     const [repairOther, setRepairOther] = useState('');
 
-    //get user and garment data
     useEffect(() => {
         if (!userLoading && user && user._id) {
-          // Fetch user profile
-          axios.get('/profile', { withCredentials: true })
-          .then((response) => {
-            const data = response.data;
-            setProfile(data); // Assuming this sets user-specific profile details
-          })
-          .catch((error) => console.error('Error fetching user profile:', error));
-      
-          // Fetch garment details based on the user ID
-          axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true })
-        .then((response) => {
-          const garmentData = response.data;
-          //console.log('Garment Details:', garmentData);
-          //setGarmentDetails(garmentData); // Assuming this sets specific garment details
-          if(Array.isArray(garmentData) && garmentData.length > 0) {
-            setGarmentList(garmentData);
-            setGarment(garmentData[0]);
-            return garmentData[0];
-          }
-          else {
-            setGarmentList([...garmentData]); // Assuming this sets specific garment details
-            setGarment(garmentData);
-            return garmentData;
-          }
-          // No need to sort here as we'll handle sorting directly where the data is rendered to ensure reactivity
-          
-        })
-        .then((data) => {
-            //initialize garment
-            if(data) {
-                let measureTypes = getSetByCategory(getCategory(data.garmentType));
-                setMeasures([...measureTypes]);
-            }
-          })
-        .catch((error) => console.error('Error fetching garment details:', error));
-  
+            axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true })
+                .then((response) => {
+                    const garmentData = response.data;
+                    if (Array.isArray(garmentData) && garmentData.length > 0) {
+                        setGarmentList(garmentData);
+                        setGarment(garmentData[0]);
+                        const measureTypes = getSetByCategory(getCategory(garmentData[0].garmentType));
+                        setMeasures([...measureTypes]);
+                    } else {
+                        setGarmentList([...garmentData]);
+                        setGarment(garmentData);
+                    }
+                })
+                .catch((error) => console.error('Error fetching garment details:', error));
         }
-  
-      }, [user, userLoading]);
-      //if (userLoading || garmentLoading) {
-      if (userLoading) {
-        return <div>Loading...</div>; // Show loading state while data is being fetched
-      }
-      //if (!user || !garment) {
-      if (!user) {
-        return <div>No user or garment data available.</div>; // Show a message or redirect if data is not available
-      }
-  
-    const sendGarmentDetails = async () => {
-        const formData = new FormData();
-    
-        // Prepare washShrinkMeasurements if washShrink is selected
-        if (wearTear.washShrink) {
-            const washShrinkMeasurements = measuresData.map((measure, index) => ({
-              measureType: measures[index].value,
-              value: measure.value,
-              unit: measure.unit === "" ? "cm" : measure.unit
-            }));
+    }, [user, userLoading]);
 
-            const updatedTearExtra = {
-                ...tearExtra,
-                washShrinkMeasurements // This will add the measurements array under the key "washShrinkMeasurements"
-              };
-              formData.append('tearExtra', JSON.stringify(updatedTearExtra));
-            } else {
-              // If washShrink is not checked, append the existing tearExtra object
-              formData.append('tearExtra', JSON.stringify(tearExtra));
-            }
-    
-        // Append the rest of the data
+    const handleGarmentChange = (e) => {
+        const index = parseInt(e.target.value, 10);
+        if (index >= 0 && index < garmentList.length) {
+            const selectedGarment = garmentList[index];
+            setGarment(selectedGarment);
+            const measureTypes = getSetByCategory(getCategory(selectedGarment.garmentType));
+            setMeasures(measureTypes);
+        }
+    };
+
+    const sendGarmentDetails = async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('garmentId', garment._id);
         formData.append('tearDate', tearDate);
-        formData.append('wantRepair', wantRepair);
+        formData.append('wantRepair', wantRepair.toString());
         formData.append('wearTear', JSON.stringify(wearTear));
         formData.append('repairRequest', JSON.stringify(repairRequest));
         formData.append('repairOther', repairOther);
-    
-        // Append images and files
+        
+        const sampleTearInfo = [{
+            tearDate: tearDate,
+            hasTear: true,
+            wantRepair: wantRepair,
+            wearTear: wearTear,
+            tearExtra: tearExtra,
+            repairRequest: repairRequest,
+            repairOther: repairOther
+        }];
+        formData.append('tearInfo', JSON.stringify(sampleTearInfo));
+
         if (twistingImg) formData.append('twistingImg', twistingImg);
         if (spandexShrinkImg) formData.append('spandexShrinkImg', spandexShrinkImg);
         if (printFadeImg) formData.append('printFadeImg', printFadeImg);
@@ -157,13 +121,13 @@ export default function GarmentTear() {
 
         if (repairRequest.looseButton || repairRequest.brokenZipper || repairRequest.lostString || repairRequest.looseHem || repairRequest.other) {
             var message = `A new repair request has been made from the garment website. The details are as follows: `;
-
+        
             repairRequest.looseButton ? message += `a button is loose, ` : "";
             repairRequest.brokenZipper ? message += `the zipper is broken, ` : "";
             repairRequest.lostString ? message += `a string has been lost, ` : "";
             repairRequest.looseHem ? message += `the hem is loose, ` : "";
             repairRequest.other ? message += `other: ${repairOther}.` : "";
-    
+        
             emailjs.send('service_xapjkvh', 'template_tvq1krn', {
                 user: user.name,
                 message,
@@ -173,16 +137,16 @@ export default function GarmentTear() {
                 console.log('Email not sent ' + error);
             });
         }
-        
+
         try {
-            const { data } = await axios.post('/addgarmentdetails', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
+            const response = await axios.post('/addgarmentdetails', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
             });
-    
-            if (data.error) {
-                toast.error(data.error);
+            if (response.data.error) {
+                toast.error(response.data.error);
             } else {
                 toast.success('Garment details updated successfully');
+                setGarment(response.data.garmentDetail); // Update local state with new garment details
                 navigate("/garment-care");
             }
         } catch (error) {
@@ -190,51 +154,17 @@ export default function GarmentTear() {
             toast.error('An error occurred while updating garment details.');
         }
     };
-    
-    
+
     function getCategory(val) {
         const category = GARMENT_TYPES.find(option => option.value === val)?.cat;
-        console.log(`Category found: ${category}`);
         return category;
     }
-    
+
     function getSetByCategory(catID) {
         const objArr = measurementTypes.filter(obj => obj.categories.includes(catID));
-        console.log(`objArr returned: `, objArr);
         return objArr;
     }
 
-    const validatePage = (selector) => {
-        // Assuming this function is supposed to select elements and validate them
-        const elements = document.querySelectorAll(selector);
-        let isValid = true;
-        elements.forEach(el => {
-            // Example validation check for an input
-            if(el.type === 'text' && !el.value.trim()) {
-                console.error(`Validation failed for ${el.name}: Field is empty.`);
-                isValid = false;
-            }
-            // Add other validation checks as needed
-        });
-        return isValid;
-    };
-    
-    // New validateAndSubmit function similar to GarmentWear
-    function validateAndSubmit(e) {
-        e.preventDefault(); // Prevent the default form submission behavior
-    
-        // Perform your validation check here
-        if (!validatePage("input[type='text'],input[type='number'],input[type='date'],select")) {
-            console.error('Validation failed. Please check your input.');
-            toast.error('Validation failed. Please check your input.');
-            // Log detailed information here
-            console.log('Inspecting inputs for failure reasons:');
-            // Potentially call a more detailed validation check here that logs specific failures
-            return; // Stop execution if validation fails
-        }
-        console.log('Validation passed, proceeding with sending garment details.');
-        sendGarmentDetails();
-    }
 
   return (
     <div>
@@ -244,32 +174,19 @@ export default function GarmentTear() {
             <label className="container-title">Garment Tear</label>
             <hr/>
         </div>
-        <form onSubmit={validateAndSubmit}>
+        <form onSubmit={sendGarmentDetails}>
             <div className='container-content'>
 
                 <div>
                     <p className="container-subtitle-2">Selected Garment</p>
-                    <select
-                        onChange={(e)=>{
-                        if(e.target.value < garmentList.length) {
-                            let data = garmentList[e.target.value];
-                            setGarment(data);
-                            let measureTypes = getSetByCategory(getCategory(data.garmentType));
-                            setMeasures([...measureTypes]);
-                        }
-                        }}
-                    >
-                        {
-                        garmentList && garmentList.length > 0 &&
-                        garmentList.map((garmentOpt, index) => {
-                            return (
-                            <option key={"garmentOpt_"+index} value={index}>
-                                {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} ({formatDate(garmentOpt.purchaseDate)})
-                            </option>
-                            )
-                        }) 
-                        }
-                    </select>
+                    <select onChange={handleGarmentChange} value={garment ? garmentList.findIndex(g => g._id === garment._id) : ''}>
+                                {garmentList.map((garmentOpt, index) => (
+                                    <option key={garmentOpt._id} value={index}>
+                                        {garmentOpt.garmentType} ({formatDate(garmentOpt.purchaseDate)})
+                                    </option>
+                                ))}
+                            </select>
+
                 </div>
                 <br/>
 

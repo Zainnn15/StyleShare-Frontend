@@ -37,7 +37,6 @@ const GarmentMeasurement = () => {
     });
     const options = GARMENT_TYPES;
     const [measures, setMeasures] = useState([]);
-
     //get user and garment data
     useEffect(() => {
         if (!userLoading && user && user._id) {
@@ -162,6 +161,7 @@ const GarmentMeasurement = () => {
         // Construct the payload
         const payload = {
             userId: user._id,
+            garmentId: garment._id,
             clothingType,
             garmentSizeType: formData.garmentSizeType,
             garmentSize: formData.garmentSize,
@@ -218,24 +218,29 @@ const GarmentMeasurement = () => {
             <div>
                 <p className="container-subtitle-2">Selected Garment</p>
                 <select
-                    onChange={(e)=>{
-                    if(e.target.value < garmentList.length) {
-                        let data = garmentList[e.target.value];
-                        setGarment(data);
-                                //initialize garment
-                        setFormData({
-                            ...formData, 
-                            clothingType: {value:data.garmentType, label: findAttribute(GARMENT_TYPES, data.garmentType)}
-                        });
-                        setMeasures([...getSetByCategory(getCategory(data.garmentType))]);
-                        if (measures.length === 0) {
-                            const category = getCategory(data.garmentType);
-                            const newMeasures = getSetByCategory(category);
-                            setMeasures(newMeasures);
-                        }
-                    }
-                    }}
-                >
+        onChange={(e) => {
+          // Get the index from the selected option value
+          const index = e.target.value;
+          // Make sure the index is within the bounds of the garmentList array
+          if (index >= 0 && index < garmentList.length) {
+            const selectedGarment = garmentList[index];
+            setGarment(selectedGarment); // Set the selected garment
+            // Initialize form data for the selected garment
+            setFormData({
+              ...formData,
+              clothingType: {
+                value: selectedGarment.garmentType,
+                label: findAttribute(GARMENT_TYPES, selectedGarment.garmentType),
+              },
+            });
+            // Update the measurements for the selected garment's type
+            const category = getCategory(selectedGarment.garmentType);
+            const newMeasures = getSetByCategory(category);
+            setMeasures(newMeasures);
+          }
+        }}
+        value={garmentList.findIndex((g) => g._id === garment._id)} // This line will ensure the selected garment is highlighted in the dropdown
+      >
                     {
                     garmentList && garmentList.length > 0 &&
                     garmentList.map((garmentOpt, index) => {
