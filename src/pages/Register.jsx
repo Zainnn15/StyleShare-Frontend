@@ -6,6 +6,7 @@ import ScreenHeader from '../components/common/ScreenHeader';
 import CircleImg from '../components/common/CircleImg';
 
 import logo from '../assets/icons/logo.jpg';
+import logo_purple from '../assets/images/ShareStyle_purple.png';
 
 export default function Register() {
     const navigate = useNavigate();
@@ -36,12 +37,12 @@ export default function Register() {
 
   return (
     <div>
-        <ScreenHeader isLogin={false}/>
+        <ScreenHeader isLogin={false} linkName={"Login"}/>
         <div className='container main'>           
             <form onSubmit={handleSubmit}>
                 <div className='container-small'>
                     <div className='container-col'>
-                    <CircleImg iconUrl={logo} width="30%"/>
+                    <CircleImg iconUrl={logo_purple} width="30%"/>
                     </div>
                     <div>
                         <label className="container-title">Register</label>

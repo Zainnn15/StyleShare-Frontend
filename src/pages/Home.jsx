@@ -7,15 +7,16 @@ const Home = () => {
     changeTitle("Home");
     return (
         <div>
-            <ScreenHeader />
+            <ScreenHeader isLogin={false} linkName={"Login"}/>
             <div className="container main">
                 <div>
                     <label className="container-title">Home</label>
                     <hr/>
-                    <Navbar />
+                    { <Navbar /> }
                 </div>
             </div>
         </div>
+
     );
 };
 
