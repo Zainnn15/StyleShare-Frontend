@@ -89,28 +89,35 @@ export default function GarmentWash() {
         return <div>No user or garment data available.</div>; // Show a message or redirect if data is not available
       }
 
-    const handleSubmit = async (event) => {
+      const handleSubmit = async (event) => {
         event.preventDefault();
-
+    
+        const washCareInstructions = {
+            washDate,
+            careWash,
+            careDry,
+            careDryC: useDryC ? careDryC : {},
+            careIron: useIron ? careIron : {},
+            useDryC,
+            useIron,
+            ironDuration,
+            isVentilated,
+            ventilatedTime,
+        };
+    
         const formData = {
             garmentId: garment._id,
-            washCareInstructions: [{
-                washDate,
-                careWash,
-                careDry,
-                careDryC: useDryC ? careDryC : {},
-                careIron: useIron ? careIron : {},
-                useDryC,
-                useIron,
-                ironDuration,
-                isVentilated,
-                ventilatedTime,
-            }],
+            washCareInstructions: JSON.stringify([washCareInstructions]), // Ensure this is an array
             userId: user._id,
         };
-        
+    
         try {
-            const { data } = await axios.post('/addGarmentDetails', formData);
+            const { data } = await axios.post('/updateGarmentDetails', formData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+    
             if (data.error) {
                 toast.error(data.error);
             } else {

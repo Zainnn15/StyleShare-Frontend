@@ -14,71 +14,51 @@ import { formatDate } from '../../constants/functions/valueHandlers';
 
 export default function GarmentWear() {
     const navigate = useNavigate();
-    //const {user} = useContext(UserContext);
     const { user, loading: userLoading } = useContext(UserContext);
-    const [setProfile] = useState(null);
-    const [garment, setGarment] = useState(null); 
+    const [garment, setGarment] = useState(null);
     const [garmentList, setGarmentList] = useState([]);
     const [wearDate, setWearDate] = useState('');
     const [wearTime, setWearTime] = useState('');
-    const [WearFront, setWearFront] = useState('');
-    const [WearBack, setWearBack] = useState('');
+    const [wearFront, setWearFront] = useState('');
+    const [wearBack, setWearBack] = useState('');
 
-     //get user and garment data
-     useEffect(() => {
+    useEffect(() => {
         if (!userLoading && user && user._id) {
-          // Fetch user profile
-          axios.get('/profile', { withCredentials: true })
-          .then((response) => {
-            const data = response.data;
-            setProfile(data); // Assuming this sets user-specific profile details
-          })
-          .catch((error) => console.error('Error fetching user profile:', error));
-      
-          // Fetch garment details based on the user ID
-          axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true })
-        .then((response) => {
-          const garmentData = response.data;
-          //console.log('Garment Details:', garmentData);
-          //setGarmentDetails(garmentData); // Assuming this sets specific garment details
-          if(Array.isArray(garmentData) && garmentData.length > 0) {
-            setGarmentList(garmentData);
-            setGarment(garmentData[0]);
-            return garmentData[0];
-          }
-          else {
-            setGarmentList([...garmentData]); // Assuming this sets specific garment details
-            setGarment(garmentData);
-            return garmentData;
-          }
-          // No need to sort here as we'll handle sorting directly where the data is rendered to ensure reactivity
-          
-        })
-        .catch((error) => console.error('Error fetching garment details:', error));
-  
+            axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true })
+                .then(response => {
+                    const garmentData = response.data;
+                    if (Array.isArray(garmentData) && garmentData.length > 0) {
+                        setGarmentList(garmentData);
+                        setGarment(garmentData[0]);
+                    } else {
+                        setGarmentList([garmentData]);
+                        setGarment(garmentData);
+                    }
+                })
+                .catch(error => console.error('Error fetching garment details:', error));
         }
-  
-      }, [user, userLoading]);
-      //if (userLoading || garmentLoading) {
-      if (userLoading) {
-        return <div>Loading...</div>; // Show loading state while data is being fetched
-      }
-      //if (!user || !garment) {
-      if (!user) {
-        return <div>No user or garment data available.</div>; // Show a message or redirect if data is not available
-      }
+    }, [user, userLoading]);
 
-      const sendGarmentDetails = async () => {
+    const sendGarmentDetails = async () => {
         const formData = new FormData();
         formData.append('wearDate', wearDate);
         formData.append('wearTime', wearTime);
         formData.append('userId', user._id);
         formData.append('garmentId', garment._id);
-        if (WearFront) formData.append('WearFront', WearFront);
-        if (WearBack) formData.append('WearBack', WearBack);
+        if (wearFront && wearFront instanceof File) {
+            formData.append('wearFront', wearFront);
+        }
+        if (wearBack && wearBack instanceof File) {
+            formData.append('wearBack', wearBack);
+        }
+    
+        // Logging to see what's being sent
+        for (var pair of formData.entries()) {
+            console.log(pair[0]+ ', ' + pair[1]); 
+        }
     
         try {
-            const response = await axios.post('/addgarmentdetails', formData, {
+            const response = await axios.post('/updateGarmentDetails', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
     
@@ -95,17 +75,16 @@ export default function GarmentWear() {
         }
     };
     
-    
+
     const validateAndSubmit = (e) => {
         e.preventDefault();
-    
-        if (!wearDate || !wearTime || !WearFront || !WearBack) {
+        if (!wearDate || !wearTime || !wearFront || !wearBack) {
             toast.error('Please fill in all fields correctly.');
             return;
         }
-    
         sendGarmentDetails();
     };
+
     return (
     <div>
         <ScreenHeaderIn />
@@ -177,7 +156,7 @@ export default function GarmentWear() {
                         <p>Front photo of the garment after wearing</p>
                     </div>
                     <div className='container-input-img clickable' onClick={()=>clickID("fileWearFront")}>
-                        <img id='fileWearFront_img' src={WearFront ? URL.createObjectURL(WearFront) : selectImg} alt='Front Wear' />
+                        <img id='fileWearFront_img' src={wearFront ? URL.createObjectURL(wearFront) : selectImg} alt='Front Wear' />
                     </div>
                     <div className="container-input">
                         <input id="fileWearFront" type="file" onChange={(e) => setWearFront(e.target.files[0])} required />
@@ -189,7 +168,7 @@ export default function GarmentWear() {
                         <p>Back photo of the garment after wearing</p>
                     </div>
                     <div className='container-input-img clickable' onClick={()=>clickID("fileWearBack")}>
-                        <img id='fileWearBack_img' src={WearBack ? URL.createObjectURL(WearBack) : selectImg} alt='Back Wear' />
+                        <img id='fileWearBack_img' src={wearBack ? URL.createObjectURL(wearBack) : selectImg} alt='Back Wear' />
                     </div>
                     <div className="container-input">
                         <input id="fileWearBack" type="file" onChange={(e) => setWearBack(e.target.files[0])} required />

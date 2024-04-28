@@ -21,14 +21,11 @@ import { findAttribute, formatDate } from "../../constants/functions/valueHandle
 import Axios from "axios";
 
 const GarmentMeasurement = () => {
-    changeTitle("Garment Measurement")
-    const navigate  = useNavigate();
+    changeTitle("Garment Measurement");
+    const navigate = useNavigate();
     const { user, loading: userLoading } = useContext(UserContext);
-    const [setProfile] = useState(null);
-    const [garment, setGarment] = useState(null); 
+    const [garment, setGarment] = useState(null);
     const [garmentList, setGarmentList] = useState([]);
-    //const { user } = useContext(UserContext);
-    //const {garment} = useContext(GarmentContext);
     const [formData, setFormData] = useState({
         clothingType: '',
         garmentSizeType: '',
@@ -37,112 +34,64 @@ const GarmentMeasurement = () => {
     });
     const options = GARMENT_TYPES;
     const [measures, setMeasures] = useState([]);
-    //get user and garment data
+
     useEffect(() => {
         if (!userLoading && user && user._id) {
-          // Fetch user profile
-          Axios.get('/profile', { withCredentials: true })
-          .then((response) => {
-            const data = response.data;
-            setProfile(data); // Assuming this sets user-specific profile details
-          })
-          .catch((error) => console.error('Error fetching user profile:', error));
-      
-          // Fetch garment details based on the user ID
-          Axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true })
-        .then((response) => {
-          const garmentData = response.data;
-          //console.log('Garment Details:', garmentData);
-          //setGarmentDetails(garmentData); // Assuming this sets specific garment details
-          if(Array.isArray(garmentData) && garmentData.length > 0) {
-            setGarmentList(garmentData);
-            setGarment(garmentData[0]);
-            return garmentData[0];
-          }
-          else {
-            setGarmentList([...garmentData]); // Assuming this sets specific garment details
-            setGarment(garmentData);
-            return garmentData;
-          }
-          // No need to sort here as we'll handle sorting directly where the data is rendered to ensure reactivity
-          
-        })
-        .then((data) => {
-          //initialize garment
-          if(data) {
-            setFormData({
-                ...formData, 
-                clothingType: {value:data.garmentType, label: findAttribute(GARMENT_TYPES, data.garmentType)}
-            });
-            setMeasures([...getSetByCategory(getCategory(data.garmentType))]);
-            if (measures.length === 0) {
-                const category = getCategory(data.garmentType);
-                const newMeasures = getSetByCategory(category);
-                setMeasures(newMeasures);
-            }
-          }
-        })
-        .catch((error) => console.error('Error fetching garment details:', error));
-  
+            Axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true })
+                .then(response => {
+                    const garmentData = response.data;
+                    if (Array.isArray(garmentData) && garmentData.length > 0) {
+                        setGarmentList(garmentData);
+                        setGarment(garmentData[0]);
+                        initializeFormData(garmentData[0]);
+                    } else {
+                        setGarmentList([garmentData]); // Assuming garmentData is an object when not an array
+                        setGarment(garmentData);
+                        initializeFormData(garmentData);
+                    }
+                })
+                .catch(error => console.error('Error fetching garment details:', error));
         }
-  
-      }, [user, userLoading]);
-      //if (userLoading || garmentLoading) {
-      if (userLoading) {
-        return <div>Loading...</div>; // Show loading state while data is being fetched
-      }
-      //if (!user || !garment) {
-      if (!user) {
-        return <div>No user or garment data available.</div>; // Show a message or redirect if data is not available
-      }
+    }, [user, userLoading]);
 
-    const selectType = (event) => {
-        // clear previous
-        measures.forEach((obj, index) => {
-            let e_measure = document.getElementById("measure_" + obj.value + "_" + index);
-            if (e_measure) {
-                e_measure.value = "";
-            }
-            let e_unit = document.getElementById("unit_" + obj.value + "_" + index);
-            if (e_unit) {
-                e_unit.value = "cm";
-            }
+    const initializeFormData = (garment) => {
+        const clothingType = findAttribute(GARMENT_TYPES, garment.garmentType);
+        setFormData({
+            ...formData,
+            clothingType: { value: garment.garmentType, label: clothingType ? clothingType.label : garment.garmentType },
         });
-        let temp = getSetByCategory(getCategory(event.target.value));
-        setMeasures([...temp]);
-        setFormData({ ...formData,   clothingType: { value: event.target.value, label: event.target.value } });
+        const measures = getSetByCategory(getCategory(garment.garmentType));
+        setMeasures(measures);
     };
 
-    function getCategory(val) {
-        let category = -1;
-        for (let i = 0; i < options.length; i++) {
-            if (options[i].value === val) {
-                category = options[i].cat;
-                break;
-            }
-        }
-        return category;
-    }
-
-    function getSetByCategory(catID) {
-        let objArr = [];
-        measurementTypes.forEach((obj) => {
-            if (obj.categories.includes(catID)) {
-                objArr.push(obj);
+    const selectType = (event) => {
+        const temp = getSetByCategory(getCategory(event.target.value));
+        setMeasures(temp);
+        setFormData({
+            ...formData,
+            clothingType: {
+                value: event.target.value,
+                label: findAttribute(GARMENT_TYPES, event.target.value).label
             }
         });
-        return objArr;
-    }
+    };
+
+    const getCategory = (val) => {
+        const option = options.find(o => o.value === val);
+        return option ? option.cat : -1;
+    };
+
+    const getSetByCategory = (catID) => {
+        return measurementTypes.filter(obj => obj.categories.includes(catID));
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
         if (!user || !user._id) {
-            console.error("User ID is not available.");
             toast.error("Unable to identify user. Please make sure you are logged in.");
             return;
         }
-    
+
         const garmentMeasurements = measures.map((measureType, index) => {
             const valueElement = document.getElementById(`measure_${measureType.value}_${index}`);
             const unitElement = document.getElementById(`unit_${measureType.value}_${index}`);
@@ -151,35 +100,27 @@ const GarmentMeasurement = () => {
                 value: parseFloat(valueElement ? valueElement.value : '0'),
                 unit: unitElement ? unitElement.value : 'cm',
             };
-        }).filter(measure => measure.value > 0); // Ensure only measurements with valid values are included
+        }).filter(measure => measure.value > 0);
 
-        const clothingType = {
-            value: formData.clothingType.value,
-            label: findAttribute(GARMENT_TYPES, formData.clothingType.value).label,
-        };
-    
-        // Construct the payload
         const payload = {
             userId: user._id,
             garmentId: garment._id,
-            clothingType,
+            clothingType: formData.clothingType,  // Send as an object
             garmentSizeType: formData.garmentSizeType,
             garmentSize: formData.garmentSize,
             garmentFit: formData.garmentFit,
-            garmentMeasurements: JSON.stringify(garmentMeasurements), // Stringify for correct format
+            garmentMeasurements,
         };
-    
+
         try {
-            const response = await axios.post('/addgarmentdetails', payload, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+            const response = await axios.post('/updateGarmentDetails', payload, {
+                headers: { 'Content-Type': 'application/json' },
             });
-    
+
             if (response.data.error) {
                 toast.error(response.data.error);
             } else {
-                toast.success('Garment details updated successfully.');
+                toast.success('Garment measurement details updated successfully.');
                 navigate('/dashboard');
             }
         } catch (error) {
@@ -188,21 +129,6 @@ const GarmentMeasurement = () => {
         }
     };
     
-    
-    
-
-    // useEffect(() => {
-    //     if (measures.length === 0) {
-    //       const category = getCategory(garment.garmentType);
-    //       const newMeasures = getSetByCategory(category);
-    //       setMeasures(newMeasures);
-    //     }
-    //     // This effect should run only when `garment.garmentType` changes,
-    //     // hence it's included in the dependency array.
-    //   }, [garment.garmentType]);
-
-    //console.log(garment);
-
     return (
         <div>
             <ScreenHeaderIn />

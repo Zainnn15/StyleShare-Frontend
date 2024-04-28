@@ -139,7 +139,7 @@ export default function GarmentTear() {
         }
 
         try {
-            const response = await axios.post('/addgarmentdetails', formData, {
+            const response = await axios.post('/updategarmentdetails', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             if (response.data.error) {

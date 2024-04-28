@@ -91,7 +91,7 @@ export default function GarmentFeel() {
         };
     
         try {
-            const response = await axios.post('/addgarmentdetails', garmentFeelData, {
+            const response = await axios.post('/updategarmentdetails', garmentFeelData, {
                 headers: { 'Content-Type': 'application/json' },
                 withCredentials: true
             });
