@@ -1,27 +1,33 @@
 import { Link } from 'react-router-dom';
 import '../styles/navbarstlyes.css'
+import { UserContext } from '../../../context/userContext';
+import { useContext } from 'react';
 
 export default function NavbarIn() {
 
+  const { setUser } = useContext(UserContext);
   // logout function
   const handleLogout = async () => {
     try {
-      // Make a request to your backend logout endpoint, e.g., using fetch or axios
-      await fetch('http://localhost:8000/logout', {
+      const response = await fetch('https://garment-backend.onrender.com/logout', {
         method: 'GET',
         credentials: 'include', // Include credentials for cookies to be sent
       });
-
-      // Clear any local state or user information in your frontend
-      // For example, if you're using context, reset the user context
-
-      // Redirect to the home page by changing the window location
-      window.location.href = '/';
+  
+      if (response.ok) {
+        // Clear any user state or context here
+        setUser(null); // Assuming `setUser` can handle null to reset user context
+  
+        // Redirect to the home page by changing the window location
+        window.location.href = '/';
+      } else {
+        throw new Error('Failed to log out');
+      }
     } catch (error) {
       console.error('Logout error:', error);
     }
   };
-
+  
   return (
     <nav>
     <ul>

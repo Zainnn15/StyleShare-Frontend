@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { useContext } from 'react';
 import { GarmentContext } from "../../../context/garmentContext.jsx";
 import { UserContext } from "../../../context/userContext.jsx";
-import logo from '../../assets/icons/logo.jpg';
 import logo_black from '../../assets/images/ShareStyle_black.png';
 import menu from '../../assets/icons/menu.png';
 import profile from '../../assets/images/profile_default.jpg';
@@ -20,7 +19,7 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
       // logout function
       const handleLogout = async () => {
         try {
-            await fetch('http://localhost:8000/logout', {
+            await fetch('https://garment-backend.onrender.com/logout', {
                 method: 'GET',
                 credentials: 'include', // Include credentials for cookies to be sent
             });
