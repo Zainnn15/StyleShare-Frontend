@@ -23,7 +23,8 @@ import GarmentExchange from './pages/GarmentPages/GarmentExchange';
 import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
 
-axios.defaults.baseURL = 'https://garment-backend.onrender.com/';
+axios.defaults.baseURL = 'http://localhost:8000/';
+//axios.defaults.baseURL = 'https://garment-backend.onrender.com/';
 axios.defaults.withCredentials = true;
 
 function App() {

@@ -1,5 +1,6 @@
 import { careInstructions } from "../data/lists";
-const imgHostURL = 'https://garment-backend.onrender.com/';
+//const imgHostURL = 'https://garment-backend.onrender.com/';
+const imgHostURL = 'http://localhost:8000/';
 
 function findAttribute(objArr, val, attrCheck="value", attrReturn="label") {
     try {
