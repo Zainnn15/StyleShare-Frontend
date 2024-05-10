@@ -4,6 +4,8 @@ import {toast} from 'react-hot-toast';
 import {useNavigate} from 'react-router-dom';
 import ScreenHeader from '../components/common/ScreenHeader';
 import CircleImg from '../components/common/CircleImg';
+
+//import logo from '../assets/icons/logo.jpg';
 import logo_purple from '../assets/images/ShareStyle_purple.png';
 
 export default function Register() {

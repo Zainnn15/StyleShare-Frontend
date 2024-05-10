@@ -13,7 +13,7 @@ export default function GarmentCare() {
             <ScreenHeaderIn />
             <div className='container main'>
                 <div className="m2-v">
-                    <label className="container-title">Garment Wear & Care</label>
+                    <label className="container-title">Garment Wear, Care, Tear & Feel</label>
                     <hr/>
                 </div>
                 <div className="container-grid-4-lg gap">
@@ -45,7 +45,7 @@ export default function GarmentCare() {
                              imgWidth="13em"
                              imgHeight="15em"
                              imgClassName={"container-card-img"}
-                             title={<p className="center text-purpleLight text-midLg">Garment Wash</p>}
+                             title={<p className="center text-purpleLight text-midLg">Garment Care</p>}
                              titleClassName={"container-row bg-purpleDark"}
                              description={
                                  <p className="center">

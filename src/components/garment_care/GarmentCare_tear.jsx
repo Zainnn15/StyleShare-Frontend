@@ -662,7 +662,7 @@ export default function GarmentTear() {
                             />                
                             </div>
                             <div className='container-prompt'>
-                                <p>Upload photo of shrinking area</p>
+                                <p>Upload photo of shrinking/curling area</p>
                             </div>
                             <div className='container-input-img clickable' onClick={()=>clickID("spandexShrinkImg")}>
                                 <img id='spandexShrinkImg_img' src={spandexShrinkImg ? URL.createObjectURL(spandexShrinkImg) : selectImg} alt='upload photo'/>

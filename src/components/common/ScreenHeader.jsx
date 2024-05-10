@@ -2,8 +2,7 @@
 import '../../styles/main.scss';
 import { Link } from "react-router-dom";
 
-import logo from '../../assets/icons/logo.jpg';
-import logo_black from '../../assets/images/ShareStyle_black.png'; 
+import logo from '../../assets/icons/logo_white.png';
 import menu from '../../assets/icons/menu.png';
 import profile from '../../assets/images/profile_default.jpg';
 
@@ -65,7 +64,7 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
             <div className="container-header">
                 <div className="container-row">
                     <Link className="container-header-button" to="/">
-                        <CircleBtn iconUrl={logo_black} className={"button-header"} width={"40px"} height={"50px"} />
+                        <CircleBtn iconUrl={logo} className={"button-header"} />
                     </Link>
                     {  
                         isLogin &&
@@ -109,7 +108,7 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
                             <Link to="/">Home</Link>
                             <Link to="/login">Add Garment</Link>
                             <Link to="/login">Add Measurement</Link>
-                            <Link to="/login">Garment Care</Link>
+                            <Link to="/login">Garment Wear, Care, Tear & Feel</Link>
                             <Link to="/login">Exchange Garment</Link>
                             <Link to="/login">Reserve a Garment</Link>
                         </div>

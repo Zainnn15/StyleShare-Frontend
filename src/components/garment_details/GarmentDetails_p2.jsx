@@ -85,6 +85,11 @@ const GarmentDetails_p2 = ({ formData, setFormData, page, handleForward, handleB
                 </div>
             </div>
 
+            <label>
+                <strong>
+                **For the photo uploads: Please take a photo of the full garment, including sleeves, and use a white or black background.
+                </strong>
+            </label>
             <div className="container-grid-2-md gap">
                 {['fileFront', 'fileBack'].map(key => (
                     <div key={key}>
