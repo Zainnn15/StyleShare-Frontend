@@ -206,7 +206,7 @@ export default function Profile() {
             <div className="container-profile-img clickable" onClick={()=>{setIsModalOpen(true)}}>
               <img src={user.profilePicture ? getImageFromURL(user.profilePicture) : defaultProfile} alt="profile"/>
             </div>        
-            <h3>Welcome, {user.name}</h3>
+            <h3>Welcome, {user.username}</h3>
           </div>        
           <hr/>
           <div className="container-content popup">

@@ -4,8 +4,6 @@ import {toast} from 'react-hot-toast';
 import {useNavigate} from 'react-router-dom';
 import ScreenHeader from '../components/common/ScreenHeader';
 import CircleImg from '../components/common/CircleImg';
-
-import logo from '../assets/icons/logo.jpg';
 import logo_purple from '../assets/images/ShareStyle_purple.png';
 
 export default function Register() {
@@ -51,10 +49,10 @@ export default function Register() {
                     <br/>
 
                     <div>
-                        <label htmlFor="name">Full Name</label>
-                        <input type="text" id="name" value={data.name} 
-                            onChange={(e) => setData({...data, name: e.target.value})} 
-                        />
+                    <label htmlFor="name">Full Name (Optional)</label>
+                    <input type="text" id="name" value={data.name} 
+                    onChange={(e) => setData({...data, name: e.target.value})} 
+                    />
 
                         <label htmlFor="name">Username</label>
                         <input type="text" id="username" value={data.username} 
