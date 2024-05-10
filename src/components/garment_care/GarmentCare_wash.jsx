@@ -135,7 +135,7 @@ export default function GarmentWash() {
         <ScreenHeaderIn />
         <div className='container main'>
             <div>
-                <label className="container-title">Garment Wash</label>
+                <label className="container-title">Garment Care</label>
                 <hr/>
             </div>
             <form onSubmit={handleSubmit}>
@@ -427,77 +427,6 @@ export default function GarmentWash() {
 
                 </div>
 
-
-                <div className='container-grid-2-md'>
-                    <div className='container-content'>
-                    <label className='text-b clickable' htmlFor='isDryC'>Use Dry Clean:</label>
-                    <label className='tab'></label>
-                    <input type='checkbox' id="isDryC" name="isDryC" value={1} checked={useDryC} 
-                        onChange={(e)=>setUseDryC(e.target.checked)} />
-                    <InfoPopup text='Check if the garment was dry cleaned'/>
-                    </div>
-
-                    {useDryC && (
-                    <div>
-                        <div>
-                            <div className='container-prompt'>
-                                <p>Dry Cleaning Method</p>
-                                <InfoPopup text='Select the dry cleaning method applied to the garment' />
-                            </div>
-                            <div id={"dryCSolvent_error"} style={{textAlign:"center"}}></div>
-                            <div className='container-input'>
-                                <select id='dryCSolvent' 
-                                name='dryCSolvent' 
-                                value={careDryC.Solvent} 
-                                onChange={(e)=>{
-                                    setCareDryC({...careDryC, "Solvent":e.target.value});
-                                    addErrorMessageByID("dryCSolvent_error", null);
-                                }}
-                                required
-                                >
-                                <option key='dryCSolvent_null' value=''>Select a method...</option>
-                                {CARE_DRYC_METHODS.Solvent.map((opt) => {
-                                    return (
-                                        <option key={"dryCSolvent_" + opt.value} value={opt.value}>
-                                            {opt.label}
-                                        </option>
-                                    )
-                                })}
-                                </select> 
-                            </div>
-                        </div>
-
-                        <div>
-                            <div className='container-prompt'>
-                                <p>Dry Cleaning Extra Care</p>
-                                <InfoPopup text='Select the extra care applied during dry cleaning' />
-                            </div>
-                            <div id={"dryCCare_error"} style={{textAlign:"center"}}></div>
-                            <div className='container-input'>
-                                <select id='dryCCare' 
-                                name='dryCCare' 
-                                value={careDryC.Care} 
-                                onChange={(e)=>{
-                                    setCareDryC({...careDryC, "Care":e.target.value});
-                                    addErrorMessageByID("dryCCare_error", null);
-                                }}
-                                required
-                                >
-                                <option key='dryCCare_null' value=''>Select an extra care...</option>
-                                {CARE_DRYC_METHODS.Care.map((opt) => {
-                                    return (
-                                        <option key={"dryCCare_" + opt.value} value={opt.value}>
-                                            {opt.label}
-                                        </option>
-                                    )
-                                })}
-                                </select> 
-                            </div>
-                        </div>
-                    </div>
-                    )}
-                </div>
-
             
                 <div className='container-grid-2-md'>
                     <div className='container-content'>
@@ -572,7 +501,7 @@ export default function GarmentWash() {
                     <label className='tab'></label>
                     <input type='checkbox' id='isVentilated' name="isVentilated" value={1} checked={isVentilated} 
                         onChange={(e)=>setIsVentilated(e.target.checked)} />
-                    <InfoPopup text='Check if the garment was ventilated'/>
+                    <InfoPopup text='Sometimes, instead of washing a garment, it can be hanging outside in the fresh air for air exchange to neutralize smell and remove little wrinkles.'/>
                     </div>
 
                     {isVentilated &&
@@ -601,6 +530,78 @@ export default function GarmentWash() {
                         </div>
                     }
                 </div>
+
+
+                <div className='container-grid-2-md'>
+                    <div className='container-content'>
+                    <label className='text-b clickable' htmlFor='isDryC'>Use Dry Clean:</label>
+                    <label className='tab'></label>
+                    <input type='checkbox' id="isDryC" name="isDryC" value={1} checked={useDryC} 
+                        onChange={(e)=>setUseDryC(e.target.checked)} />
+                    <InfoPopup text='Check if the garment was dry cleaned'/>
+                    </div>
+
+                    {useDryC && (
+                    <div>
+                        <div>
+                            <div className='container-prompt'>
+                                <p>Dry Cleaning Method</p>
+                                <InfoPopup text='Select the dry cleaning method applied to the garment' />
+                            </div>
+                            <div id={"dryCSolvent_error"} style={{textAlign:"center"}}></div>
+                            <div className='container-input'>
+                                <select id='dryCSolvent' 
+                                name='dryCSolvent' 
+                                value={careDryC.Solvent} 
+                                onChange={(e)=>{
+                                    setCareDryC({...careDryC, "Solvent":e.target.value});
+                                    addErrorMessageByID("dryCSolvent_error", null);
+                                }}
+                                required
+                                >
+                                <option key='dryCSolvent_null' value=''>Select a method...</option>
+                                {CARE_DRYC_METHODS.Solvent.map((opt) => {
+                                    return (
+                                        <option key={"dryCSolvent_" + opt.value} value={opt.value}>
+                                            {opt.label}
+                                        </option>
+                                    )
+                                })}
+                                </select> 
+                            </div>
+                        </div>
+
+                        <div>
+                            <div className='container-prompt'>
+                                <p>Dry Cleaning Extra Care</p>
+                                <InfoPopup text='Select the extra care applied during dry cleaning' />
+                            </div>
+                            <div id={"dryCCare_error"} style={{textAlign:"center"}}></div>
+                            <div className='container-input'>
+                                <select id='dryCCare' 
+                                name='dryCCare' 
+                                value={careDryC.Care} 
+                                onChange={(e)=>{
+                                    setCareDryC({...careDryC, "Care":e.target.value});
+                                    addErrorMessageByID("dryCCare_error", null);
+                                }}
+                                required
+                                >
+                                <option key='dryCCare_null' value=''>Select an extra care...</option>
+                                {CARE_DRYC_METHODS.Care.map((opt) => {
+                                    return (
+                                        <option key={"dryCCare_" + opt.value} value={opt.value}>
+                                            {opt.label}
+                                        </option>
+                                    )
+                                })}
+                                </select> 
+                            </div>
+                        </div>
+                    </div>
+                    )}
+                </div>
+
             <br/>
 
             <div className='container-input'>

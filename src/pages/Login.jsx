@@ -4,10 +4,11 @@ import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/userContext'; // Adjust path as needed
 import { Link } from 'react-router-dom';
-import logo from '../assets/icons/logo.jpg';
+//import logo from '../assets/icons/logo.jpg';
 import ScreenHeader from '../components/common/ScreenHeader';
 import CircleImg from '../components/common/CircleImg';
 import logo_purple from '../assets/images/ShareStyle_purple.png';
+import { addErrorMessageByID } from '../constants/functions/inputHandlers';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -21,6 +22,7 @@ export default function Login() {
             const { data } = await axios.post('/login', { email, password }, { withCredentials: true });
             if(data.error) {
                 toast.error(data.error);
+                addErrorMessageByID("login_error", "Invalid credentials. Please try again");
             } else {
                 setUser(data); // Update user state on successful login
                 navigate('/dashboard');
@@ -63,6 +65,7 @@ export default function Login() {
         </div>    
         <br/>
         <div>
+            <div id={"login_error"} style={{textAlign:"center"}}></div>
             <label htmlFor="email">Email</label>
             <input 
                 type="email" 

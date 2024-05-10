@@ -89,7 +89,7 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
             <div className="container-header">
                 <div className="container-row">
                     <Link className="container-header-button" to="/dashboard">
-                        <CircleBtn iconUrl={logo} className={"button-header"} width={"30px"} height={"30px"} />
+                        <CircleBtn iconUrl={logo} className={"button-header"} />
                     </Link>
                     {  
                         isLogin &&
@@ -133,7 +133,7 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
                             <Link to="/dashboard">Home</Link>
                             <Link to="/garment-details">Add Garment</Link>
                             <Link to="/garment-measure">Add Measurement</Link>
-                            <Link to="/garment-care">Garment Care</Link>
+                            <Link to="/garment-care">Garment Wear, Care, Tear & Feel</Link>
                             <Link to="/garment-exchange">Exchange Garment</Link>
                         </div>
                     </div>

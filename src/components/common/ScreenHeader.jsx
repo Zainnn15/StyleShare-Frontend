@@ -64,7 +64,7 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
             <div className="container-header">
                 <div className="container-row">
                     <Link className="container-header-button" to="/">
-                        <CircleBtn iconUrl={logo} className={"button-header"} width={"40px"} height={"50px"} />
+                        <CircleBtn iconUrl={logo} className={"button-header"} />
                     </Link>
                     {  
                         isLogin &&
@@ -108,7 +108,7 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
                             <Link to="/">Home</Link>
                             <Link to="/login">Add Garment</Link>
                             <Link to="/login">Add Measurement</Link>
-                            <Link to="/login">Garment Care</Link>
+                            <Link to="/login">Garment Wear, Care, Tear & Feel</Link>
                             <Link to="/login">Exchange Garment</Link>
                             <Link to="/login">Reserve a Garment</Link>
                         </div>
