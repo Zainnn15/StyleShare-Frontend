@@ -1054,61 +1054,72 @@ export default function GarmentTear() {
         <br/>
 
         <div className='container-content'>
-        <label className='text-b clickable' htmlFor='wantRepair'>Require garment repair?</label>
-        <label className='tab'></label>
-        <input type='checkbox' id="wantRepair" name='wantRepair' checked={wantRepair} onChange={(e)=>setWantRepair(e.target.checked)} />
-        <InfoPopup text='Damage which require support such as lost buttons, missing strings, broken zipper, etc.'/>
-        </div>
+    <label className='text-b clickable' htmlFor='wantRepair'>Require garment repair?</label>
+    <input
+        type='checkbox'
+        id="wantRepair"
+        name='wantRepair'
+        checked={wantRepair}
+        onChange={(e) => setWantRepair(e.target.checked)}
+    />
+    <InfoPopup text='Damage which require support such as lost buttons, missing strings, broken zipper, etc.'/>
+</div>
 
-        {
-        wantRepair && (
-            <div>
-            <div className="container-prompt">
-                <p>Select which repairs are needed (Check all that apply)</p>
-            </div>
-            <div id={"repair_error"} style={{textAlign:"center"}}></div>
-            {
-                repairRequests.map((repair, index)=>{
-                return(
-                    <div  key={"repair_"+index} className="container-radio-group m2-h">
-                    <input type="checkbox" id={"repair_"+repair.value} name="repairs[]"
-                        value={repair.value} 
-                        onClick={(e) => {
-                            setRepairRequest({
-                                ...repairRequest,
-                                [repair.value]: Number(e.target.checked)
-                            });
+{wantRepair && (
+    <div>
+        <div className="container-prompt">
+            <p>Select which repairs are needed (Check all that apply)</p>
+        </div>
+        <div id={"repair_error"} style={{textAlign:"center"}}></div>
+        {repairRequests.map((repair, index) => (
+            <div key={"repair_" + index} className="container-radio-group m2-h">
+                <input
+                    type="checkbox"
+                    id={"repair_" + repair.value}
+                    name="repairs[]"
+                    checked={repairRequest[repair.value]}
+                    onChange={(e) => {
+                        setRepairRequest(prev => ({
+                            ...prev,
+                            [repair.value]: e.target.checked
+                        }));
+                        if (Object.values(repairRequest).some(v => v)) {
                             addErrorMessageByID("repair_error", null);
-                        }}
-                    />
-                    <label htmlFor={"repair_"+repair.value}>{repair.label}</label>
-                    </div>
-                )
-                })
-            }
-            {
-                repairRequest.other === 1 && (
-                <div>
-                    <div className='container-prompt'>
+                        }
+                    }}
+                />
+                <label htmlFor={"repair_" + repair.value}>{repair.label}</label>
+            </div>
+        ))}
+        {repairRequest.other && (
+            <div>
+                <div className='container-prompt'>
                     <p>Specify request</p>
-                    </div>
-                    <div className='container-input'>
+                </div>
+                <div className='container-input'>
                     <input
                         type='text'
                         name='repairOther'
                         value={repairOther}
-                        onChange={(e)=>setRepairOther(e.target.value)}
+                        onChange={(e) => setRepairOther(e.target.value)}
                         placeholder='Enter your request'
                         required
                     />                
-                    </div>
                 </div>
-            )}
             </div>
-            )
-          }
+        )}
+    </div>
+)}
 
-          <br/>
+{Object.values(repairRequest).some(v => v) && (
+    <div>
+        <p>Please send an email to Arafat to arrange garment repair:</p>
+        <a href="mailto:arafat@example.com">md-arafat-ali.khan@senecapolytechnic.ca</a>
+    </div>
+)}
+
+<br/>
+
           <div className='container-input'>
               <button className="button-form full" type="submit">
                   Save

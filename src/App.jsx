@@ -22,6 +22,7 @@ import GarmentDetails from './pages/GarmentPages/GarmentDetails';
 import GarmentExchange from './pages/GarmentPages/GarmentExchange';
 import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
+import Help from './pages/Help';
 
 axios.defaults.baseURL = 'http://localhost:8000/';
 //axios.defaults.baseURL = 'https://garment-backend.onrender.com/';
@@ -51,6 +52,7 @@ function App() {
             <Route path='/garment-exchange' element={<GarmentExchange />} />
             <Route path='/forgetPassword' element={<ForgetPassword />} />
             <Route path='/resetPassword/:token' element={<ResetPassword />} />
+            <Route path="/help" element={<Help />} />
           </Routes>
         </GroupContextProvider>
       </GarmentContextProvider>

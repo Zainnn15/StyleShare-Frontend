@@ -5,6 +5,7 @@ import selectImg from '../../assets/icons/select_img.png';
 import { selectID, validatePage } from "../../constants/functions/inputHandlers";
 
 const GarmentDetails_p2 = ({ formData, setFormData, page, handleForward, handleBack }) => {
+    
     const options = GARMENT_TYPES;
 
     const handleImageChange = (e, key) => {
@@ -25,12 +26,10 @@ const GarmentDetails_p2 = ({ formData, setFormData, page, handleForward, handleB
     // Handle navigation to the next form page
     const validateAndNext = () => {
         let querySelect = "select, textarea";
-        // Validate pages except the file input directly here; file checks will be done separately
         if (!validatePage(querySelect)) {
             return false;
         }
         
-        // Ensure that either the files or their previews exist when trying to proceed
         if (!formData.fileFront && !formData.fileFrontPreview) {
             alert('Please upload a front photo of the garment.');
             return false;

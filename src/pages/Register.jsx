@@ -6,7 +6,7 @@ import ScreenHeader from '../components/common/ScreenHeader';
 import CircleImg from '../components/common/CircleImg';
 
 //import logo from '../assets/icons/logo.jpg';
-import logo_purple from '../assets/images/ShareStyle_purple.png';
+import logo_purple from '../assets/images/thumbnail_Style Share Purple.png';
 
 export default function Register() {
     const navigate = useNavigate();

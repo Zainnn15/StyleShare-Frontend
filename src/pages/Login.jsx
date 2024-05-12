@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 //import logo from '../assets/icons/logo.jpg';
 import ScreenHeader from '../components/common/ScreenHeader';
 import CircleImg from '../components/common/CircleImg';
-import logo_purple from '../assets/images/ShareStyle_purple.png';
+import logo_purple from '../assets/images/thumbnail_Style Share Purple.png';
 import { addErrorMessageByID } from '../constants/functions/inputHandlers';
 
 export default function Login() {

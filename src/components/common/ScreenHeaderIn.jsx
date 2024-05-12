@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useContext } from 'react';
 import { GarmentContext } from "../../../context/garmentContext.jsx";
 import { UserContext } from "../../../context/userContext.jsx";
-import logo from '../../assets/icons/logo_white.png';
+import logo from '../../assets/images/thumbnail_Style Share White.png';
 import menu from '../../assets/icons/menu.png';
 import profile from '../../assets/images/profile_default.jpg';
 import { useNavigate } from 'react-router-dom';
@@ -89,7 +89,7 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
             <div className="container-header">
                 <div className="container-row">
                     <Link className="container-header-button" to="/dashboard">
-                        <CircleBtn iconUrl={logo} className={"button-header"} />
+                        <CircleBtn iconUrl={logo} className={"button-header"}  width={"250px"} height={"250px"}/>
                     </Link>
                     {  
                         isLogin &&
@@ -135,6 +135,7 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
                             <Link to="/garment-measure">Add Measurement</Link>
                             <Link to="/garment-care">Garment Wear, Care, Tear & Feel</Link>
                             <Link to="/garment-exchange">Exchange Garment</Link>
+                            <Link to='/help'>Help</Link>
                         </div>
                     </div>
                 )

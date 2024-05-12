@@ -2,17 +2,32 @@ import { careInstructions, countryListAllIsoData, genericFibre } from "./lists";
 
 //garment types
 const GARMENT_TYPES = [
-    { cat: 1, value: 'shirt', label: 'Shirt' },
-    { cat: 1, value: 'sweater', label: 'Sweater' },
-    { cat: 2, value: 'pants', label: 'Pants' },
-    { cat: 2, value: 'trouser', label: 'Trouser' },
-    { cat: 2, value: 'jeans', label: 'Jeans' },
-    { cat: 3, value: 'offDress', label: 'Off-shoulder Dress' },
-    { cat: 6, value: 'dress', label: 'Dress' },
-    { cat: 4, value: 'skirt', label: 'Skirt' },
-    { cat: 5, value: 'tankTop', label: 'Tank Top' },
+    { cat: 'Top', value: 'tShirt', label: 'T-shirt (long or short sleeve)' },
+    { cat: 'Top', value: 'poloShirt', label: 'Polo shirt (long or short sleeve)' },
+    { cat: 'Top', value: 'sweatshirt', label: 'Sweatshirt or Hoodie' },
+    { cat: 'Top', value: 'sweater', label: 'Sweater or Pullover' },
+    { cat: 'Top', value: 'buttonDownShirt', label: 'Button-down shirt (long or short sleeve)' },
+    { cat: 'Top', value: 'blouse', label: 'Blouse (long or short sleeve)' },
+    { cat: 'Top', value: 'waistcoat', label: 'Waistcoat or Vest' },
+    { cat: 'Top', value: 'cardigan', label: 'Cardigan' },
+    { cat: 'Top', value: 'tankTop', label: 'Tank Top' },
+    { cat: 'Top', value: 'corsage', label: 'Corsage' },
+    { cat: 'Top', value: 'blazer', label: 'Blazer' },
+    { cat: 'Top', value: 'suitJacket', label: 'Suit Jacket' },
+    { cat: 'Top', value: 'jacket', label: 'Jacket' },
+    { cat: 'Top', value: 'coat', label: 'Coat' },
+    { cat: 'Top', value: 'rainJacket', label: 'Rain Jacket' },
+    { cat: 'Bottom', value: 'pants', label: 'Pants' },
+    { cat: 'Bottom', value: 'trouser', label: 'Trouser' },
+    { cat: 'Bottom', value: 'jeans', label: 'Jeans or Denim Pants' },
+    { cat: 'Bottom', value: 'shorts', label: 'Shorts' },
+    { cat: 'Bottom', value: 'sweatpants', label: 'Sweatpants' },
+    { cat: 'Bottom', value: 'leggings', label: 'Leggings or Tights' },
+    { cat: 'Bottom', value: 'skirt', label: 'Skirt' },
+    { cat: 'Combined', value: 'dress', label: 'Dress' },
+    { cat: 'Combined', value: 'offShoulderDress', label: 'Off shoulder Dress' },
+    { cat: 'Combined', value: 'jumpsuit', label: 'Jumpsuit or Coverall' },
 ];
-
 //measurement size types
 const GARMENT_SIZE_TYPES = [
     {value: 'general', label: 'General Size (XXS - XXL)'},
