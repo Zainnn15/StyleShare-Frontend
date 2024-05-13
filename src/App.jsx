@@ -1,4 +1,5 @@
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+// import './App.css'
+import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -6,7 +7,7 @@ import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
 import { UserContextProvider } from '../context/userContext';
 import { GarmentContextProvider } from '../context/garmentContext';
-import { GroupContextProvider } from '../context/groupContext';
+import { GroupContextProvider } from '../context/groupContext'; // Add this line
 import Dashboard from './pages/Dashboard';
 import GarmentMeasure from './pages/GarmentPages/GarmentMeasure';
 import Profile from './pages/Profile';
@@ -23,6 +24,7 @@ import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
 import Help from './pages/Help';
 
+//axios.defaults.baseURL = 'http://localhost:8000/';
 axios.defaults.baseURL = 'https://garment-backend.onrender.com/';
 axios.defaults.withCredentials = true;
 
@@ -30,30 +32,28 @@ function App() {
   return (
     <UserContextProvider>
       <GarmentContextProvider>
-        <GroupContextProvider>
+        <GroupContextProvider> 
           <Toaster position='bottom-right' toastOptions={{ duration: 2000 }} />
-          <Router>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path='/register' element={<Register />} />
-              <Route path='/userprofile' element={<Profile />} />
-              <Route path='/group' element={<Group />} />
-              <Route path='/garment-measure' element={<GarmentMeasure />} />
-              <Route path='/garment-care' element={<GarmentCare />} />
-              <Route path='/garment-wear' element={<GarmentWear />} />
-              <Route path='/garment-wash' element={<GarmentWash />} />
-              <Route path='/garment-tear' element={<GarmentTear />} />
-              <Route path='/garment-feel' element={<GarmentFeel />} />
-              <Route path='/usersearch' element={<UserSearch />} />
-              <Route path='/garment-details' element={<GarmentDetails />} />
-              <Route path='/garment-exchange' element={<GarmentExchange />} />
-              <Route path='/forgetPassword' element={<ForgetPassword />} />
-              <Route path='/resetPassword/:token' element={<ResetPassword />} />
-              <Route path="/help" element={<Help />} />
-            </Routes>
-          </Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/userprofile' element={<Profile />} />
+            <Route path='/group' element={<Group />} />
+            <Route path='/garment-measure' element={<GarmentMeasure />} />
+            <Route path='/garment-care' element={<GarmentCare />} />
+            <Route path='/garment-wear' element={<GarmentWear />} />
+            <Route path='/garment-wash' element={<GarmentWash />} />
+            <Route path='/garment-tear' element={<GarmentTear />} />
+            <Route path='/garment-feel' element={<GarmentFeel />} />
+            <Route path='/usersearch' element={<UserSearch />} />
+            <Route path='/garment-details' element={<GarmentDetails />} />
+            <Route path='/garment-exchange' element={<GarmentExchange />} />
+            <Route path='/forgetPassword' element={<ForgetPassword />} />
+            <Route path='/resetPassword/:token' element={<ResetPassword />} />
+            <Route path="/help" element={<Help />} />
+          </Routes>
         </GroupContextProvider>
       </GarmentContextProvider>
     </UserContextProvider>
