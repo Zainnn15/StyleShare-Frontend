@@ -24,8 +24,8 @@ import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
 import Help from './pages/Help';
 
-axios.defaults.baseURL = 'http://localhost:8000/';
-//axios.defaults.baseURL = 'https://garment-backend.onrender.com/';
+//axios.defaults.baseURL = 'http://localhost:8000/';
+axios.defaults.baseURL = 'https://garment-backend.onrender.com/';
 axios.defaults.withCredentials = true;
 
 function App() {
