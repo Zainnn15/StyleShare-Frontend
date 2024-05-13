@@ -20,7 +20,7 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
       const handleLogout = async () => {
         try {
             await fetch('https://garment-backend.onrender.com/logout', {
-           // await fetch('http://localhost:8000/logout', {
+           //await fetch('http://localhost:8000/logout', {
                 method: 'GET',
                 credentials: 'include', // Include credentials for cookies to be sent
             });

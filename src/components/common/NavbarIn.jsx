@@ -10,7 +10,7 @@ export default function NavbarIn() {
   const handleLogout = async () => {
     try {
       const response = await fetch('https://garment-backend.onrender.com/logout', {
-     // const response = await fetch('http://localhost:8000/logout', {
+      //const response = await fetch('http://localhost:8000/logout', {
         method: 'GET',
         credentials: 'include', // Include credentials for cookies to be sent
       });
