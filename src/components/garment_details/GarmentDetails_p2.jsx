@@ -5,8 +5,6 @@ import selectImg from '../../assets/icons/select_img.png';
 import { selectID, validatePage } from "../../constants/functions/inputHandlers";
 
 const GarmentDetails_p2 = ({ formData, setFormData, page, handleForward, handleBack }) => {
-    
-    const options = GARMENT_TYPES;
 
     const handleImageChange = (e, key) => {
         const file = e.target.files[0];
@@ -42,9 +40,20 @@ const GarmentDetails_p2 = ({ formData, setFormData, page, handleForward, handleB
         handleForward();
     };
 
+    const renderGroupedOptions = () => {
+        const categories = [...new Set(GARMENT_TYPES.map(item => item.cat))];
+        return categories.map(cat => (
+            <optgroup label={cat} key={cat}>
+                {GARMENT_TYPES.filter(item => item.cat === cat).map(garment => (
+                    <option key={garment.value} value={garment.value}>{garment.label}</option>
+                ))}
+            </optgroup>
+        ));
+    };
+
     return (
         <div>
-            <div>
+              <div>
                 <div className="container-prompt" onClick={() => selectID("garmentType")}>
                     <p>What type of garment is it?</p>
                 </div>
@@ -58,9 +67,7 @@ const GarmentDetails_p2 = ({ formData, setFormData, page, handleForward, handleB
                         required
                     >
                         <option value="">Select a garment...</option>
-                        {options.map(opt => (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
-                        ))}
+                        {renderGroupedOptions()}
                     </select>
                 </div>
             </div>
