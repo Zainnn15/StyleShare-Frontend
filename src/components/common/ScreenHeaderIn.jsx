@@ -2,7 +2,7 @@
 import '../../styles/main.scss';
 import { Link } from "react-router-dom";
 import { useContext } from 'react';
-import { GarmentContext } from "../../../context/garmentContext.jsx";
+//import { GarmentContext } from "../../../context/garmentContext.jsx";
 import { UserContext } from "../../../context/userContext.jsx";
 import logo from '../../assets/images/thumbnail_Style Share White.png';
 import menu from '../../assets/icons/menu.png';
@@ -14,8 +14,8 @@ import { getImageFromURL } from '../../constants/functions/valueHandlers.js';
 
 const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
     const navigate = useNavigate();
-    const { setUser } = useContext(UserContext);
-    const {garment} = useContext(GarmentContext);
+    const { setUser, user } = useContext(UserContext);
+    //const {garment} = useContext(GarmentContext);
       // logout function
       const handleLogout = async () => {
         try {
@@ -103,7 +103,7 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
                 {
                     isLogin &&
                     <div className="container-header-button popup">
-                    <CircleBtn iconUrl={garment ? getImageFromURL(garment.fileFront) : profile} 
+                    <CircleBtn iconUrl={user && user.profilePicture ? getImageFromURL(user.profilePicture) : profile} 
                         className={"button-header"} width={"30px"} height={"30px"}
                         handlePress={openProfileDropdown}
                     />
