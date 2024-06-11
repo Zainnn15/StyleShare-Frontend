@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { formatDate, getImageFromURL } from '../../constants/functions/valueHandlers';
+import { formatDate, getImageFromURL } from '../../constants/functions/valueHandlers.jsx';
 import '../../styles/main.scss';
 
 const Garment_wear = ({garment}) => {

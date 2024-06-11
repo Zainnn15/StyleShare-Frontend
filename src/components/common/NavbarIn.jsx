@@ -9,8 +9,8 @@ export default function NavbarIn() {
   // logout function
   const handleLogout = async () => {
     try {
-      const response = await fetch('https://garment-backend.onrender.com/logout', {
-      //const response = await fetch('http://localhost:8000/logout', {
+      // eslint-disable-next-line no-undef
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/logout`, {
         method: 'GET',
         credentials: 'include', // Include credentials for cookies to be sent
       });

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 import '../../styles/main.scss';
 import { Link } from "react-router-dom";
@@ -10,7 +11,7 @@ import profile from '../../assets/images/profile_default.jpg';
 import { useNavigate } from 'react-router-dom';
 
 import CircleBtn from "./CircleBtn.jsx";
-import { getImageFromURL } from '../../constants/functions/valueHandlers.js';
+import { getImageFromURL } from '../../constants/functions/valueHandlers.jsx';
 
 const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
     const navigate = useNavigate();
@@ -19,8 +20,7 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
       // logout function
       const handleLogout = async () => {
         try {
-            await fetch('https://garment-backend.onrender.com/logout', {
-           //await fetch('http://localhost:8000/logout', {
+            await fetch(`${import.meta.env.VITE_API_URL}/logout`, {
                 method: 'GET',
                 credentials: 'include', // Include credentials for cookies to be sent
             });

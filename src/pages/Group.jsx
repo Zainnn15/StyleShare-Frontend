@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../../context/userContext';
 import { GroupContext } from '../../context/groupContext';
@@ -43,8 +44,7 @@ export default function Group() {
 
     const fetchChatHistory = async (groupId) => {
         try {
-            //const response = await axios.get(`http://localhost:8000/getChatHistory/${groupId}`);
-            const response = await axios.get(`https://garment-backend.onrender.com/getChatHistory/${groupId}`);
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getChatHistory/${groupId}`);
             setChatHistory(response.data);
         } catch (error) {
             console.error("Failed to fetch chat history", error);

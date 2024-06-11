@@ -1,6 +1,8 @@
+/* eslint-disable no-undef */
 import { careInstructions } from "../data/lists";
-const imgHostURL = 'https://garment-backend.onrender.com/';
-//const imgHostURL = 'http://localhost:8000/';
+
+const imgHostURL = import.meta.env.VITE_API_URL;
+
 
 function findAttribute(objArr, val, attrCheck="value", attrReturn="label") {
     try {

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // import './App.css'
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
@@ -24,8 +25,7 @@ import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
 import Help from './pages/Help';
 
-//axios.defaults.baseURL = 'http://localhost:8000/';
-axios.defaults.baseURL = 'https://garment-backend.onrender.com/';
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 axios.defaults.withCredentials = true;
 
 function App() {
