@@ -70,37 +70,54 @@ export default function Profile() {
 
     const handleCampusChange = (event) => {
       const selectedOptions = Array.from(event.target.selectedOptions, option => option.value);
-      //const selectedOptions = event.target.value;
       setSelectedCampus(selectedOptions);
-      console.log("Selected campuses updated:", selectedOptions); // Debug: Check what's being set
-    };
-    
+  };
+  
     const handleUpdateProfile = async (e) => {
       e.preventDefault();
       const formData = new FormData();
       formData.append('userId', user._id);
-    
+  
       // Use JSON.stringify to ensure the array is sent as a single JSON string
       formData.set('selectedDays', JSON.stringify(selectedDays));
       formData.set('selectedTimes', JSON.stringify(selectedTimes));
       formData.set('campuses', JSON.stringify(selectedCampus));  // Ensure that campuses are sent as a JSON array
       formData.append('customCampus', customCampus);
-    
+  
       if (selectedImage) {
-        formData.append('profilePicture', selectedImage);
-        setIsModalOpen(false);
+          formData.append('profilePicture', selectedImage);
+          setIsModalOpen(false);
       }
-    
+  
       try {
-        const response = await Axios.post('/updateProfile', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-          withCredentials: true,
-        });
-        console.log('Profile updated:', response.data);
+          const response = await Axios.post('/updateProfile', formData, {
+              headers: { 'Content-Type': 'multipart/form-data' },
+              withCredentials: true,
+          });
+          console.log('Profile updated:', response.data);
       } catch (error) {
-        console.error('Error updating profile:', error);
+          console.error('Error updating profile:', error);
       }
-    };
+  };
+  
+  useEffect(() => {
+      if (user && user._id) {
+          // Fetch user profile
+          Axios.get(`/profile/${user._id}`, { withCredentials: true })
+              .then((response) => {
+                  const data = response.data;
+                  setProfile(data); // Assuming this sets user-specific profile details
+                  setSelectedDays(data.SenecaDays || []);
+                  setSelectedTimes(data.SenecaTimes || []);
+                  setSelectedCampus(data.campuses || []);
+                  setCustomCampus(data.customCampuses[0] || '');
+                  //set selectedImage
+                  setSelectedImage(user.profilePicture);
+              })
+              .catch((error) => console.error('Error fetching user profile:', error));
+      }
+  }, [user, userLoading]);
+  
     
     useEffect(() => {
       if (user && user._id) {
@@ -170,27 +187,27 @@ export default function Profile() {
 
     function handleDaySelect(e) {
       let temp = selectedDays;
-      if(e.target.checked) {
-        if(!selectedDays.includes(e.target.value)) {
-          temp.push(e.target.value);
-          temp.sort();
-        }
-      }
-      else {
-        let index = selectedDays.indexOf(e.target.value);
-        if(index > -1) {
-          temp.splice(index, 1);
-        }
+      if (e.target.checked) {
+          if (!selectedDays.includes(e.target.value)) {
+              temp.push(e.target.value);
+              temp.sort();
+          }
+      } else {
+          let index = selectedDays.indexOf(e.target.value);
+          if (index > -1) {
+              temp.splice(index, 1);
+          }
       }
       setSelectedDays([...temp]);
-    }
-
-    const handleTimeChange = (day, field, value) => {
+  }
+  
+  const handleTimeChange = (day, field, value) => {
       const temp = [...selectedTimes];
       const index = temp.findIndex((time) => time.day === day);
       temp[index][field] = value;
       setSelectedTimes(temp);
-    };
+  };
+  
 
     console.log(user);
 
@@ -251,39 +268,34 @@ export default function Profile() {
                 </div>
             )}
               <div className="container-border clear-box">
-              <p>Available Times at
-                <strong>
-                {
-                  user.campuses[0] === "[\"Other\"]" ? 
-                    ' ' + user.customCampuses[0] : 
-                    ' Seneca ' + user.campuses[0] }
-                </strong>:
-                {
-                //selectedDays.map(dayNum => dayMapping[dayNum]).join(", ")
-                }
-              </p>
-        <div id="user_schedule">
-          <ul>
+    <p>Available Times at
+        <strong>
+            {user.campuses[0] === "[\"Other\"]" ? 
+                ' ' + user.customCampuses[0] : 
+                ' Seneca ' + user.campuses[0]}
+        </strong>:
+    </p>
+    <div id="user_schedule">
+        <ul>
             {user.SenecaTimes.length > 0 &&
-              user.SenecaTimes.map((schedule, index) => {
-                // Display information for a specific day (e.g., Thursday)
-                //if (schedule.day === 4) {
-                  return (
-                    schedule.start &&
-                    schedule.end && (
-                      <li key={"sched_" + index}>
-                        <label>
-                          {dayMapping[schedule.day]}:
-                          <label className="tab"></label>
-                          <label>{`${schedule.start} - ${schedule.end}`}</label>
-                        </label>
-                      </li>
-                    )
-                  );
-              })}
-          </ul>
-        </div>
-              </div>
+                user.SenecaTimes.map((schedule, index) => {
+                    return (
+                        schedule.start &&
+                        schedule.end && (
+                            <li key={"sched_" + index}>
+                                <label>
+                                    {dayMapping[schedule.day]}:
+                                    <label className="tab"></label>
+                                    <label>{`${schedule.start} - ${schedule.end}`}</label>
+                                </label>
+                            </li>
+                        )
+                    );
+                })}
+        </ul>
+    </div>
+</div>
+
             </div>
           </div>
 
@@ -294,7 +306,7 @@ export default function Profile() {
             <button className={editMode ? "button-cancel" : "button-regular"} 
               onClick={handleChangeSchedule}
             >
-                {editMode ? "Cancel" : "Change Seneca Days"}
+                {editMode ? "Cancel" : "Change Available Time and Place"}
             </button>
           </div>
 

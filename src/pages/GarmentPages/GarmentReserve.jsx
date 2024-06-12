@@ -1,7 +1,6 @@
 import { useState } from "react";
 import ScreenHeaderIn from "../../components/common/ScreenHeaderIn";
 import { PICKUP_LOCS, PICKUP_CAMPUS } from "../../constants/data/options";
-import axios from "axios";
 
 export default function GarmentReserve() {
     // have to input a time, date, and location for the exchange
