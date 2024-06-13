@@ -10,7 +10,7 @@ const GARMENT_TYPES = [
     { cat: 'Top', value: 'blouse', label: 'Blouse (long or short sleeve)' },
     { cat: 'Top', value: 'waistcoat', label: 'Waistcoat or Vest (sleeveless upper-body garment)' },
     { cat: 'Top', value: 'cardigan', label: 'Cardigan' },
-    { cat: 'Top', value: 'tankTop', label: 'Tank Top (shirt without sleeves)' },
+    { cat: 'Tank', value: 'tankTop', label: 'Tank Top (shirt without sleeves)' },
     { cat: 'Top', value: 'corsage', label: 'Corsage' },
     { cat: 'Top', value: 'blazer', label: 'Blazer (a type of jacket resembling a suit jacket but cut more casually)' },
     { cat: 'Top', value: 'suitJacket', label: 'Suit Jacket (also called a lounge jacket, classic menswear as part of a suit)' },
@@ -23,9 +23,9 @@ const GARMENT_TYPES = [
     { cat: 'Bottom', value: 'shorts', label: 'Shorts' },
     { cat: 'Bottom', value: 'sweatpants', label: 'Sweatpants' },
     { cat: 'Bottom', value: 'leggings', label: 'Leggings or Tights' },
-    { cat: 'Bottom', value: 'skirt', label: 'Skirt' },
-    { cat: 'Combined', value: 'dress', label: 'Dress' },
-    { cat: 'Combined', value: 'offShoulderDress', label: 'Off shoulder Dress' },
+    { cat: 'Skirt', value: 'skirt', label: 'Skirt' },
+    { cat: 'Dress', value: 'dress', label: 'Dress' },
+    { cat: 'DressNS', value: 'offShoulderDress', label: 'Off shoulder Dress' },
     { cat: 'Combined', value: 'jumpsuit', label: 'Jumpsuit or Coverall' },
   ];
   
