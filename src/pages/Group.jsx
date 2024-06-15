@@ -44,7 +44,7 @@ export default function Group() {
 
     const fetchChatHistory = async (groupId) => {
         try {
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}getChatHistory/${groupId}`);
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getChatHistory/${groupId}`);
             setChatHistory(response.data);
         } catch (error) {
             console.error("Failed to fetch chat history", error);

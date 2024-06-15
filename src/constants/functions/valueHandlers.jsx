@@ -73,9 +73,11 @@ function getImageFromURL(imgName) {
         // Return a default image or null if no image name is provided
         return 'path/to/default-image.jpg'; // Adjust the default image path as necessary
     }
-    let srcName = imgHostURL + imgName.replace(/\\/g, '/');
+    let srcName = `${imgHostURL}/${imgName.replace(/\\/g, '/')}`;
+    console.log(`Constructed image URL: ${srcName}`); // Log the constructed URL
     return srcName;
 }
+
 
 function getElemByMaxAttr(objArr, attrCheck="value", isDate=false) {
     let maxIndex = -1;
