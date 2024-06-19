@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import { careInstructions } from "../data/lists";
 
-const imgHostURL = import.meta.env.VITE_API_URL;
+//const imgHostURL = import.meta.env.VITE_API_URL;
 
 
 function findAttribute(objArr, val, attrCheck="value", attrReturn="label") {
@@ -68,15 +68,24 @@ function getAttrByInpID(dataID, mapObj, listAttr="img", listObj=careInstructions
     return listObj[mapObj[dataID]][listAttr];
 }
 
-function getImageFromURL(imgName) {
-    if (!imgName) {
-        // Return a default image or null if no image name is provided
-        return 'path/to/default-image.jpg'; // Adjust the default image path as necessary
+export const getImageFromURL = (imagePath) => {
+    const S3_BUCKET_URL = 'https://garment-picture.s3.amazonaws.com';
+    
+    // If imagePath already contains the S3 bucket URL, return it directly
+    if (imagePath.startsWith(S3_BUCKET_URL)) {
+      return imagePath;
     }
-    let srcName = `${imgHostURL}/${imgName.replace(/\\/g, '/')}`;
-    console.log(`Constructed image URL: ${srcName}`); // Log the constructed URL
-    return srcName;
-}
+
+    if (!imagePath || typeof imagePath !== 'string') {
+        return '';
+    }
+    
+  
+    // Ensure that the imagePath does not have leading slashes or 'images/' prefix
+    const cleanPath = imagePath.replace(/^\/|images\//g, '');
+    return `${S3_BUCKET_URL}/${cleanPath}`;
+  };
+  
 
 
 function getElemByMaxAttr(objArr, attrCheck="value", isDate=false) {
@@ -118,5 +127,4 @@ function dateComparator(dateX, dateY) {
     }
 }
 
-export { findAttribute, parseID, formatStr, formatDate, formatTemp, getAttrByInpID,
-getImageFromURL, getElemByMaxAttr, dateComparator }
+export { findAttribute, parseID, formatStr, formatDate, formatTemp, getAttrByInpID, getElemByMaxAttr, dateComparator }

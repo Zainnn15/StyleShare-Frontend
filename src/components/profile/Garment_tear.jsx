@@ -94,7 +94,7 @@ const Garment_tear = ({garment}) => {
                                             <label className="text-b">Photo:<label className="tab"></label></label>
                                         </p>
                                         <div className='container-input-img img-size-sm'>
-                                            <img src={getImageFromURL(tear.twistingImg)} alt="front"/>
+                                            {tear.twistingImg && <img src={getImageFromURL(tear.twistingImg)} alt="twisting"/>}
                                         </div>
                                     </div>
                                 )
@@ -154,7 +154,7 @@ const Garment_tear = ({garment}) => {
                                             <label className="text-b">Photo:<label className="tab"></label></label>
                                         </p>
                                         <div className='container-input-img img-size-sm'>
-                                            <img src={getImageFromURL(tear.spandexShrinkImg)} alt="front"/>
+                                            {tear.spandexShrinkImg && <img src={getImageFromURL(tear.spandexShrinkImg)} alt="spandex shrink"/>}
                                         </div>
                                     </div>
                                 )
@@ -176,7 +176,7 @@ const Garment_tear = ({garment}) => {
                                             <label className="text-b">Photo:<label className="tab"></label></label>
                                         </p>
                                         <div className='container-input-img img-size-sm'>
-                                            <img src={getImageFromURL(tear.printFadeImg)} alt="front"/>
+                                            {tear.printFadeImg && <img src={getImageFromURL(tear.printFadeImg)} alt="print fade"/>}
                                         </div>
                                     </div>
                                 )
@@ -203,7 +203,7 @@ const Garment_tear = ({garment}) => {
                                             <label className="text-b">Photo:<label className="tab"></label></label>
                                         </p>
                                         <div className='container-input-img img-size-sm'>
-                                            <img src={getImageFromURL(tear.holeImg)} alt="front"/>
+                                            {tear.holeImg && <img src={getImageFromURL(tear.holeImg)} alt="hole"/>}
                                         </div>
                                     </div>
                                 )
@@ -269,7 +269,7 @@ const Garment_tear = ({garment}) => {
                                             <label className="text-b">Photo:<label className="tab"></label></label>
                                         </p>
                                         <div className='container-input-img img-size-sm'>
-                                            <img src={getImageFromURL(tear.stainImg)} alt="front"/>
+                                            {tear.stainImg && <img src={getImageFromURL(tear.stainImg)} alt="stain"/>}
                                         </div>
                                     </div>
                                 )
