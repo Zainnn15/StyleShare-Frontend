@@ -71,21 +71,20 @@ function getAttrByInpID(dataID, mapObj, listAttr="img", listObj=careInstructions
 export const getImageFromURL = (imagePath) => {
     const S3_BUCKET_URL = 'https://garment-picture.s3.amazonaws.com';
     
+    if (!imagePath || typeof imagePath !== 'string') {
+        return ''; // Return a default image URL or an empty string if imagePath is not valid
+    }
+
     // If imagePath already contains the S3 bucket URL, return it directly
     if (imagePath.startsWith(S3_BUCKET_URL)) {
       return imagePath;
     }
 
-    if (!imagePath || typeof imagePath !== 'string') {
-        return '';
-    }
-    
-  
     // Ensure that the imagePath does not have leading slashes or 'images/' prefix
     const cleanPath = imagePath.replace(/^\/|images\//g, '');
     return `${S3_BUCKET_URL}/${cleanPath}`;
-  };
-  
+};
+
 
 
 function getElemByMaxAttr(objArr, attrCheck="value", isDate=false) {
