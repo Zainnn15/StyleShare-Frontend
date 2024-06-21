@@ -2,7 +2,8 @@ import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../context/userContext";
 import { GroupContext } from "../../context/groupContext";
 import Axios from "axios";
-import Modal from 'react-modal'; // Assuming you are using react-modal for modal dialogs
+import Modal from 'react-modal';
+import { toast, Toaster } from 'react-hot-toast';
 import '../styles/main.scss';
 import ScreenHeaderIn from "../components/common/ScreenHeaderIn";
 import General from "../components/profile/Garment_general";
@@ -74,10 +75,9 @@ export default function Profile() {
     const formData = new FormData();
     formData.append('userId', user._id);
 
-    // Use JSON.stringify to ensure the array is sent as a single JSON string
     formData.set('selectedDays', JSON.stringify(selectedDays));
     formData.set('selectedTimes', JSON.stringify(selectedTimes));
-    formData.set('campuses', JSON.stringify(selectedCampus));  // Ensure that campuses are sent as a JSON array
+    formData.set('campuses', JSON.stringify(selectedCampus));
     formData.append('customCampus', customCampus);
 
     if (selectedImage) {
@@ -91,23 +91,23 @@ export default function Profile() {
             withCredentials: true,
         });
         console.log('Profile updated:', response.data);
+        toast.success('Profile updated successfully, please refresh the page to see changes');
     } catch (error) {
         console.error('Error updating profile:', error);
+        toast.error('Failed to update profile');
     }
   };
 
   useEffect(() => {
       if (user && user._id) {
-          // Fetch user profile
           Axios.get(`/profile/${user._id}`, { withCredentials: true })
               .then((response) => {
                   const data = response.data;
-                  setProfile(data); // Assuming this sets user-specific profile details
+                  setProfile(data);
                   setSelectedDays(data.SenecaDays || []);
                   setSelectedTimes(data.SenecaTimes || []);
                   setSelectedCampus(data.campuses || []);
                   setCustomCampus(data.customCampuses[0] || '');
-                  //set selectedImage
                   setSelectedImage(data.profilePicture);
               })
               .catch((error) => console.error('Error fetching user profile:', error));
@@ -116,30 +116,26 @@ export default function Profile() {
 
   useEffect(() => {
     if (user && user._id) {
-      // Fetch user profile
       Axios.get(`/profile/${user._id}`, { withCredentials: true })
       .then((response) => {
         const data = response.data;
-        setProfile(data); // Assuming this sets user-specific profile details
+        setProfile(data);
         setSelectedDays(data?.SenecaDays || []);
         setSelectedTimes(data?.SenecaTimes.filter(time => time.start && time.end) || []);
-        //set selectedImage
         setSelectedImage(data.profilePicture);
       })
       .catch((error) => console.error('Error fetching user profile:', error));
   
-      // Fetch garment details based on the user ID
       Axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true })
     .then((response) => {
       const garmentData = response.data;
       console.log('Garment Details:', garmentData);
-      //setGarmentDetails(garmentData); // Assuming this sets specific garment details
       if(Array.isArray(garmentData) && garmentData.length > 0) {
         setGarmentList(garmentData);
         setGarment(garmentData[0]);
       }
       else {
-        setGarmentList([]); // Ensure garmentList is an empty array if there are no garments
+        setGarmentList([]);
         setGarment(null);
       }
     })
@@ -159,18 +155,18 @@ export default function Profile() {
             withCredentials: true,
         });
         console.log('Garment deleted:', response.data);
-        // Remove the deleted garment from the state
         const updatedGarmentList = garmentList.filter(g => g._id !== garmentToDelete);
         setGarmentList(updatedGarmentList);
-        // Reset the selected garment
         if (updatedGarmentList.length > 0) {
             setGarment(updatedGarmentList[0]);
         } else {
             setGarment(null);
         }
         closeDeleteModal();
+        toast.success('Garment deleted successfully');
     } catch (error) {
         console.error('Error deleting garment:', error);
+        toast.error('Failed to delete garment');
     }
   };
 
@@ -185,11 +181,11 @@ export default function Profile() {
   };
 
   if (userLoading) {
-    return <div>Loading...</div>; // Show loading state while data is being fetched
+    return <div>Loading...</div>;
   }
 
   if (!user) {
-    return <div>No user or garment data available.</div>; // Show a message or redirect if data is not available
+    return <div>No user or garment data available.</div>;
   }
   
   function handleChangeSchedule() {
@@ -235,6 +231,7 @@ const handleTimeChange = (day, field, value) => {
 
 return (
   <div>
+    <Toaster />
     <ScreenHeaderIn />
     <div className="container main">
         <div>
@@ -268,7 +265,6 @@ return (
                 }
               </p>
             </div>
-              {/* Campus Selection */}
               {editMode && (
               <div className="container-input">
                   <label htmlFor="campuses">Campus:</label>
@@ -322,7 +318,6 @@ return (
 
        <br/>
 
-       {/* Button to toggle edit mode */}
        <div className="container-content">
          <button className={editMode ? "button-cancel" : "button-regular"} 
            onClick={handleChangeSchedule}
@@ -331,7 +326,6 @@ return (
          </button>
        </div>
 
-     {/* Section to select days */}
      {editMode && (
        <div>
          <div className="container-prompt">
@@ -627,7 +621,6 @@ return (
       )}
    </div>
 
-   {/* Profile Picture Modal */}
    <Modal
      isOpen={isModalOpen}
      onRequestClose={() => setIsModalOpen(false)}
@@ -662,7 +655,6 @@ return (
      </form>
  </Modal>
 
-   {/* Delete Garment Confirmation Modal */}
    <Modal
      isOpen={isDeleteModalOpen}
      onRequestClose={closeDeleteModal}
@@ -687,6 +679,5 @@ return (
      </div>
  </Modal>
  </div>
-
 );
 }

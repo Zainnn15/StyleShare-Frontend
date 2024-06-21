@@ -145,7 +145,7 @@ export default function GarmentTear() {
             if (response.data.error) {
                 toast.error(response.data.error);
             } else {
-                toast.success('Garment details updated successfully');
+                toast.success('Garment Tear details updated successfully');
                 setGarment(response.data.garmentDetail); // Update local state with new garment details
                 navigate("/garment-care");
             }
