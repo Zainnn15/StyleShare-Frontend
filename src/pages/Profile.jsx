@@ -23,13 +23,12 @@ export default function Profile() {
   const { userGroups } = useContext(GroupContext);
   const [setProfile] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [schedules, setSchedules] = useState([]);
+  const [availability, setAvailability] = useState([]);
   const [newSchedule, setNewSchedule] = useState({
     day: '',
     start: '',
     end: '',
-    campus: '',
-    customCampus: ''
+    location: '',
   });
   const [editMode, setEditMode] = useState(false);
   const [garment, setGarment] = useState(null);
@@ -68,13 +67,12 @@ export default function Profile() {
   };
 
   const addSchedule = () => {
-    setSchedules(prevSchedules => [...prevSchedules, newSchedule]);
+    setAvailability(prevAvailability => [...prevAvailability, newSchedule]);
     setNewSchedule({
       day: '',
       start: '',
       end: '',
-      campus: '',
-      customCampus: ''
+      location: '',
     });
   };
 
@@ -82,7 +80,7 @@ export default function Profile() {
     e.preventDefault();
     const formData = new FormData();
     formData.append('userId', user._id);
-    formData.append('schedules', JSON.stringify(schedules));
+    formData.append('availability', JSON.stringify(availability));
 
     if (selectedImage) {
         formData.append('profilePicture', selectedImage);
@@ -108,7 +106,7 @@ export default function Profile() {
               .then((response) => {
                   const data = response.data;
                   setProfile(data);
-                  setSchedules(data.schedules || []);
+                  setAvailability(data.availability || []);
                   setSelectedImage(data.profilePicture);
               })
               .catch((error) => console.error('Error fetching user profile:', error));
@@ -121,7 +119,7 @@ export default function Profile() {
       .then((response) => {
         const data = response.data;
         setProfile(data);
-        setSchedules(data.schedules || []);
+        setAvailability(data.availability || []);
         setSelectedImage(data.profilePicture);
       })
       .catch((error) => console.error('Error fetching user profile:', error));
@@ -232,11 +230,11 @@ export default function Profile() {
                 <p>Available Times at:</p>
                 <div id="user_schedule">
                   <ul>
-                    {schedules.length > 0 &&
-                      schedules.map((schedule, index) => (
+                    {availability.length > 0 &&
+                      availability.map((schedule, index) => (
                         <li key={"sched_" + index}>
                           <label>
-                            {dayMapping[schedule.day]} at {schedule.campus === "Other" ? schedule.customCampus : schedule.campus}:
+                            {dayMapping[schedule.day]} at {schedule.location === "Other" ? schedule.customCampus : schedule.location}:
                             <label className="tab"></label>
                             <label>{`${schedule.start} - ${schedule.end}`}</label>
                           </label>
@@ -270,6 +268,7 @@ export default function Profile() {
                 onChange={handleNewScheduleChange}
                 className="form-control"
               >
+                <option value="">Select Day</option>
                 {weekDays.map(day => (
                   <option key={day.value} value={day.value}>{day.label}</option>
                 ))}
@@ -292,8 +291,8 @@ export default function Profile() {
               />
               <label>Campus:</label>
               <select
-                name="campus"
-                value={newSchedule.campus}
+                name="location"
+                value={newSchedule.location}
                 onChange={handleNewScheduleChange}
                 className="form-control"
               >
@@ -303,7 +302,7 @@ export default function Profile() {
                 <option value="King">King</option>
                 <option value="Other">Other</option>
               </select>
-              {newSchedule.campus === "Other" && (
+              {newSchedule.location === "Other" && (
                 <input
                   type="text"
                   name="customCampus"
