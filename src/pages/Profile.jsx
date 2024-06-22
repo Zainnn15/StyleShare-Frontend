@@ -23,22 +23,18 @@ export default function Profile() {
   const { userGroups } = useContext(GroupContext);
   const [setProfile] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [selectedDays, setSelectedDays] = useState([]);
-  const [selectedTimes, setSelectedTimes] = useState([
-    { day: 0, start: "", end: "" },
-    { day: 1, start: "", end: "" },
-    { day: 2, start: "", end: "" },
-    { day: 3, start: "", end: "" },
-    { day: 4, start: "", end: "" },
-    { day: 5, start: "", end: "" },
-    { day: 6, start: "", end: "" },
-  ]);
+  const [schedules, setSchedules] = useState([]);
+  const [newSchedule, setNewSchedule] = useState({
+    day: '',
+    start: '',
+    end: '',
+    campus: '',
+    customCampus: ''
+  });
   const [editMode, setEditMode] = useState(false);
-  const [garment, setGarment] = useState(null); 
+  const [garment, setGarment] = useState(null);
   const [garmentList, setGarmentList] = useState([]);
   const [tabPage, setTabPage] = useState(0);
-  const [selectedCampus, setSelectedCampus] = useState('');
-  const [customCampus, setCustomCampus] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [garmentToDelete, setGarmentToDelete] = useState(null);
@@ -63,22 +59,30 @@ export default function Profile() {
     6: 'Saturday',
   };
 
-  const weeks = weekDays.filter((day) => day.value > 0 && day.value < 6);
+  const handleNewScheduleChange = (e) => {
+    const { name, value } = e.target;
+    setNewSchedule(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
 
-  const handleCampusChange = (event) => {
-    const selectedOptions = Array.from(event.target.selectedOptions, option => option.value);
-    setSelectedCampus(selectedOptions);
+  const addSchedule = () => {
+    setSchedules(prevSchedules => [...prevSchedules, newSchedule]);
+    setNewSchedule({
+      day: '',
+      start: '',
+      end: '',
+      campus: '',
+      customCampus: ''
+    });
   };
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('userId', user._id);
-
-    formData.set('selectedDays', JSON.stringify(selectedDays));
-    formData.set('selectedTimes', JSON.stringify(selectedTimes));
-    formData.set('campuses', JSON.stringify(selectedCampus));
-    formData.append('customCampus', customCampus);
+    formData.append('schedules', JSON.stringify(schedules));
 
     if (selectedImage) {
         formData.append('profilePicture', selectedImage);
@@ -104,10 +108,7 @@ export default function Profile() {
               .then((response) => {
                   const data = response.data;
                   setProfile(data);
-                  setSelectedDays(data.SenecaDays || []);
-                  setSelectedTimes(data.SenecaTimes || []);
-                  setSelectedCampus(data.campuses || []);
-                  setCustomCampus(data.customCampuses[0] || '');
+                  setSchedules(data.schedules || []);
                   setSelectedImage(data.profilePicture);
               })
               .catch((error) => console.error('Error fetching user profile:', error));
@@ -120,8 +121,7 @@ export default function Profile() {
       .then((response) => {
         const data = response.data;
         setProfile(data);
-        setSelectedDays(data?.SenecaDays || []);
-        setSelectedTimes(data?.SenecaTimes.filter(time => time.start && time.end) || []);
+        setSchedules(data.schedules || []);
         setSelectedImage(data.profilePicture);
       })
       .catch((error) => console.error('Error fetching user profile:', error));
@@ -189,495 +189,414 @@ export default function Profile() {
   }
   
   function handleChangeSchedule() {
-    if(editMode === true) {
-      setSelectedDays([]);
-      setSelectedTimes([
-        { day: 0, start: "", end: "" },
-        { day: 1, start: "", end: "" },
-        { day: 2, start: "", end: "" },
-        { day: 3, start: "", end: "" },
-        { day: 4, start: "", end: "" },
-        { day: 5, start: "", end: "" },
-        { day: 6, start: "", end: "" },
-      ]);
-    }
     setEditMode(!editMode);
   }
 
-  function handleDaySelect(e) {
-    let temp = selectedDays;
-    if (e.target.checked) {
-        if (!selectedDays.includes(e.target.value)) {
-            temp.push(e.target.value);
-            temp.sort();
-        }
-    } else {
-        let index = selectedDays.indexOf(e.target.value);
-        if (index > -1) {
-            temp.splice(index, 1);
-        }
-    }
-    setSelectedDays([...temp]);
-}
-
-const handleTimeChange = (day, field, value) => {
-    const temp = [...selectedTimes];
-    const index = temp.findIndex((time) => time.day === day);
-    temp[index][field] = value;
-    setSelectedTimes(temp);
-};
-
-  console.log(user);
-
-return (
-  <div>
-    <Toaster />
-    <ScreenHeaderIn />
-    <div className="container main">
-        <div>
-            <label className="container-title">Profile</label>
-            <hr/>
-        </div>
-        <div className="container-row space-evenly wrap container-border greeting">
-          <div className="container-profile-img clickable" onClick={()=>{setIsModalOpen(true)}}>
-            <img src={user.profilePicture ? getImageFromURL(user.profilePicture) : defaultProfile} alt="profile"/>
+  return (
+    <div>
+      <Toaster />
+      <ScreenHeaderIn />
+      <div className="container main">
+          <div>
+              <label className="container-title">Profile</label>
+              <hr/>
+          </div>
+          <div className="container-row space-evenly wrap container-border greeting">
+            <div className="container-profile-img clickable" onClick={()=>{setIsModalOpen(true)}}>
+              <img src={user.profilePicture ? getImageFromURL(user.profilePicture) : defaultProfile} alt="profile"/>
+            </div>        
+            <h3>Welcome, {user.username}</h3>
           </div>        
-          <h3>Welcome, {user.username}</h3>
-        </div>        
+          <hr/>
+          <div className="container-content popup">
+            <h3>User Details</h3>
+            <hr/>
+            <br/>
+            <div className="container-grid-2-md gap">
+              <div className="container-border clear-box">
+                <p><label className="text-b">Name:<label className="tab"></label></label>{user.name}</p>
+                <p><label className="text-b">Username:<label className="tab"></label></label>{user.username}</p>
+                <p><label className="text-b">Email:<label className="tab"></label></label>{user.email}</p>
+                <p><label className="text-b">Group:<label className="tab"></label></label>
+                  {
+                    userGroups &&
+                    <label>{userGroups.group_name}</label>
+                  }
+                  {
+                    !userGroups &&
+                    <label>N/A</label>
+                  }
+                </p>
+              </div>
+              <div className="container-border clear-box">
+                <p>Available Times at:</p>
+                <div id="user_schedule">
+                  <ul>
+                    {schedules.length > 0 &&
+                      schedules.map((schedule, index) => (
+                        <li key={"sched_" + index}>
+                          <label>
+                            {dayMapping[schedule.day]} at {schedule.campus === "Other" ? schedule.customCampus : schedule.campus}:
+                            <label className="tab"></label>
+                            <label>{`${schedule.start} - ${schedule.end}`}</label>
+                          </label>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br/>
+          <div className="container-content">
+            <button className={editMode ? "button-cancel" : "button-regular"} 
+              onClick={handleChangeSchedule}
+            >
+                {editMode ? "Cancel" : "Change Available Time and Place"}
+            </button>
+          </div>
+
+        {editMode && (
+          <div>
+            <div className="container-prompt">
+              <p>Add a new available schedule</p>
+            </div>
+            <div id={"timeRange_error"} style={{textAlign:"center"}}></div>
+            <div className="container-input">
+              <label>Day:</label>
+              <select
+                name="day"
+                value={newSchedule.day}
+                onChange={handleNewScheduleChange}
+                className="form-control"
+              >
+                {weekDays.map(day => (
+                  <option key={day.value} value={day.value}>{day.label}</option>
+                ))}
+              </select>
+              <label>Start Time:</label>
+              <input
+                type="time"
+                name="start"
+                value={newSchedule.start}
+                onChange={handleNewScheduleChange}
+                className="form-control"
+              />
+              <label>End Time:</label>
+              <input
+                type="time"
+                name="end"
+                value={newSchedule.end}
+                onChange={handleNewScheduleChange}
+                className="form-control"
+              />
+              <label>Campus:</label>
+              <select
+                name="campus"
+                value={newSchedule.campus}
+                onChange={handleNewScheduleChange}
+                className="form-control"
+              >
+                <option value="">Select Campus</option>
+                <option value="Newham">Newham</option>
+                <option value="York">York</option>
+                <option value="King">King</option>
+                <option value="Other">Other</option>
+              </select>
+              {newSchedule.campus === "Other" && (
+                <input
+                  type="text"
+                  name="customCampus"
+                  placeholder="Specify your location"
+                  value={newSchedule.customCampus}
+                  onChange={handleNewScheduleChange}
+                  className="form-control mt-2"
+                />
+              )}
+              <button className="button-regular" onClick={addSchedule}>Add Schedule</button>
+            </div>
+            <button className="button-regular mt-3" onClick={handleUpdateProfile}>Save</button>
+          </div>
+        )}
+        <br/>
+
         <hr/>
         <div className="container-content popup">
-          <h3>User Details</h3>
+          <h3>Garment Details</h3>
           <hr/>
-          <br/>
-          <div className="container-grid-2-md gap">
-            <div className="container-border clear-box">
-              <p><label className="text-b">Name:<label className="tab"></label></label>{user.name}</p>
-              <p><label className="text-b">Username:<label className="tab"></label></label>{user.username}</p>
-              <p><label className="text-b">Email:<label className="tab"></label></label>{user.email}</p>
-              <p><label className="text-b">Group:<label className="tab"></label></label>
-                {
-                  userGroups &&
-                  <label>{userGroups.group_name}</label>
-                }
-                {
-                  !userGroups &&
-                  <label>N/A</label>
-                }
-              </p>
-            </div>
-              {editMode && (
-              <div className="container-input">
-                  <label htmlFor="campuses">Campus:</label>
-                  <select multiple id="campuses" value={selectedCampus} onChange={handleCampusChange} className="form-control">
-                      <option value="Newham">Newham</option>
-                      <option value="York">York</option>
-                      <option value="King">King</option>
-                      <option value="Other">Other</option>
-                  </select>
-                  {selectedCampus.includes('Other') && (
-                      <input
-                          type="text"
-                          placeholder="Specify your location"
-                          value={customCampus}
-                          onChange={e => setCustomCampus(e.target.value)}
-                          className="form-control mt-2"
-                      />
-                  )}
-              </div>
-          )}
-            <div className="container-border clear-box">
-  <p>Available Times at
-      <strong>
-          {user.campuses[0] === "[\"Other\"]" ? 
-              ' ' + user.customCampuses[0] : 
-              ' Seneca ' + user.campuses[0]}
-      </strong>:
-  </p>
-  <div id="user_schedule">
-      <ul>
-          {user.SenecaTimes.length > 0 &&
-              user.SenecaTimes.map((schedule, index) => {
-                  return (
-                      schedule.start &&
-                      schedule.end && (
-                          <li key={"sched_" + index}>
-                              <label>
-                                  {dayMapping[schedule.day]}:
-                                  <label className="tab"></label>
-                                  <label>{`${schedule.start} - ${schedule.end}`}</label>
-                              </label>
-                          </li>
-                      )
-                  );
-              })}
-      </ul>
-  </div>
-</div>
-</div>
-       </div>
-
-       <br/>
-
-       <div className="container-content">
-         <button className={editMode ? "button-cancel" : "button-regular"} 
-           onClick={handleChangeSchedule}
-         >
-             {editMode ? "Cancel" : "Change Available Time and Place"}
-         </button>
-       </div>
-
-     {editMode && (
-       <div>
-         <div className="container-prompt">
-           <p>Select your available days</p>
-         </div>
-         <div id={"timeRange_error"} style={{textAlign:"center"}}></div>
-         <div className="container-input">
-             {weeks.map((day, index) => {
-               return(
-                 <label key={"chooseDay_"+index} className="clickable">
-                   <input
-                     type="checkbox"
-                     value={day.value}
-                     defaultChecked={selectedDays.includes((day.value).toString())}
-                     onChange={handleDaySelect}
-                   />
-                   {day.label}
-                 </label>
-               )
-             })}
-           <button className="button-regular" onClick={handleUpdateProfile}>Save</button>
-         </div>
-
-         <div className="container-grid-2-md">
-         {selectedDays.map((dayNum, index) => {
-           return (
-             <div key={"chooseTime_" + index}>
-               <div className="container-prompt">
-                 <p>{weekDays[dayNum].label} Available Time</p>
-               </div>
-               <div className="container-content">
-                 <div className="container-grid-2-md center">
-                   <div>
-                     <p>Start Time</p>
-                     <input
-                       type="time"
-                       value={selectedTimes[dayNum]?.start || ""}
-                       onChange={(e) =>
-                         handleTimeChange(
-                           weekDays[dayNum].value,
-                           "start",
-                           e.target.value
-                         )
-                       }
-                       onBlur={(e) => {
-                         e.target.value = selectedTimes[dayNum]?.start || "";
-                       }}
-                         />
-                       </div>
-                       <div>
-                         <p>End Time</p>
-                         <input type="time" value={selectedTimes[dayNum].end}
-                         onChange={(e) =>
-                           handleTimeChange(
-                             weekDays[dayNum].value,
-                             "end",
-                             e.target.value
-                           )
-                         }
-                         onBlur={(e) => {
-                             e.target.value = selectedTimes[dayNum].end;
-                           }}
-                         />
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-               )
-           })}
-         </div>
-         
-       </div>
-     )}
-     <br/>
-
-     <hr/>
-     <div className="container-content popup">
-       <h3>Garment Details</h3>
-       <hr/>
-     </div>
-     {garmentList.length > 0 ? (
-        <>
-          <div>
-            <p className="container-subtitle-2">Selected Garment</p>
-            <select
-              value={garmentList.findIndex(g => g._id === garment?._id)}
-              onChange={(e)=>{
-                const selectedGarment = garmentList[e.target.value];
-                setGarment(selectedGarment);
-              }}
-            >
-              {
-                garmentList.map((garmentOpt, index) => {
-                  return (
-                    <option key={"garmentOpt_"+index} value={index}>
-                      {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} ({formatDate(garmentOpt.purchaseDate)})
-                    </option>
-                  )
-                }) 
-              }
-            </select>
-          </div>
-          <br/>
-          <div className="container-border page-tab">
-            <div className="container-tab">
-              <div id="tab0" className="container-tab-group active" 
-                onClick={()=>{
-                  let e_active = document.getElementById(`tab${tabPage}`);
-                  if(e_active) {
-                    e_active.classList.toggle("active", false);
-                  }
-                  setTabPage(0);
-                  let e_div = document.getElementById(`tab0`)
-                  if(e_div) {
-                    e_div.classList.toggle("active", true);
-                  }
-                }}
-              >
-                <p className="text-purpleLight">General</p>
-              </div>
-              <div id="tab1" className="container-tab-group"
-                onClick={()=>{
-                  let e_active = document.getElementById(`tab${tabPage}`);
-                  if(e_active) {
-                    e_active.classList.toggle("active", false);
-                  }
-                  setTabPage(1);
-                  let e_div = document.getElementById(`tab1`)
-                  if(e_div) {
-                    e_div.classList.toggle("active", true);
-                  }
-                }}
-              >
-                <p className="text-purpleLight">Measurements</p>
-              </div>
-              <div id="tab2" className="container-tab-group"
-                onClick={()=>{
-                  let e_active = document.getElementById(`tab${tabPage}`);
-                  if(e_active) {
-                    e_active.classList.toggle("active", false);
-                  }
-                  setTabPage(2);
-                  let e_div = document.getElementById(`tab2`)
-                  if(e_div) {
-                    e_div.classList.toggle("active", true);
-                  }
-                }}
-              >
-                <p className="text-purpleLight">Composition</p>
-              </div>
-              <div id="tab3" className="container-tab-group"
-                onClick={()=>{
-                  let e_active = document.getElementById(`tab${tabPage}`);
-                  if(e_active) {
-                    e_active.classList.toggle("active", false);
-                  }
-                  setTabPage(3);
-                  let e_div = document.getElementById(`tab3`)
-                  if(e_div) {
-                    e_div.classList.toggle("active", true);
-                  }
-                }}
-              >
-                <p className="text-purpleLight">Care Instructions</p>
-              </div>
-              <div id="tab4" className="container-tab-group"
-                onClick={()=>{
-                  let e_active = document.getElementById(`tab${tabPage}`);
-                  if(e_active) {
-                    e_active.classList.toggle("active", false);
-                  }
-                  setTabPage(4);
-                  let e_div = document.getElementById(`tab4`)
-                  if(e_div) {
-                    e_div.classList.toggle("active", true);
-                  }
-                }}
-              >
-                <p className="text-purpleLight">Wear</p>
-              </div>
-              <div id="tab5" className="container-tab-group"
-                onClick={()=>{
-                  let e_active = document.getElementById(`tab${tabPage}`);
-                  if(e_active) {
-                    e_active.classList.toggle("active", false);
-                  }
-                  setTabPage(5);
-                  let e_div = document.getElementById(`tab5`)
-                  if(e_div) {
-                    e_div.classList.toggle("active", true);
-                  }
-                }}
-              >
-                <p className="text-purpleLight">Wash</p>
-              </div>
-              <div id="tab6" className="container-tab-group"
-                onClick={()=>{
-                  let e_active = document.getElementById(`tab${tabPage}`);
-                  if(e_active) {
-                    e_active.classList.toggle("active", false);
-                  }
-                  setTabPage(6);
-                  let e_div = document.getElementById(`tab6`)
-                  if(e_div) {
-                    e_div.classList.toggle("active", true);
-                  }
-                }}
-              >
-                <p className="text-purpleLight">Tear</p>
-              </div>
-              <div id="tab7" className="container-tab-group"
-                onClick={()=>{
-                  let e_active = document.getElementById(`tab${tabPage}`);
-                  if(e_active) {
-                    e_active.classList.toggle("active", false);
-                  }
-                  setTabPage(7);
-                  let e_div = document.getElementById(`tab7`)
-                  if(e_div) {
-                    e_div.classList.toggle("active", true);
-                  }
-                }}
-              >
-                <p className="text-purpleLight">Feel</p>
-              </div>
-            </div>
-
-            {
-              tabPage === 0 &&
-              garment && (
-                <General garment={garment}/>
-              )
-            }
-
-            {
-              tabPage === 1 &&
-              garment && 
-              garment.garmentSize && (
-                <Measure garment={garment}/>
-              )
-            }
-
-            {
-              tabPage === 2 &&
-              garment && (
-                <Composition garment={garment}/>
-              )
-            }
-
-            {
-              tabPage === 3 &&
-              garment && (
-                <Care garment={garment}/>
-              )
-            }
-
-            {
-              tabPage === 4 &&
-              garment &&
-              garment.wearInfo &&
-              garment.wearInfo.length > 0 && (
-                <Wear garment={garment}/>
-              )
-            }
-
-            {
-              tabPage === 5 &&
-              garment &&
-              garment.washCareInstructions &&
-              garment.washCareInstructions.length > 0 && (
-                <Wash garment={garment}/>
-              )
-            }
-
-            {
-              tabPage === 6 &&
-              garment &&
-              garment.tearInfo &&
-              garment.tearInfo.length > 0 && (
-                <Tear garment={garment}/>
-              )
-            }
-
-          </div>
-          <div className="container-content">
-            <button className="button-regular" onClick={() => openDeleteModal(garment._id)}>Delete Selected Garment</button>
-          </div>
-        </>
-      ) : (
-        <div className="container-content">
-          <p>You have no garments. Please add a garment to see the details here.</p>
         </div>
-      )}
-   </div>
+        {garmentList.length > 0 ? (
+          <>
+            <div>
+              <p className="container-subtitle-2">Selected Garment</p>
+              <select
+                value={garmentList.findIndex(g => g._id === garment?._id)}
+                onChange={(e)=>{
+                  const selectedGarment = garmentList[e.target.value];
+                  setGarment(selectedGarment);
+                }}
+              >
+                {
+                  garmentList.map((garmentOpt, index) => {
+                    return (
+                      <option key={"garmentOpt_"+index} value={index}>
+                        {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} ({formatDate(garmentOpt.purchaseDate)})
+                      </option>
+                    )
+                  }) 
+                }
+              </select>
+            </div>
+            <br/>
+            <div className="container-border page-tab">
+              <div className="container-tab">
+                <div id="tab0" className="container-tab-group active" 
+                  onClick={()=>{
+                    let e_active = document.getElementById(`tab${tabPage}`);
+                    if(e_active) {
+                      e_active.classList.toggle("active", false);
+                    }
+                    setTabPage(0);
+                    let e_div = document.getElementById(`tab0`)
+                    if(e_div) {
+                      e_div.classList.toggle("active", true);
+                    }
+                  }}
+                >
+                  <p className="text-purpleLight">General</p>
+                </div>
+                <div id="tab1" className="container-tab-group"
+                  onClick={()=>{
+                    let e_active = document.getElementById(`tab${tabPage}`);
+                    if(e_active) {
+                      e_active.classList.toggle("active", false);
+                    }
+                    setTabPage(1);
+                    let e_div = document.getElementById(`tab1`)
+                    if(e_div) {
+                      e_div.classList.toggle("active", true);
+                    }
+                  }}
+                >
+                  <p className="text-purpleLight">Measurements</p>
+                </div>
+                <div id="tab2" className="container-tab-group"
+                  onClick={()=>{
+                    let e_active = document.getElementById(`tab${tabPage}`);
+                    if(e_active) {
+                      e_active.classList.toggle("active", false);
+                    }
+                    setTabPage(2);
+                    let e_div = document.getElementById(`tab2`)
+                    if(e_div) {
+                      e_div.classList.toggle("active", true);
+                    }
+                  }}
+                >
+                  <p className="text-purpleLight">Composition</p>
+                </div>
+                <div id="tab3" className="container-tab-group"
+                  onClick={()=>{
+                    let e_active = document.getElementById(`tab${tabPage}`);
+                    if(e_active) {
+                      e_active.classList.toggle("active", false);
+                    }
+                    setTabPage(3);
+                    let e_div = document.getElementById(`tab3`)
+                    if(e_div) {
+                      e_div.classList.toggle("active", true);
+                    }
+                  }}
+                >
+                  <p className="text-purpleLight">Care Instructions</p>
+                </div>
+                <div id="tab4" className="container-tab-group"
+                  onClick={()=>{
+                    let e_active = document.getElementById(`tab${tabPage}`);
+                    if(e_active) {
+                      e_active.classList.toggle("active", false);
+                    }
+                    setTabPage(4);
+                    let e_div = document.getElementById(`tab4`)
+                    if(e_div) {
+                      e_div.classList.toggle("active", true);
+                    }
+                  }}
+                >
+                  <p className="text-purpleLight">Wear</p>
+                </div>
+                <div id="tab5" className="container-tab-group"
+                  onClick={()=>{
+                    let e_active = document.getElementById(`tab${tabPage}`);
+                    if(e_active) {
+                      e_active.classList.toggle("active", false);
+                    }
+                    setTabPage(5);
+                    let e_div = document.getElementById(`tab5`)
+                    if(e_div) {
+                      e_div.classList.toggle("active", true);
+                    }
+                  }}
+                >
+                  <p className="text-purpleLight">Wash</p>
+                </div>
+                <div id="tab6" className="container-tab-group"
+                  onClick={()=>{
+                    let e_active = document.getElementById(`tab${tabPage}`);
+                    if(e_active) {
+                      e_active.classList.toggle("active", false);
+                    }
+                    setTabPage(6);
+                    let e_div = document.getElementById(`tab6`)
+                    if(e_div) {
+                      e_div.classList.toggle("active", true);
+                    }
+                  }}
+                >
+                  <p className="text-purpleLight">Tear</p>
+                </div>
+                <div id="tab7" className="container-tab-group"
+                  onClick={()=>{
+                    let e_active = document.getElementById(`tab${tabPage}`);
+                    if(e_active) {
+                      e_active.classList.toggle("active", false);
+                    }
+                    setTabPage(7);
+                    let e_div = document.getElementById(`tab7`)
+                    if(e_div) {
+                      e_div.classList.toggle("active", true);
+                    }
+                  }}
+                >
+                  <p className="text-purpleLight">Feel</p>
+                </div>
+              </div>
 
-   <Modal
-     isOpen={isModalOpen}
-     onRequestClose={() => setIsModalOpen(false)}
-     contentLabel="Profile Picture Upload"
-     style={{
-         content: {
-             top: '20%',
-             left: '50%',
-             right: 'auto',
-             bottom: 'auto',
-             transform: 'translate(-50%, 0)',
-             backgroundColor: "#F8E7E7",
-             maxHeight: '65%',
-         },
-     }}
- >
-     <h3>Upload Profile Picture</h3>
-     <form onSubmit={(e)=>e.preventDefault()}>
-         <div className="container-col">
-           <div className="container-profile-img clickable" onClick={()=>{clickID('uploadProfile')}}>
-             <img src={selectedImage ? URL.createObjectURL(selectedImage) : defaultProfile} alt="profile"/>
-           </div> 
-           <div>
-             <label><strong>Upload Photo: </strong></label>
-             <br/><br/>
-             <input id='uploadProfile' 
-               type="file" name="profilePicture" onChange={handleFileChange} style={{width:'80%'}}/>
-           </div>
-         </div>
-         <br/>
-         <button className="button-regular full" onClick={handleUpdateProfile}>Submit</button>
-     </form>
- </Modal>
+              {
+                tabPage === 0 &&
+                garment && (
+                  <General garment={garment}/>
+                )
+              }
 
-   <Modal
-     isOpen={isDeleteModalOpen}
-     onRequestClose={closeDeleteModal}
-     contentLabel="Delete Garment Confirmation"
-     style={{
-         content: {
-             top: '20%',
-             left: '50%',
-             right: 'auto',
-             bottom: 'auto',
-             transform: 'translate(-50%, 0)',
-             backgroundColor: "#F8E7E7",
-             maxHeight: '65%',
-         },
-     }}
- >
-     <h3>Confirm Delete</h3>
-     <p>Are you sure you want to delete this garment?</p>
-     <div className="container-row">
-         <button className="button-regular" onClick={handleDeleteGarment}>Yes</button>
-         <button className="button-cancel" onClick={closeDeleteModal}>No</button>
+              {
+                tabPage === 1 &&
+                garment && 
+                garment.garmentSize && (
+                  <Measure garment={garment}/>
+                )
+              }
+
+              {
+                tabPage === 2 &&
+                garment && (
+                  <Composition garment={garment}/>
+                )
+              }
+
+              {
+                tabPage === 3 &&
+                garment && (
+                  <Care garment={garment}/>
+                )
+              }
+
+              {
+                tabPage === 4 &&
+                garment &&
+                garment.wearInfo &&
+                garment.wearInfo.length > 0 && (
+                  <Wear garment={garment}/>
+                )
+              }
+
+              {
+                tabPage === 5 &&
+                garment &&
+                garment.washCareInstructions &&
+                garment.washCareInstructions.length > 0 && (
+                  <Wash garment={garment}/>
+                )
+              }
+
+              {
+                tabPage === 6 &&
+                garment &&
+                garment.tearInfo &&
+                garment.tearInfo.length > 0 && (
+                  <Tear garment={garment}/>
+                )
+              }
+
+            </div>
+            <div className="container-content">
+              <button className="button-regular" onClick={() => openDeleteModal(garment._id)}>Delete Selected Garment</button>
+            </div>
+          </>
+        ) : (
+          <div className="container-content">
+            <p>You have no garments. Please add a garment to see the details here.</p>
+          </div>
+        )}
      </div>
- </Modal>
- </div>
-);
+
+     <Modal
+       isOpen={isModalOpen}
+       onRequestClose={() => setIsModalOpen(false)}
+       contentLabel="Profile Picture Upload"
+       style={{
+           content: {
+               top: '20%',
+               left: '50%',
+               right: 'auto',
+               bottom: 'auto',
+               transform: 'translate(-50%, 0)',
+               backgroundColor: "#F8E7E7",
+               maxHeight: '65%',
+           },
+       }}
+   >
+       <h3>Upload Profile Picture</h3>
+       <form onSubmit={(e)=>e.preventDefault()}>
+           <div className="container-col">
+             <div className="container-profile-img clickable" onClick={()=>{clickID('uploadProfile')}}>
+               <img src={selectedImage ? URL.createObjectURL(selectedImage) : defaultProfile} alt="profile"/>
+             </div> 
+             <div>
+               <label><strong>Upload Photo: </strong></label>
+               <br/><br/>
+               <input id='uploadProfile' 
+                 type="file" name="profilePicture" onChange={handleFileChange} style={{width:'80%'}}/>
+             </div>
+           </div>
+           <br/>
+           <button className="button-regular full" onClick={handleUpdateProfile}>Submit</button>
+       </form>
+   </Modal>
+
+     <Modal
+       isOpen={isDeleteModalOpen}
+       onRequestClose={closeDeleteModal}
+       contentLabel="Delete Garment Confirmation"
+       style={{
+           content: {
+               top: '20%',
+               left: '50%',
+               right: 'auto',
+               bottom: 'auto',
+               transform: 'translate(-50%, 0)',
+               backgroundColor: "#F8E7E7",
+               maxHeight: '65%',
+           },
+       }}
+   >
+       <h3>Confirm Delete</h3>
+       <p>Are you sure you want to delete this garment?</p>
+       <div className="container-row">
+           <button className="button-regular" onClick={handleDeleteGarment}>Yes</button>
+           <button className="button-cancel" onClick={closeDeleteModal}>No</button>
+       </div>
+   </Modal>
+   </div>
+  );
 }
