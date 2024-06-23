@@ -1,0 +1,26 @@
+.mb-sm {
+  margin-bottom: 15px;
+}
+.mt-sm {
+  margin-top: 15px;
+}
+
+.button-delete {
+  background-color: #dc3545;
+  border: none;
+  color: white;
+  padding: 4px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  margin-left: 12px;
+  margin-bottom: 5px;
+}
+
+.button-delete img {
+  height: 15px;
+}
