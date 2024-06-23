@@ -171,7 +171,6 @@ export default function Profile() {
         'Profile updated successfully, please refresh the page to see changes',
       )
     } catch (error) {
-      console.error('Error updating profile:', error)
       toast.error('Failed to update profile')
     }
   }
@@ -369,7 +368,7 @@ export default function Profile() {
             className={editMode ? 'button-cancel' : 'button-regular'}
             onClick={handleChangeSchedule}
           >
-            {editMode ? 'Close' : 'Change Available Time and Place'}
+            {editMode ? 'Close' : 'Add Available Time and Place'}
           </button>
         </div>
 
