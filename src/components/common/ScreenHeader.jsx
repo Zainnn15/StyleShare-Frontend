@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import '../../styles/main.scss';
 import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 
 import logo from '../../assets/icons/logo_white.png';
 import menu from '../../assets/icons/menu.png';
@@ -9,6 +10,20 @@ import profile from '../../assets/images/profile_default.jpg';
 import CircleBtn from "./CircleBtn.jsx";
 
 const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
+
+    const headings = [
+        "Welcome to Seneca School of Fashion",
+        "Any garment which is cut to fit you is much more becoming.",
+        "Contact Seneca team for futher information",
+      ];
+      const [i, setI] = useState(0);
+    
+      useEffect(() => {
+        const intervalId = setInterval(() => {
+          setI((prevI) => (prevI + 1) % headings.length);
+        }, 4000);
+        return () => clearInterval(intervalId);
+    }, []);
 
     function openProfileDropdown() {
         let e_dropdown = document.getElementById("profile_dropdown");
@@ -62,10 +77,13 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
     return(
         <div>
             <div className="container-header">
-                <div className="container-row">
+                <div className="container-row2">
                     <Link className="container-header-button" to="/">
                         <CircleBtn iconUrl={logo} className={"button-header"} />
                     </Link>
+                    <span className="container-text">
+                        {headings[i]}
+                    </span>
                     {  
                         isLogin &&
                         <div className="container-header-button popup">

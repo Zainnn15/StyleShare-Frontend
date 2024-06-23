@@ -230,9 +230,15 @@ $screen-xl-min: 1200px;
     }
 }
 
-.container-row {
+.container-row{
     @include container-row;
 }
+
+.container-row2{
+    @include container-row;
+    gap: 30rem;
+}
+
 .space-evenly {
     justify-content: space-evenly;
 }
@@ -325,6 +331,15 @@ $screen-xl-min: 1200px;
     a, div {
         width: $profileItemWidth;
     }
+}
+
+.container-text {
+    font-family: 'Sans-serif'; 
+    vertical-align: middle;
+    color: Colors.$purpleScarlet;;
+    font-size: large;
+    font-weight: bold;
+
 }
 
 .container-header-menu {

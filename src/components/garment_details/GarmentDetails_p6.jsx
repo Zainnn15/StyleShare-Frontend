@@ -404,6 +404,27 @@ const GarmentDetails_p6 = ({formData, setFormData, page, numPages, handleForward
                                         <label>{careInstructions.dryShade.name}</label>
                                     </span>
                                 </div>
+                                <div className="container-care-group">         
+                                    {/* Update Do Not Tumble Dry - Kevin */}
+                                    <input type="radio" id="doNotTumble" name="dryType"
+                                        value={"doNotTumble"} 
+                                        onClick={(e) => {
+                                            const newTumble = formData.instructionTumble;
+                                            newTumble.Shade = e.target.id;
+                                            setFormData({
+                                                ...formData,
+                                                instructionTumble: newTumble
+                                            });
+                                            addErrorMessageByID("canTumble_error", null);
+                                        }}
+                                        defaultChecked={checkOnID("doNotTumble", formData.instructionTumble.Tumble)}
+                                    />
+
+                                    <span className="container-care-img" onClick={()=>clickID("tumble_no")}>
+                                        <CircleImg className="img-care" iconUrl={careInstructions.noTumble.img} width="50%"/>
+                                        <label>{careInstructions.noTumble.name}</label>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     )
