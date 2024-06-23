@@ -45,3 +45,31 @@
 .card-button:hover {
     background-color: #0056b3;
 }
+
+.button-confirm {
+    background-color: #4CAF50; /* Green background */
+    border: none; /* Remove border */
+    color: white; /* White text */
+    padding: 12px 24px; /* Some padding */
+    text-align: center; /* Center the text */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Make it inline-block */
+    font-size: 16px; /* Increase font size */
+    margin: 4px 2px; /* Add some margin */
+    cursor: pointer; /* Pointer/hand icon on hover */
+    border-radius: 8px; /* Rounded corners */
+    transition: background-color 0.3s ease; /* Add transition for hover effect */
+}
+
+.button-confirm:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+.button-confirm:active {
+    background-color: #3e8e41; /* Even darker green on click */
+}
+
+.button-confirm:disabled {
+    background-color: #ccc; /* Gray background when disabled */
+    cursor: not-allowed; /* Not-allowed cursor when disabled */
+}
