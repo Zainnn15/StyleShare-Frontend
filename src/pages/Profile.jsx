@@ -1,50 +1,49 @@
-import { useContext, useState, useEffect } from 'react'
-import { UserContext } from '../../context/userContext'
-import { GroupContext } from '../../context/groupContext'
-import Axios from 'axios'
-import Modal from 'react-modal'
-import { toast, Toaster } from 'react-hot-toast'
-import '../styles/main.scss'
-import ScreenHeaderIn from '../components/common/ScreenHeaderIn'
-import General from '../components/profile/Garment_general'
-import Composition from '../components/profile/Garment_composition'
-import Care from '../components/profile/Garment_care'
-import Measure from '../components/profile/Garment_measure'
-import Wear from '../components/profile/Garment_wear'
-import Wash from '../components/profile/Garment_wash'
-import Tear from '../components/profile/Garment_tear'
-import Feel from '../components/profile/Garment_feel'
-import TrashIcon from '../assets/icons/trash.png'
-import '../styles/marcus.css'
+import { useContext, useState, useEffect } from 'react';
+import { UserContext } from '../../context/userContext';
+import { GroupContext } from '../../context/groupContext';
+import Axios from 'axios';
+import Modal from 'react-modal';
+import { toast, Toaster } from 'react-hot-toast';
+import '../styles/main.scss';
+import ScreenHeaderIn from '../components/common/ScreenHeaderIn';
+import General from '../components/profile/Garment_general';
+import Composition from '../components/profile/Garment_composition';
+import Care from '../components/profile/Garment_care';
+import Measure from '../components/profile/Garment_measure';
+import Wear from '../components/profile/Garment_wear';
+import Wash from '../components/profile/Garment_wash';
+import Tear from '../components/profile/Garment_tear';
+import Feel from '../components/profile/Garment_feel';
+import TrashIcon from '../assets/icons/trash.png';
+import '../styles/marcus.css';
 import {
   findAttribute,
   formatDate,
   getImageFromURL,
-} from '../constants/functions/valueHandlers'
-import defaultProfile from '../assets/images/profile_default.jpg'
-import { GARMENT_TYPES } from '../constants/data/options'
-import { clickID } from '../constants/functions/inputHandlers'
-import axios from 'axios'
+} from '../constants/functions/valueHandlers';
+import defaultProfile from '../assets/images/profile_default.jpg';
+import { GARMENT_TYPES } from '../constants/data/options';
+import { clickID } from '../constants/functions/inputHandlers';
 
 export default function Profile() {
-  const { user, loading: userLoading } = useContext(UserContext)
-  const { userGroups } = useContext(GroupContext)
-  const [setProfile] = useState(null)
-  const [selectedImage, setSelectedImage] = useState(null)
-  const [availability, setAvailability] = useState([])
+  const { user, loading: userLoading } = useContext(UserContext);
+  const { userGroups } = useContext(GroupContext);
+  const [setProfile] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [availability, setAvailability] = useState([]);
   const [newSchedule, setNewSchedule] = useState({
     day: '',
     start: '',
     end: '',
     location: '',
-  })
-  const [editMode, setEditMode] = useState(false)
-  const [garment, setGarment] = useState(null)
-  const [garmentList, setGarmentList] = useState([])
-  const [tabPage, setTabPage] = useState(0)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [garmentToDelete, setGarmentToDelete] = useState(null)
+  });
+  const [editMode, setEditMode] = useState(false);
+  const [garment, setGarment] = useState(null);
+  const [garmentList, setGarmentList] = useState([]);
+  const [tabPage, setTabPage] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [garmentToDelete, setGarmentToDelete] = useState(null);
 
   const weekDays = [
     { value: 0, label: 'Sunday', short: 'Sun' },
@@ -54,7 +53,7 @@ export default function Profile() {
     { value: 4, label: 'Thursday', short: 'Thu' },
     { value: 5, label: 'Friday', short: 'Fri' },
     { value: 6, label: 'Saturday', short: 'Sat' },
-  ]
+  ];
 
   const dayMapping = {
     0: 'Sunday',
@@ -64,18 +63,18 @@ export default function Profile() {
     4: 'Thursday',
     5: 'Friday',
     6: 'Saturday',
-  }
+  };
 
   const handleNewScheduleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setNewSchedule((prevState) => ({
       ...prevState,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
   const addSchedule = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (
       !newSchedule.day ||
@@ -83,18 +82,18 @@ export default function Profile() {
       !newSchedule.end ||
       !newSchedule.location
     ) {
-      toast.error('Please fill in all fields')
-      return
+      toast.error('Please fill in all fields');
+      return;
     }
 
     if (newSchedule.location === 'Other' && newSchedule.customCampus) {
-      newSchedule.location = newSchedule.customCampus
+      newSchedule.location = newSchedule.customCampus;
     }
 
     setAvailability((prevAvailability) => {
-      const newAvailability = [...prevAvailability, newSchedule]
+      const newAvailability = [...prevAvailability, newSchedule];
 
-      console.log(newAvailability)
+      console.log(newAvailability);
 
       // Make the Axios request with the new availability state
       Axios.patch(
@@ -103,34 +102,34 @@ export default function Profile() {
         { withCredentials: true },
       )
         .then(() => {
-          // toast.success('Availability deleted')
+          // toast.success('Availability deleted');
         })
         .catch((error) => {
-          console.error('Error updating availability:', error)
-          // toast.error('Failed to update availability')
-        })
+          console.error('Error updating availability:', error);
+          // toast.error('Failed to update availability');
+        });
 
-      return newAvailability // Update the state with the new availability
-    })
+      return newAvailability; // Update the state with the new availability
+    });
     setNewSchedule({
       day: '',
       start: '',
       end: '',
       location: '',
-    })
-    // window.location.reload()
-  }
+    });
+    // window.location.reload();
+  };
 
   const deleteSchedule = async (e, id) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // Use a callback with the updater function to ensure we have the updated state
     setAvailability((prevAvailability) => {
       const newAvailability = prevAvailability.filter(
         (schedule) => schedule._id !== id,
-      )
+      );
 
-      console.log(newAvailability)
+      console.log(newAvailability);
 
       // Make the Axios request with the new availability state
       Axios.patch(
@@ -139,132 +138,134 @@ export default function Profile() {
         { withCredentials: true },
       )
         .then(() => {
-          // toast.success('Availability deleted')
+          // toast.success('Availability deleted');
         })
         .catch((error) => {
-          console.error('Error updating availability:', error)
-          // toast.error('Failed to update availability')
-        })
+          console.error('Error updating availability:', error);
+          // toast.error('Failed to update availability');
+        });
 
-      return newAvailability // Update the state with the new availability
-    })
-  }
+      return newAvailability; // Update the state with the new availability
+    });
+  };
 
   const handleUpdateProfile = async (e) => {
-    e.preventDefault()
-    const formData = new FormData()
-    formData.append('userId', user._id)
-    formData.append('availability', JSON.stringify(availability))
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('userId', user._id);
+    formData.append('availability', JSON.stringify(availability));
 
     if (selectedImage) {
-      formData.append('profilePicture', selectedImage)
-      setIsModalOpen(false)
+      formData.append('profilePicture', selectedImage);
+      setIsModalOpen(false);
     }
 
     try {
       const response = await Axios.post('/updateProfile', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         withCredentials: true,
-      })
-      console.log('Profile updated:', response.data)
+      });
+      console.log('Profile updated:', response.data);
       toast.success(
         'Profile updated successfully, please refresh the page to see changes',
-      )
+      );
     } catch (error) {
-      toast.error('Failed to update profile')
+      toast.error('Failed to update profile');
     }
-  }
+  };
 
   useEffect(() => {
     if (user && user._id) {
-      setAvailability(user.availability || [])
+      setAvailability(user.availability || []);
       Axios.get(`/profile/${user._id}`, { withCredentials: true })
         .then((response) => {
-          const data = response.data
-          setProfile(data)
-          setAvailability(data.availability || [])
-          setSelectedImage(data.profilePicture)
+          const data = response.data;
+          setProfile(data);
+          setAvailability(data.availability || []);
+          setSelectedImage(data.profilePicture);
         })
-        .catch((error) => console.error('Error fetching user profile:', error))
+        .catch((error) => console.error('Error fetching user profile:', error));
     }
-  }, [user, userLoading])
+  }, [user, userLoading]);
 
   useEffect(() => {
     if (user && user._id) {
       Axios.get(`/profile/${user._id}`, { withCredentials: true })
         .then((response) => {
-          const data = response.data
-          setProfile(data)
-          setAvailability(data.availability || [])
-          setSelectedImage(data.profilePicture)
+          const data = response.data;
+          setProfile(data);
+          setAvailability(data.availability || []);
+          setSelectedImage(data.profilePicture);
         })
-        .catch((error) => console.error('Error fetching user profile:', error))
+        .catch((error) => console.error('Error fetching user profile:', error));
 
       Axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true })
         .then((response) => {
-          const garmentData = response.data
-          console.log('Garment Details:', garmentData)
+          const garmentData = response.data;
+          console.log('Garment Details:', garmentData);
           if (Array.isArray(garmentData) && garmentData.length > 0) {
-            setGarmentList(garmentData)
-            setGarment(garmentData[0])
+            setGarmentList(garmentData);
+            setGarment(garmentData[0]);
           } else {
-            setGarmentList([])
-            setGarment(null)
+            setGarmentList([]);
+            setGarment(null);
           }
         })
         .catch((error) =>
           console.error('Error fetching garment details:', error),
-        )
+        );
     }
-  }, [user, userLoading])
+  }, [user, userLoading]);
 
   const handleFileChange = (event) => {
-    setSelectedImage(event.target.files[0])
-  }
+    setSelectedImage(event.target.files[0]);
+  };
 
   const handleDeleteGarment = async () => {
     try {
       const response = await Axios.delete(`/deleteGarment/${garmentToDelete}`, {
+        data: { userId: user._id }, // Pass userId in the request body
         withCredentials: true,
-      })
-      console.log('Garment deleted:', response.data)
+      });
+      console.log('Garment deleted:', response.data);
       const updatedGarmentList = garmentList.filter(
         (g) => g._id !== garmentToDelete,
-      )
-      setGarmentList(updatedGarmentList)
+      );
+      setGarmentList(updatedGarmentList);
       if (updatedGarmentList.length > 0) {
-        setGarment(updatedGarmentList[0])
+        setGarment(updatedGarmentList[0]);
       } else {
-        setGarment(null)
+        setGarment(null);
       }
-      closeDeleteModal()
-      toast.success('Garment deleted successfully')
+      closeDeleteModal();
+      toast.success('Garment deleted successfully');
     } catch (error) {
-      console.error('Error deleting garment:', error)
-      toast.error('Failed to delete garment')
+      console.error('Error deleting garment:', error);
+      toast.error('Failed to delete garment');
     }
-  }
+  };
+  
 
   const openDeleteModal = (garmentId) => {
-    setGarmentToDelete(garmentId)
-    setIsDeleteModalOpen(true)
-  }
+    setGarmentToDelete(garmentId);
+    setIsDeleteModalOpen(true);
+  };
 
   const closeDeleteModal = () => {
-    setIsDeleteModalOpen(false)
-    setGarmentToDelete(null)
-  }
+    setIsDeleteModalOpen(false);
+    setGarmentToDelete(null);
+  };
 
   if (userLoading) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   if (!user) {
-    return <div>No user or garment data available.</div>
+    return <div>No user or garment data available.</div>;
   }
 
   function handleChangeSchedule() {
-    setEditMode(!editMode)
+    setEditMode(!editMode);
   }
 
   return (
@@ -280,7 +281,7 @@ export default function Profile() {
           <div
             className="container-profile-img clickable"
             onClick={() => {
-              setIsModalOpen(true)
+              setIsModalOpen(true);
             }}
           >
             <img
@@ -458,8 +459,8 @@ export default function Profile() {
               <select
                 value={garmentList.findIndex((g) => g._id === garment?._id)}
                 onChange={(e) => {
-                  const selectedGarment = garmentList[e.target.value]
-                  setGarment(selectedGarment)
+                  const selectedGarment = garmentList[e.target.value];
+                  setGarment(selectedGarment);
                 }}
               >
                 {garmentList.map((garmentOpt, index) => {
@@ -468,7 +469,7 @@ export default function Profile() {
                       {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} (
                       {formatDate(garmentOpt.purchaseDate)})
                     </option>
-                  )
+                  );
                 })}
               </select>
             </div>
@@ -479,14 +480,14 @@ export default function Profile() {
                   id="tab0"
                   className="container-tab-group active"
                   onClick={() => {
-                    let e_active = document.getElementById(`tab${tabPage}`)
+                    let e_active = document.getElementById(`tab${tabPage}`);
                     if (e_active) {
-                      e_active.classList.toggle('active', false)
+                      e_active.classList.toggle('active', false);
                     }
-                    setTabPage(0)
-                    let e_div = document.getElementById(`tab0`)
+                    setTabPage(0);
+                    let e_div = document.getElementById(`tab0`);
                     if (e_div) {
-                      e_div.classList.toggle('active', true)
+                      e_div.classList.toggle('active', true);
                     }
                   }}
                 >
@@ -496,14 +497,14 @@ export default function Profile() {
                   id="tab1"
                   className="container-tab-group"
                   onClick={() => {
-                    let e_active = document.getElementById(`tab${tabPage}`)
+                    let e_active = document.getElementById(`tab${tabPage}`);
                     if (e_active) {
-                      e_active.classList.toggle('active', false)
+                      e_active.classList.toggle('active', false);
                     }
-                    setTabPage(1)
-                    let e_div = document.getElementById(`tab1`)
+                    setTabPage(1);
+                    let e_div = document.getElementById(`tab1`);
                     if (e_div) {
-                      e_div.classList.toggle('active', true)
+                      e_div.classList.toggle('active', true);
                     }
                   }}
                 >
@@ -513,14 +514,14 @@ export default function Profile() {
                   id="tab2"
                   className="container-tab-group"
                   onClick={() => {
-                    let e_active = document.getElementById(`tab${tabPage}`)
+                    let e_active = document.getElementById(`tab${tabPage}`);
                     if (e_active) {
-                      e_active.classList.toggle('active', false)
+                      e_active.classList.toggle('active', false);
                     }
-                    setTabPage(2)
-                    let e_div = document.getElementById(`tab2`)
+                    setTabPage(2);
+                    let e_div = document.getElementById(`tab2`);
                     if (e_div) {
-                      e_div.classList.toggle('active', true)
+                      e_div.classList.toggle('active', true);
                     }
                   }}
                 >
@@ -530,14 +531,14 @@ export default function Profile() {
                   id="tab3"
                   className="container-tab-group"
                   onClick={() => {
-                    let e_active = document.getElementById(`tab${tabPage}`)
+                    let e_active = document.getElementById(`tab${tabPage}`);
                     if (e_active) {
-                      e_active.classList.toggle('active', false)
+                      e_active.classList.toggle('active', false);
                     }
-                    setTabPage(3)
-                    let e_div = document.getElementById(`tab3`)
+                    setTabPage(3);
+                    let e_div = document.getElementById(`tab3`);
                     if (e_div) {
-                      e_div.classList.toggle('active', true)
+                      e_div.classList.toggle('active', true);
                     }
                   }}
                 >
@@ -547,14 +548,14 @@ export default function Profile() {
                   id="tab4"
                   className="container-tab-group"
                   onClick={() => {
-                    let e_active = document.getElementById(`tab${tabPage}`)
+                    let e_active = document.getElementById(`tab${tabPage}`);
                     if (e_active) {
-                      e_active.classList.toggle('active', false)
+                      e_active.classList.toggle('active', false);
                     }
-                    setTabPage(4)
-                    let e_div = document.getElementById(`tab4`)
+                    setTabPage(4);
+                    let e_div = document.getElementById(`tab4`);
                     if (e_div) {
-                      e_div.classList.toggle('active', true)
+                      e_div.classList.toggle('active', true);
                     }
                   }}
                 >
@@ -564,14 +565,14 @@ export default function Profile() {
                   id="tab5"
                   className="container-tab-group"
                   onClick={() => {
-                    let e_active = document.getElementById(`tab${tabPage}`)
+                    let e_active = document.getElementById(`tab${tabPage}`);
                     if (e_active) {
-                      e_active.classList.toggle('active', false)
+                      e_active.classList.toggle('active', false);
                     }
-                    setTabPage(5)
-                    let e_div = document.getElementById(`tab5`)
+                    setTabPage(5);
+                    let e_div = document.getElementById(`tab5`);
                     if (e_div) {
-                      e_div.classList.toggle('active', true)
+                      e_div.classList.toggle('active', true);
                     }
                   }}
                 >
@@ -581,14 +582,14 @@ export default function Profile() {
                   id="tab6"
                   className="container-tab-group"
                   onClick={() => {
-                    let e_active = document.getElementById(`tab${tabPage}`)
+                    let e_active = document.getElementById(`tab${tabPage}`);
                     if (e_active) {
-                      e_active.classList.toggle('active', false)
+                      e_active.classList.toggle('active', false);
                     }
-                    setTabPage(6)
-                    let e_div = document.getElementById(`tab6`)
+                    setTabPage(6);
+                    let e_div = document.getElementById(`tab6`);
                     if (e_div) {
-                      e_div.classList.toggle('active', true)
+                      e_div.classList.toggle('active', true);
                     }
                   }}
                 >
@@ -598,14 +599,14 @@ export default function Profile() {
                   id="tab7"
                   className="container-tab-group"
                   onClick={() => {
-                    let e_active = document.getElementById(`tab${tabPage}`)
+                    let e_active = document.getElementById(`tab${tabPage}`);
                     if (e_active) {
-                      e_active.classList.toggle('active', false)
+                      e_active.classList.toggle('active', false);
                     }
-                    setTabPage(7)
-                    let e_div = document.getElementById(`tab7`)
+                    setTabPage(7);
+                    let e_div = document.getElementById(`tab7`);
                     if (e_div) {
-                      e_div.classList.toggle('active', true)
+                      e_div.classList.toggle('active', true);
                     }
                   }}
                 >
@@ -688,7 +689,7 @@ export default function Profile() {
             <div
               className="container-profile-img clickable"
               onClick={() => {
-                clickID('uploadProfile')
+                clickID('uploadProfile');
               }}
             >
               <img
@@ -750,5 +751,5 @@ export default function Profile() {
         </div>
       </Modal>
     </div>
-  )
+  );
 }

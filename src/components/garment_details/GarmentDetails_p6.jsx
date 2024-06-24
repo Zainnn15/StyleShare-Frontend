@@ -351,11 +351,11 @@ const GarmentDetails_p6 = ({ formData, setFormData, page, numPages, handleForwar
                                 <div className="container-care-group">
                                     <input type="radio" id="doNotTumble" name="dryType"
                                         value={"doNotTumble"}
-                                        onClick={(e) => handleRadioChange('Shade', e.target.id)}
-                                        defaultChecked={checkOnID("doNotTumble", formData.instructionTumble.Shade)}
+                                        onClick={(e) => handleRadioChange('Air', e.target.id)}
+                                        defaultChecked={checkOnID("doNotTumble", formData.instructionTumble.Air)}
                                     />
                                     <span className="container-care-img" onClick={() => {
-                                        handleRadioChange('Shade', 'doNotTumble');
+                                        handleRadioChange('Air', 'doNotTumble');
                                         clickID("doNotTumble");
                                     }}>
                                         <CircleImg className="img-care" iconUrl={careInstructions.noTumble.img} width="50%" />
