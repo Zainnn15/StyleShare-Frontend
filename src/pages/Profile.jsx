@@ -419,7 +419,7 @@ export default function Profile() {
                 onChange={handleNewScheduleChange}
                 className="form-control mb-sm mt-sm"
               >
-                <option value="">Select Campus</option>
+                <option value="">Select a Campus or other location</option>
                 <option value="Newham">Newham</option>
                 <option value="York">York</option>
                 <option value="King">King</option>
