@@ -24,7 +24,6 @@ import {
 import defaultProfile from '../assets/images/profile_default.jpg'
 import { GARMENT_TYPES } from '../constants/data/options'
 import { clickID } from '../constants/functions/inputHandlers'
-import axios from 'axios'
 
 export default function Profile() {
   const { user, loading: userLoading } = useContext(UserContext)
@@ -74,9 +73,10 @@ export default function Profile() {
     }))
   }
 
-  const addSchedule = (e) => {
+  const addSchedule = async (e) => {
     e.preventDefault()
 
+    // Validation
     if (
       !newSchedule.day ||
       !newSchedule.start ||
@@ -87,67 +87,70 @@ export default function Profile() {
       return
     }
 
-    if (newSchedule.location === 'Other' && newSchedule.customCampus) {
+    // Handle custom campus location
+    if (newSchedule.location === 'Other') {
+      if (!newSchedule.customCampus) {
+        toast.error('Please fill in all fields')
+        return
+      }
       newSchedule.location = newSchedule.customCampus
     }
 
-    setAvailability((prevAvailability) => {
-      const newAvailability = [...prevAvailability, newSchedule]
+    // Update state
+    const newAvailability = [...availability, newSchedule]
+    // setAvailability(newAvailability)
 
-      console.log(newAvailability)
-
-      // Make the Axios request with the new availability state
-      Axios.patch(
+    // Make the Axios request with the new availability state
+    try {
+      const availabilityResult = await Axios.patch(
         `/updateAvailability/${user._id}`,
         { availability: newAvailability },
         { withCredentials: true },
       )
-        .then(() => {
-          // toast.success('Availability deleted')
-        })
-        .catch((error) => {
-          console.error('Error updating availability:', error)
-          // toast.error('Failed to update availability')
-        })
+      setAvailability(availabilityResult.data.availability)
+      // toast.success('Availability added');
+    } catch (error) {
+      console.error('Error updating availability:', error)
+      // toast.error('Failed to update availability');
+    }
 
-      return newAvailability // Update the state with the new availability
-    })
+    // Reset newSchedule
     setNewSchedule({
       day: '',
       start: '',
       end: '',
       location: '',
+      customCampus: '', // Ensure this is reset if applicable
     })
-    // window.location.reload()
+
+    // Optionally, refresh the page if necessary
+    // window.location.reload();
   }
 
   const deleteSchedule = async (e, id) => {
     e.preventDefault()
 
-    // Use a callback with the updater function to ensure we have the updated state
-    setAvailability((prevAvailability) => {
-      const newAvailability = prevAvailability.filter(
-        (schedule) => schedule._id !== id,
-      )
+    // Update the state synchronously
+    const newAvailability = availability.filter(
+      (schedule) => schedule._id !== id,
+    )
 
-      console.log(newAvailability)
+    // Set the new state
+    // setAvailability(newAvailability)
 
-      // Make the Axios request with the new availability state
-      Axios.patch(
+    // Make the Axios request with the new availability state
+    try {
+      const availabilityResult = await Axios.patch(
         `/updateAvailability/${user._id}`,
         { availability: newAvailability },
         { withCredentials: true },
       )
-        .then(() => {
-          // toast.success('Availability deleted')
-        })
-        .catch((error) => {
-          console.error('Error updating availability:', error)
-          // toast.error('Failed to update availability')
-        })
-
-      return newAvailability // Update the state with the new availability
-    })
+      setAvailability(availabilityResult.data.availability)
+      // toast.success('Availability deleted')
+    } catch (error) {
+      console.error('Error updating availability:', error)
+      // toast.error('Failed to update availability')
+    }
   }
 
   const handleUpdateProfile = async (e) => {
@@ -332,7 +335,7 @@ export default function Profile() {
                 {availability.length > 0 ? (
                   <>Availability:</>
                 ) : (
-                  <>No Availability</>
+                  <>No Availability for user</>
                 )}
               </p>
               <div id="user_schedule">
@@ -420,6 +423,7 @@ export default function Profile() {
                 <option value="Newham">Newham</option>
                 <option value="York">York</option>
                 <option value="King">King</option>
+                <option value="Markham">Markham</option>
                 <option value="Other">Other</option>
               </select>
               {newSchedule.location === 'Other' && (
