@@ -1,38 +1,38 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react"
-import "../../styles/main.scss"
-import { toast } from "react-hot-toast"
-import ScreenHeaderIn from "../../components/common/ScreenHeaderIn"
-import { wearTears, repairRequests } from "../../constants/data/lists"
-import InfoPopup from "../../components/common/InfoPopup"
+import { useEffect, useState } from 'react'
+import '../../styles/main.scss'
+import { toast } from 'react-hot-toast'
+import ScreenHeaderIn from '../../components/common/ScreenHeaderIn'
+import { wearTears, repairRequests } from '../../constants/data/lists'
+import InfoPopup from '../../components/common/InfoPopup'
 import {
   addErrorMessageByID,
   checkOnID,
   clickID,
-} from "../../constants/functions/inputHandlers"
-import { GARMENT_TYPES } from "../../constants/data/options"
-import { measurementTypes } from "../../constants/data/lists"
-import axios from "axios"
-import { useContext } from "react"
-import { UserContext } from "../../../context/userContext"
+} from '../../constants/functions/inputHandlers'
+import { GARMENT_TYPES } from '../../constants/data/options'
+import { measurementTypes } from '../../constants/data/lists'
+import axios from 'axios'
+import { useContext } from 'react'
+import { UserContext } from '../../../context/userContext'
 //import { GarmentContext } from '../../../context/garmentContext';
-import { useNavigate } from "react-router-dom"
-import PopupImg from "../common/PopupImg"
-import CircleBtn from "../common/CircleBtn"
-import info from "../../assets/icons/info.png"
-import selectImg from "../../assets/icons/select_img.png"
-import img_twisting from "../../assets/images/twisting.png"
-import img_shrinking from "../../assets/images/spandex_shrink.png"
-import img_pilling from "../../assets/images/pilling.png"
-import emailjs from "@emailjs/browser"
-import { formatDate } from "../../constants/functions/valueHandlers"
+import { useNavigate } from 'react-router-dom'
+import PopupImg from '../common/PopupImg'
+import CircleBtn from '../common/CircleBtn'
+import info from '../../assets/icons/info.png'
+import selectImg from '../../assets/icons/select_img.png'
+import img_twisting from '../../assets/images/twisting.png'
+import img_shrinking from '../../assets/images/spandex_shrink.png'
+import img_pilling from '../../assets/images/pilling.png'
+import emailjs from '@emailjs/browser'
+import { formatDate } from '../../constants/functions/valueHandlers'
 
 export default function GarmentTear() {
   const navigate = useNavigate()
   const { user, loading: userLoading } = useContext(UserContext)
   const [garment, setGarment] = useState(null)
   const [garmentList, setGarmentList] = useState([])
-  const [tearDate, setTearDate] = useState("")
+  const [tearDate, setTearDate] = useState('')
   const [wantRepair, setWantRepair] = useState(false)
   const [measures, setMeasures] = useState([])
   const [twistingImg, setTwistingImg] = useState(null)
@@ -58,13 +58,15 @@ export default function GarmentTear() {
   })
   const [tearExtra, setTearExtra] = useState({})
   const [repairRequest, setRepairRequest] = useState({
-    looseButton: "",
-    brokenZipper: "",
-    lostString: "",
-    looseHem: "",
-    other: "",
+    looseButton: '',
+    brokenZipper: '',
+    lostString: '',
+    looseHem: '',
+    other: '',
   })
-  const [repairOther, setRepairOther] = useState("")
+  const [repairOther, setRepairOther] = useState('')
+
+  console.log(user)
 
   useEffect(() => {
     if (!userLoading && user && user._id) {
@@ -76,7 +78,7 @@ export default function GarmentTear() {
             setGarmentList(garmentData)
             setGarment(garmentData[0])
             const measureTypes = getSetByCategory(
-              getCategory(garmentData[0].garmentType)
+              getCategory(garmentData[0].garmentType),
             )
             setMeasures([...measureTypes])
           } else {
@@ -85,7 +87,7 @@ export default function GarmentTear() {
           }
         })
         .catch((error) =>
-          console.error("Error fetching garment details:", error)
+          console.error('Error fetching garment details:', error),
         )
     }
   }, [user, userLoading])
@@ -96,7 +98,7 @@ export default function GarmentTear() {
       const selectedGarment = garmentList[index]
       setGarment(selectedGarment)
       const measureTypes = getSetByCategory(
-        getCategory(selectedGarment.garmentType)
+        getCategory(selectedGarment.garmentType),
       )
       setMeasures(measureTypes)
     }
@@ -105,12 +107,12 @@ export default function GarmentTear() {
   const sendGarmentDetails = async (e) => {
     e.preventDefault()
     const formData = new FormData()
-    formData.append("garmentId", garment._id)
-    formData.append("tearDate", tearDate)
-    formData.append("wantRepair", wantRepair.toString())
-    formData.append("wearTear", JSON.stringify(wearTear))
-    formData.append("repairRequest", JSON.stringify(repairRequest))
-    formData.append("repairOther", repairOther)
+    formData.append('garmentId', garment._id)
+    formData.append('tearDate', tearDate)
+    formData.append('wantRepair', wantRepair.toString())
+    formData.append('wearTear', JSON.stringify(wearTear))
+    formData.append('repairRequest', JSON.stringify(repairRequest))
+    formData.append('repairOther', repairOther)
 
     const sampleTearInfo = [
       {
@@ -123,14 +125,14 @@ export default function GarmentTear() {
         repairOther: repairOther,
       },
     ]
-    formData.append("tearInfo", JSON.stringify(sampleTearInfo))
+    formData.append('tearInfo', JSON.stringify(sampleTearInfo))
 
-    if (twistingImg) formData.append("twistingImg", twistingImg)
-    if (spandexShrinkImg) formData.append("spandexShrinkImg", spandexShrinkImg)
-    if (printFadeImg) formData.append("printFadeImg", printFadeImg)
-    if (holeImg) formData.append("holeImg", holeImg)
-    if (stainImg) formData.append("stainImg", stainImg)
-    formData.append("userId", user._id)
+    if (twistingImg) formData.append('twistingImg', twistingImg)
+    if (spandexShrinkImg) formData.append('spandexShrinkImg', spandexShrinkImg)
+    if (printFadeImg) formData.append('printFadeImg', printFadeImg)
+    if (holeImg) formData.append('holeImg', holeImg)
+    if (stainImg) formData.append('stainImg', stainImg)
+    formData.append('userId', user._id)
 
     if (
       repairRequest.looseButton ||
@@ -141,11 +143,11 @@ export default function GarmentTear() {
     ) {
       var message = `A new repair request has been made from the garment website. The details are as follows: `
 
-      repairRequest.looseButton ? (message += `a button is loose, `) : ""
-      repairRequest.brokenZipper ? (message += `the zipper is broken, `) : ""
-      repairRequest.lostString ? (message += `a string has been lost, `) : ""
-      repairRequest.looseHem ? (message += `the hem is loose, `) : ""
-      repairRequest.other ? (message += `other: ${repairOther}.`) : ""
+      repairRequest.looseButton ? (message += `a button is loose, `) : ''
+      repairRequest.brokenZipper ? (message += `the zipper is broken, `) : ''
+      repairRequest.lostString ? (message += `a string has been lost, `) : ''
+      repairRequest.looseHem ? (message += `the hem is loose, `) : ''
+      repairRequest.other ? (message += `other: ${repairOther}.`) : ''
 
       /* 
         EMAILJS CREDENTIALS
@@ -169,38 +171,40 @@ export default function GarmentTear() {
       console.log(import.meta.env)
       emailjs
         .send(
-          "service_8xmxyo1",
-          "template_gdt3trk",
+          'service_t61puog',
+          'template_2awvimh',
           {
             user: user.name,
             message,
+            email: user.email,
           },
           {
-            publicKey: "Mk7E-K5COHrpI_3lt",
-          }
+            publicKey: 'Vxalk7N66xyFaokl9',
+          },
         )
         .then(() => {
-          console.log("Email sent successfully")
+          console.log('Email sent successfully')
+          toast.success('Repair request sent successfully')
         })
         .catch((error) => {
-          console.error("Error sending email:", error)
+          console.error('Error sending email:', error)
         })
     }
 
     try {
-      const response = await axios.post("/updategarmentdetails", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      const response = await axios.post('/updategarmentdetails', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       })
       if (response.data.error) {
         toast.error(response.data.error)
       } else {
-        toast.success("Garment Tear details updated successfully")
+        toast.success('Garment Tear details updated successfully')
         setGarment(response.data.garmentDetail) // Update local state with new garment details
-        navigate("/garment-care")
+        navigate('/garment-care')
       }
     } catch (error) {
-      console.error("Error sending garment details:", error)
-      toast.error("An error occurred while updating garment details.")
+      console.error('Error sending garment details:', error)
+      toast.error('An error occurred while updating garment details.')
     }
   }
 
@@ -211,7 +215,7 @@ export default function GarmentTear() {
 
   function getSetByCategory(catID) {
     const objArr = measurementTypes.filter((obj) =>
-      obj.categories.includes(catID)
+      obj.categories.includes(catID),
     )
     return objArr
   }
@@ -233,7 +237,7 @@ export default function GarmentTear() {
                 value={
                   garment
                     ? garmentList.findIndex((g) => g._id === garment._id)
-                    : ""
+                    : ''
                 }
               >
                 {garmentList.map((garmentOpt, index) => (
@@ -260,16 +264,16 @@ export default function GarmentTear() {
             <div className="container-prompt">
               <p>What are the wear and tear issues? (Check all that apply)</p>
             </div>
-            <div id={"wearTear_error"} style={{ textAlign: "center" }}></div>
+            <div id={'wearTear_error'} style={{ textAlign: 'center' }}></div>
             <div className="container-radio">
               {
                 //wear and tears
                 /*colorFade*/
-                <div className="container-grid-2-md" style={{ width: "100%" }}>
+                <div className="container-grid-2-md" style={{ width: '100%' }}>
                   <div className="container-radio-group m2-h">
                     <input
                       type="checkbox"
-                      id={"tear_" + wearTears[0].value}
+                      id={'tear_' + wearTears[0].value}
                       name="wearTear[]"
                       value={wearTears[0].value}
                       onClick={(e) => {
@@ -277,10 +281,10 @@ export default function GarmentTear() {
                           ...wearTear,
                           [wearTears[0].value]: Number(e.target.checked),
                         })
-                        addErrorMessageByID("wearTear_error", null)
+                        addErrorMessageByID('wearTear_error', null)
                       }}
                     />
-                    <label htmlFor={"tear_" + wearTears[0].value}>
+                    <label htmlFor={'tear_' + wearTears[0].value}>
                       {wearTears[0].label}
                     </label>
                   </div>
@@ -294,7 +298,7 @@ export default function GarmentTear() {
                         <input
                           type="number"
                           name="colorLost"
-                          value={tearExtra["colorLost"]}
+                          value={tearExtra['colorLost']}
                           onChange={(e) => {
                             setTearExtra({
                               ...tearExtra,
@@ -316,7 +320,7 @@ export default function GarmentTear() {
                   <div className="container-radio-group m2-h">
                     <input
                       type="checkbox"
-                      id={"tear_" + wearTears[1].value}
+                      id={'tear_' + wearTears[1].value}
                       name="wearTear[]"
                       value={wearTears[1].value}
                       onClick={(e) => {
@@ -324,10 +328,10 @@ export default function GarmentTear() {
                           ...wearTear,
                           [wearTears[1].value]: Number(e.target.checked),
                         })
-                        addErrorMessageByID("wearTear_error", null)
+                        addErrorMessageByID('wearTear_error', null)
                       }}
                     />
-                    <label htmlFor={"tear_" + wearTears[1].value}>
+                    <label htmlFor={'tear_' + wearTears[1].value}>
                       {wearTears[1].label}
                     </label>
                     <CircleBtn
@@ -335,9 +339,9 @@ export default function GarmentTear() {
                       className="button-info"
                       width="1em"
                       handlePress={() => {
-                        let e = document.getElementById("info_pilling")
+                        let e = document.getElementById('info_pilling')
                         if (e) {
-                          e.classList.toggle("hide", false)
+                          e.classList.toggle('hide', false)
                         }
                       }}
                     />
@@ -359,7 +363,7 @@ export default function GarmentTear() {
                         <input
                           type="text"
                           name="pillingArea"
-                          value={tearExtra["pillingArea"]}
+                          value={tearExtra['pillingArea']}
                           onChange={(e) => {
                             setTearExtra({
                               ...tearExtra,
@@ -377,7 +381,7 @@ export default function GarmentTear() {
                         <select
                           name="pillingStrength"
                           id="pillingStrength"
-                          value={tearExtra["pillingStrength"]}
+                          value={tearExtra['pillingStrength']}
                           onChange={(e) => {
                             setTearExtra({
                               ...tearExtra,
@@ -401,7 +405,7 @@ export default function GarmentTear() {
                   <div className="container-radio-group m2-h">
                     <input
                       type="checkbox"
-                      id={"tear_" + wearTears[2].value}
+                      id={'tear_' + wearTears[2].value}
                       name="wearTear[]"
                       value={wearTears[2].value}
                       onClick={(e) => {
@@ -409,10 +413,10 @@ export default function GarmentTear() {
                           ...wearTear,
                           [wearTears[2].value]: Number(e.target.checked),
                         })
-                        addErrorMessageByID("wearTear_error", null)
+                        addErrorMessageByID('wearTear_error', null)
                       }}
                     />
-                    <label htmlFor={"tear_" + wearTears[2].value}>
+                    <label htmlFor={'tear_' + wearTears[2].value}>
                       {wearTears[2].label}
                     </label>
                   </div>
@@ -426,7 +430,7 @@ export default function GarmentTear() {
                         <input
                           type="text"
                           name="shapeLossArea"
-                          value={tearExtra["shapeLossArea"]}
+                          value={tearExtra['shapeLossArea']}
                           onChange={(e) => {
                             setTearExtra({
                               ...tearExtra,
@@ -444,7 +448,7 @@ export default function GarmentTear() {
                         <input
                           type="text"
                           name="shapeLossHow"
-                          value={tearExtra["shapeLossHow"]}
+                          value={tearExtra['shapeLossHow']}
                           onChange={(e) => {
                             setTearExtra({
                               ...tearExtra,
@@ -462,7 +466,7 @@ export default function GarmentTear() {
                   <div className="container-radio-group m2-h">
                     <input
                       type="checkbox"
-                      id={"tear_" + wearTears[3].value}
+                      id={'tear_' + wearTears[3].value}
                       name="wearTear[]"
                       value={wearTears[3].value}
                       onClick={(e) => {
@@ -470,10 +474,10 @@ export default function GarmentTear() {
                           ...wearTear,
                           [wearTears[3].value]: Number(e.target.checked),
                         })
-                        addErrorMessageByID("wearTear_error", null)
+                        addErrorMessageByID('wearTear_error', null)
                       }}
                     />
-                    <label htmlFor={"tear_" + wearTears[3].value}>
+                    <label htmlFor={'tear_' + wearTears[3].value}>
                       {wearTears[3].label}
                     </label>
                     <CircleBtn
@@ -481,9 +485,9 @@ export default function GarmentTear() {
                       className="button-info"
                       width="1em"
                       handlePress={() => {
-                        let e = document.getElementById("info_twisting")
+                        let e = document.getElementById('info_twisting')
                         if (e) {
-                          e.classList.toggle("hide", false)
+                          e.classList.toggle('hide', false)
                         }
                       }}
                     />
@@ -505,7 +509,7 @@ export default function GarmentTear() {
                         <input
                           type="text"
                           name="twistingArea"
-                          value={tearExtra["twistingArea"]}
+                          value={tearExtra['twistingArea']}
                           onChange={(e) => {
                             setTearExtra({
                               ...tearExtra,
@@ -523,7 +527,7 @@ export default function GarmentTear() {
                         <input
                           type="number"
                           name="twistingSize"
-                          value={tearExtra["twistingSize"]}
+                          value={tearExtra['twistingSize']}
                           onChange={(e) => {
                             setTearExtra({
                               ...tearExtra,
@@ -541,7 +545,7 @@ export default function GarmentTear() {
                       </div>
                       <div
                         className="container-input-img clickable"
-                        onClick={() => clickID("twistingImg")}
+                        onClick={() => clickID('twistingImg')}
                       >
                         <img
                           id="twistingImg_img"
@@ -553,6 +557,12 @@ export default function GarmentTear() {
                           alt="upload photo"
                         />
                       </div>
+                      <p>
+                        * Please take a photo that shows the entire garment;
+                        always try to choose the same background, white or
+                        black, and the same light and angle when taking the
+                        photo.
+                      </p>
                       <div className="container-input">
                         <input
                           id="twistingImg"
@@ -568,7 +578,7 @@ export default function GarmentTear() {
                   <div className="container-radio-group m2-h">
                     <input
                       type="checkbox"
-                      id={"tear_" + wearTears[4].value}
+                      id={'tear_' + wearTears[4].value}
                       name="wearTear[]"
                       value={wearTears[4].value}
                       onClick={(e) => {
@@ -576,10 +586,10 @@ export default function GarmentTear() {
                           ...wearTear,
                           [wearTears[4].value]: Number(e.target.checked),
                         })
-                        addErrorMessageByID("wearTear_error", null)
+                        addErrorMessageByID('wearTear_error', null)
                       }}
                     />
-                    <label htmlFor={"tear_" + wearTears[4].value}>
+                    <label htmlFor={'tear_' + wearTears[4].value}>
                       {wearTears[4].label}
                     </label>
                   </div>
@@ -590,11 +600,11 @@ export default function GarmentTear() {
                         return (
                           <div
                             key={
-                              "measureSet_" + measureType.value + "_" + index
+                              'measureSet_' + measureType.value + '_' + index
                             }
                           >
                             <PopupImg
-                              id={"info_temp_" + index}
+                              id={'info_temp_' + index}
                               className="container-popup"
                               iconUrl={measureType.img}
                               height="75%"
@@ -609,10 +619,10 @@ export default function GarmentTear() {
                                 width="1em"
                                 handlePress={() => {
                                   let e = document.getElementById(
-                                    "info_temp_" + index
+                                    'info_temp_' + index,
                                   )
                                   if (e) {
-                                    e.classList.toggle("hide", false)
+                                    e.classList.toggle('hide', false)
                                   }
                                 }}
                               />
@@ -620,14 +630,14 @@ export default function GarmentTear() {
                             <div className="container-measure-group">
                               <input
                                 id={
-                                  "measure_" + measureType.value + "_" + index
+                                  'measure_' + measureType.value + '_' + index
                                 }
-                                name={"measure_" + measureType.value}
+                                name={'measure_' + measureType.value}
                                 type="number"
                                 value={
                                   measuresData[index]
                                     ? measuresData[index].value
-                                    : ""
+                                    : ''
                                 }
                                 onChange={(e) => {
                                   let temp = measuresData
@@ -635,7 +645,7 @@ export default function GarmentTear() {
                                     measuresData[index] = {
                                       measureType: measureType.value,
                                       value: e.target.value,
-                                      unit: "",
+                                      unit: '',
                                     }
                                   } else {
                                     measuresData[index].value = e.target.value
@@ -647,19 +657,19 @@ export default function GarmentTear() {
                                 required
                               />
                               <select
-                                id={"unit_" + measureType.value + "_" + index}
-                                name={"unit_" + measureType.value}
+                                id={'unit_' + measureType.value + '_' + index}
+                                name={'unit_' + measureType.value}
                                 value={
                                   measuresData[index]
                                     ? measuresData[index].unit
-                                    : ""
+                                    : ''
                                 }
                                 onChange={(e) => {
                                   let temp = measuresData
                                   if (!measuresData[index]) {
                                     measuresData[index] = {
                                       measureType: measureType.value,
-                                      value: "",
+                                      value: '',
                                       unit: e.target.value,
                                     }
                                   } else {
@@ -682,7 +692,7 @@ export default function GarmentTear() {
                   <div className="container-radio-group m2-h">
                     <input
                       type="checkbox"
-                      id={"tear_" + wearTears[5].value}
+                      id={'tear_' + wearTears[5].value}
                       name="wearTear[]"
                       value={wearTears[5].value}
                       onClick={(e) => {
@@ -690,10 +700,10 @@ export default function GarmentTear() {
                           ...wearTear,
                           [wearTears[5].value]: Number(e.target.checked),
                         })
-                        addErrorMessageByID("wearTear_error", null)
+                        addErrorMessageByID('wearTear_error', null)
                       }}
                     />
-                    <label htmlFor={"tear_" + wearTears[5].value}>
+                    <label htmlFor={'tear_' + wearTears[5].value}>
                       {wearTears[5].label}
                     </label>
                   </div>
@@ -707,7 +717,7 @@ export default function GarmentTear() {
                         <textarea
                           name="discolorHow"
                           id="discolorHow"
-                          value={tearExtra["discolorHow"]}
+                          value={tearExtra['discolorHow']}
                           onChange={(e) => {
                             setTearExtra({
                               ...tearExtra,
@@ -726,7 +736,7 @@ export default function GarmentTear() {
                   <div className="container-radio-group m2-h">
                     <input
                       type="checkbox"
-                      id={"tear_" + wearTears[6].value}
+                      id={'tear_' + wearTears[6].value}
                       name="wearTear[]"
                       value={wearTears[6].value}
                       onClick={(e) => {
@@ -734,10 +744,10 @@ export default function GarmentTear() {
                           ...wearTear,
                           [wearTears[6].value]: Number(e.target.checked),
                         })
-                        addErrorMessageByID("wearTear_error", null)
+                        addErrorMessageByID('wearTear_error', null)
                       }}
                     />
-                    <label htmlFor={"tear_" + wearTears[6].value}>
+                    <label htmlFor={'tear_' + wearTears[6].value}>
                       {wearTears[6].label}
                     </label>
                     <CircleBtn
@@ -745,9 +755,9 @@ export default function GarmentTear() {
                       className="button-info"
                       width="1em"
                       handlePress={() => {
-                        let e = document.getElementById("info_shrinking")
+                        let e = document.getElementById('info_shrinking')
                         if (e) {
-                          e.classList.toggle("hide", false)
+                          e.classList.toggle('hide', false)
                         }
                       }}
                     />
@@ -770,7 +780,7 @@ export default function GarmentTear() {
                           type="text"
                           id="spandexShrinkArea"
                           name="spandexShrinkArea"
-                          value={tearExtra["spandexShrinkArea"]}
+                          value={tearExtra['spandexShrinkArea']}
                           onChange={(e) => {
                             setTearExtra({
                               ...tearExtra,
@@ -786,7 +796,7 @@ export default function GarmentTear() {
                       </div>
                       <div
                         className="container-input-img clickable"
-                        onClick={() => clickID("spandexShrinkImg")}
+                        onClick={() => clickID('spandexShrinkImg')}
                       >
                         <img
                           id="spandexShrinkImg_img"
@@ -798,6 +808,12 @@ export default function GarmentTear() {
                           alt="upload photo"
                         />
                       </div>
+                      <p>
+                        * Please take a photo that shows the entire garment;
+                        always try to choose the same background, white or
+                        black, and the same light and angle when taking the
+                        photo.
+                      </p>
                       <div className="container-input">
                         <input
                           id="spandexShrinkImg"
@@ -815,7 +831,7 @@ export default function GarmentTear() {
                   <div className="container-radio-group m2-h">
                     <input
                       type="checkbox"
-                      id={"tear_" + wearTears[7].value}
+                      id={'tear_' + wearTears[7].value}
                       name="wearTear[]"
                       value={wearTears[7].value}
                       onClick={(e) => {
@@ -823,10 +839,10 @@ export default function GarmentTear() {
                           ...wearTear,
                           [wearTears[7].value]: Number(e.target.checked),
                         })
-                        addErrorMessageByID("wearTear_error", null)
+                        addErrorMessageByID('wearTear_error', null)
                       }}
                     />
-                    <label htmlFor={"tear_" + wearTears[7].value}>
+                    <label htmlFor={'tear_' + wearTears[7].value}>
                       {wearTears[7].label}
                     </label>
                   </div>
@@ -842,7 +858,7 @@ export default function GarmentTear() {
                           <input
                             type="number"
                             name="printFade"
-                            value={tearExtra["printFade"]}
+                            value={tearExtra['printFade']}
                             onChange={(e) => {
                               setTearExtra({
                                 ...tearExtra,
@@ -863,7 +879,7 @@ export default function GarmentTear() {
                       </div>
                       <div
                         className="container-input-img clickable"
-                        onClick={() => clickID("printFadeImg")}
+                        onClick={() => clickID('printFadeImg')}
                       >
                         <img
                           id="printFadeImg_img"
@@ -875,6 +891,12 @@ export default function GarmentTear() {
                           alt="upload photo"
                         />
                       </div>
+                      <p>
+                        * Please take a photo that shows the entire garment;
+                        always try to choose the same background, white or
+                        black, and the same light and angle when taking the
+                        photo.
+                      </p>
                       <div className="container-input">
                         <input
                           id="printFadeImg"
@@ -890,7 +912,7 @@ export default function GarmentTear() {
                   <div className="container-radio-group m2-h">
                     <input
                       type="checkbox"
-                      id={"tear_" + wearTears[8].value}
+                      id={'tear_' + wearTears[8].value}
                       name="wearTear[]"
                       value={wearTears[8].value}
                       onClick={(e) => {
@@ -898,10 +920,10 @@ export default function GarmentTear() {
                           ...wearTear,
                           [wearTears[8].value]: Number(e.target.checked),
                         })
-                        addErrorMessageByID("wearTear_error", null)
+                        addErrorMessageByID('wearTear_error', null)
                       }}
                     />
-                    <label htmlFor={"tear_" + wearTears[8].value}>
+                    <label htmlFor={'tear_' + wearTears[8].value}>
                       {wearTears[8].label}
                     </label>
                   </div>
@@ -915,7 +937,7 @@ export default function GarmentTear() {
                         <input
                           type="text"
                           name="holeArea"
-                          value={tearExtra["holeArea"]}
+                          value={tearExtra['holeArea']}
                           onChange={(e) => {
                             setTearExtra({
                               ...tearExtra,
@@ -933,7 +955,7 @@ export default function GarmentTear() {
                         <input
                           type="number"
                           name="holeSize"
-                          value={tearExtra["holeSize"]}
+                          value={tearExtra['holeSize']}
                           onChange={(e) => {
                             setTearExtra({
                               ...tearExtra,
@@ -951,7 +973,7 @@ export default function GarmentTear() {
                       </div>
                       <div
                         className="container-input-img clickable"
-                        onClick={() => clickID("holeImg")}
+                        onClick={() => clickID('holeImg')}
                       >
                         <img
                           id="holeImg_img"
@@ -961,6 +983,12 @@ export default function GarmentTear() {
                           alt="upload photo"
                         />
                       </div>
+                      <p>
+                        * Please take a photo that shows the entire garment;
+                        always try to choose the same background, white or
+                        black, and the same light and angle when taking the
+                        photo.
+                      </p>
                       <div className="container-input">
                         <input
                           id="holeImg"
@@ -976,7 +1004,7 @@ export default function GarmentTear() {
                   <div className="container-radio-group m2-h">
                     <input
                       type="checkbox"
-                      id={"tear_" + wearTears[9].value}
+                      id={'tear_' + wearTears[9].value}
                       name="wearTear[]"
                       value={wearTears[9].value}
                       onClick={(e) => {
@@ -984,10 +1012,10 @@ export default function GarmentTear() {
                           ...wearTear,
                           [wearTears[9].value]: Number(e.target.checked),
                         })
-                        addErrorMessageByID("wearTear_error", null)
+                        addErrorMessageByID('wearTear_error', null)
                       }}
                     />
-                    <label htmlFor={"tear_" + wearTears[9].value}>
+                    <label htmlFor={'tear_' + wearTears[9].value}>
                       {wearTears[9].label}
                     </label>
                   </div>
@@ -997,7 +1025,7 @@ export default function GarmentTear() {
                   <div className="container-radio-group m2-h">
                     <input
                       type="checkbox"
-                      id={"tear_" + wearTears[10].value}
+                      id={'tear_' + wearTears[10].value}
                       name="wearTear[]"
                       value={wearTears[10].value}
                       onClick={(e) => {
@@ -1005,10 +1033,10 @@ export default function GarmentTear() {
                           ...wearTear,
                           [wearTears[10].value]: Number(e.target.checked),
                         })
-                        addErrorMessageByID("wearTear_error", null)
+                        addErrorMessageByID('wearTear_error', null)
                       }}
                     />
-                    <label htmlFor={"tear_" + wearTears[10].value}>
+                    <label htmlFor={'tear_' + wearTears[10].value}>
                       {wearTears[10].label}
                     </label>
                   </div>
@@ -1022,7 +1050,7 @@ export default function GarmentTear() {
                         <input
                           type="text"
                           name="looseButtonArea"
-                          value={tearExtra["looseButtonArea"]}
+                          value={tearExtra['looseButtonArea']}
                           onChange={(e) => {
                             setTearExtra({
                               ...tearExtra,
@@ -1040,7 +1068,7 @@ export default function GarmentTear() {
                         <input
                           type="number"
                           name="looseButtonQty"
-                          value={tearExtra["looseButtonQty"]}
+                          value={tearExtra['looseButtonQty']}
                           onChange={(e) => {
                             setTearExtra({
                               ...tearExtra,
@@ -1060,7 +1088,7 @@ export default function GarmentTear() {
                   <div className="container-radio-group m2-h">
                     <input
                       type="checkbox"
-                      id={"tear_" + wearTears[11].value}
+                      id={'tear_' + wearTears[11].value}
                       name="wearTear[]"
                       value={wearTears[11].value}
                       onClick={(e) => {
@@ -1068,10 +1096,10 @@ export default function GarmentTear() {
                           ...wearTear,
                           [wearTears[11].value]: Number(e.target.checked),
                         })
-                        addErrorMessageByID("wearTear_error", null)
+                        addErrorMessageByID('wearTear_error', null)
                       }}
                     />
-                    <label htmlFor={"tear_" + wearTears[11].value}>
+                    <label htmlFor={'tear_' + wearTears[11].value}>
                       {wearTears[11].label}
                     </label>
                   </div>
@@ -1085,7 +1113,7 @@ export default function GarmentTear() {
                         <input
                           type="text"
                           name="stainArea"
-                          value={tearExtra["stainArea"]}
+                          value={tearExtra['stainArea']}
                           onChange={(e) => {
                             setTearExtra({
                               ...tearExtra,
@@ -1113,8 +1141,8 @@ export default function GarmentTear() {
                               })
                             }}
                             defaultChecked={checkOnID(
-                              "stainSourceKnow_yes",
-                              tearExtra.stainSourceKnow
+                              'stainSourceKnow_yes',
+                              tearExtra.stainSourceKnow,
                             )}
                           />
                           <label htmlFor="stainSourceKnow_yes">Yes</label>
@@ -1132,14 +1160,14 @@ export default function GarmentTear() {
                               })
                             }}
                             defaultChecked={checkOnID(
-                              "stainSourceKnow_no",
-                              tearExtra.stainSourceKnow
+                              'stainSourceKnow_no',
+                              tearExtra.stainSourceKnow,
                             )}
                           />
                           <label htmlFor="stainSourceKnow_no">No</label>
                         </div>
                       </div>
-                      {tearExtra.stainSourceKnow === "stainSourceKnow_yes" && (
+                      {tearExtra.stainSourceKnow === 'stainSourceKnow_yes' && (
                         <div>
                           <div className="container-prompt">
                             <p>What caused the stain?</p>
@@ -1148,7 +1176,7 @@ export default function GarmentTear() {
                             <input
                               type="text"
                               name="stainSource"
-                              value={tearExtra["stainSource"]}
+                              value={tearExtra['stainSource']}
                               onChange={(e) => {
                                 setTearExtra({
                                   ...tearExtra,
@@ -1178,8 +1206,8 @@ export default function GarmentTear() {
                               })
                             }}
                             defaultChecked={checkOnID(
-                              "stainUgly_yes",
-                              tearExtra.stainUgly
+                              'stainUgly_yes',
+                              tearExtra.stainUgly,
                             )}
                           />
                           <label htmlFor="stainUgly_yes">Yes</label>
@@ -1197,8 +1225,8 @@ export default function GarmentTear() {
                               })
                             }}
                             defaultChecked={checkOnID(
-                              "stainUgly_no",
-                              tearExtra.stainUgly
+                              'stainUgly_no',
+                              tearExtra.stainUgly,
                             )}
                           />
                           <label htmlFor="stainUgly_no">No</label>
@@ -1210,7 +1238,7 @@ export default function GarmentTear() {
                       </div>
                       <div
                         className="container-input-img clickable"
-                        onClick={() => clickID("stainImg")}
+                        onClick={() => clickID('stainImg')}
                       >
                         <img
                           id="stainImg_img"
@@ -1220,6 +1248,12 @@ export default function GarmentTear() {
                           alt="upload photo"
                         />
                       </div>
+                      <p>
+                        * Please take a photo that shows the entire garment;
+                        always try to choose the same background, white or
+                        black, and the same light and angle when taking the
+                        photo.
+                      </p>
                       <div className="container-input">
                         <input
                           id="stainImg"
@@ -1235,7 +1269,7 @@ export default function GarmentTear() {
                   <div className="container-radio-group m2-h">
                     <input
                       type="checkbox"
-                      id={"tear_" + wearTears[12].value}
+                      id={'tear_' + wearTears[12].value}
                       name="wearTear[]"
                       value={wearTears[12].value}
                       onClick={(e) => {
@@ -1243,10 +1277,10 @@ export default function GarmentTear() {
                           ...wearTear,
                           [wearTears[12].value]: Number(e.target.checked),
                         })
-                        addErrorMessageByID("wearTear_error", null)
+                        addErrorMessageByID('wearTear_error', null)
                       }}
                     />
-                    <label htmlFor={"tear_" + wearTears[12].value}>
+                    <label htmlFor={'tear_' + wearTears[12].value}>
                       {wearTears[12].label}
                     </label>
                   </div>
@@ -1260,7 +1294,7 @@ export default function GarmentTear() {
                         <input
                           type="text"
                           name="tearOther"
-                          value={tearExtra["tearOther"]}
+                          value={tearExtra['tearOther']}
                           onChange={(e) => {
                             setTearExtra({
                               ...tearExtra,
@@ -1299,15 +1333,15 @@ export default function GarmentTear() {
               <div className="container-prompt">
                 <p>Select which repairs are needed (Check all that apply)</p>
               </div>
-              <div id={"repair_error"} style={{ textAlign: "center" }}></div>
+              <div id={'repair_error'} style={{ textAlign: 'center' }}></div>
               {repairRequests.map((repair, index) => (
                 <div
-                  key={"repair_" + index}
+                  key={'repair_' + index}
                   className="container-radio-group m2-h"
                 >
                   <input
                     type="checkbox"
-                    id={"repair_" + repair.value}
+                    id={'repair_' + repair.value}
                     name="repairs[]"
                     checked={repairRequest[repair.value]}
                     onChange={(e) => {
@@ -1316,11 +1350,11 @@ export default function GarmentTear() {
                         [repair.value]: e.target.checked,
                       }))
                       if (Object.values(repairRequest).some((v) => v)) {
-                        addErrorMessageByID("repair_error", null)
+                        addErrorMessageByID('repair_error', null)
                       }
                     }}
                   />
-                  <label htmlFor={"repair_" + repair.value}>
+                  <label htmlFor={'repair_' + repair.value}>
                     {repair.label}
                   </label>
                 </div>
