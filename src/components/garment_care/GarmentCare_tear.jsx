@@ -557,6 +557,12 @@ export default function GarmentTear() {
                           alt="upload photo"
                         />
                       </div>
+                      <p>
+                        * Please take a photo that shows the entire garment;
+                        always try to choose the same background, white or
+                        black, and the same light and angle when taking the
+                        photo.
+                      </p>
                       <div className="container-input">
                         <input
                           id="twistingImg"
@@ -802,6 +808,12 @@ export default function GarmentTear() {
                           alt="upload photo"
                         />
                       </div>
+                      <p>
+                        * Please take a photo that shows the entire garment;
+                        always try to choose the same background, white or
+                        black, and the same light and angle when taking the
+                        photo.
+                      </p>
                       <div className="container-input">
                         <input
                           id="spandexShrinkImg"
@@ -879,6 +891,12 @@ export default function GarmentTear() {
                           alt="upload photo"
                         />
                       </div>
+                      <p>
+                        * Please take a photo that shows the entire garment;
+                        always try to choose the same background, white or
+                        black, and the same light and angle when taking the
+                        photo.
+                      </p>
                       <div className="container-input">
                         <input
                           id="printFadeImg"
@@ -965,6 +983,12 @@ export default function GarmentTear() {
                           alt="upload photo"
                         />
                       </div>
+                      <p>
+                        * Please take a photo that shows the entire garment;
+                        always try to choose the same background, white or
+                        black, and the same light and angle when taking the
+                        photo.
+                      </p>
                       <div className="container-input">
                         <input
                           id="holeImg"
@@ -1224,6 +1248,12 @@ export default function GarmentTear() {
                           alt="upload photo"
                         />
                       </div>
+                      <p>
+                        * Please take a photo that shows the entire garment;
+                        always try to choose the same background, white or
+                        black, and the same light and angle when taking the
+                        photo.
+                      </p>
                       <div className="container-input">
                         <input
                           id="stainImg"
