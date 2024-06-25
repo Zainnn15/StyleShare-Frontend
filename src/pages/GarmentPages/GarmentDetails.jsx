@@ -22,7 +22,7 @@ import Ninth from '../../components/garment_details/GarmentDetails_p9.jsx';
 
 const GarmentDetails = () => {
     const navigate = useNavigate();
-    const {user} = useContext(UserContext);
+    const { user } = useContext(UserContext);
     const numPages = 9;
     const [page, setPage] = useState(0);
     const [formData, setFormData] = useState({
@@ -78,83 +78,84 @@ const GarmentDetails = () => {
     });
 
     const conditionalComponent = () => {
-        switch(page) {
+        switch (page) {
             case 1:
-                return <Second 
-                    formData={formData} 
+                return <Second
+                    formData={formData}
                     setFormData={setFormData}
-                    page={page} 
+                    page={page}
                     numPages={numPages}
                     handleForward={handleForward}
                     handleBack={handleBack}
                 />;
             case 2:
-                return <Third 
-                    formData={formData} 
+                return <Third
+                    formData={formData}
                     setFormData={setFormData}
-                    page={page} 
+                    page={page}
                     numPages={numPages}
                     handleForward={handleForward}
                     handleBack={handleBack}
                 />;
             case 3:
-                return <Fourth 
-                    formData={formData} 
-                    setFormData={setFormData} 
-                    page={page} 
+                return <Fourth
+                    formData={formData}
+                    setFormData={setFormData}
+                    page={page}
                     numPages={numPages}
                     handleForward={handleForward}
                     handleBack={handleBack}
                 />;
             case 4:
-                return <Fifth 
-                    formData={formData} 
+                return <Fifth
+                    formData={formData}
                     setFormData={setFormData}
-                    page={page} 
+                    page={page}
                     numPages={numPages}
                     handleForward={handleForward}
                     handleBack={handleBack}
                 />;
             case 5:
-                return <Sixth 
-                    formData={formData} 
+                return <Sixth
+                    formData={formData}
                     setFormData={setFormData}
-                    page={page} 
+                    page={page}
                     numPages={numPages}
                     handleForward={handleForward}
                     handleBack={handleBack}
                 />;
             case 6:
                 return <Seventh
-                    formData={formData} 
+                    formData={formData}
                     setFormData={setFormData}
-                    page={page} 
+                    page={page}
                     numPages={numPages}
                     handleForward={handleForward}
                     handleBack={handleBack}
                 />;
             case 7:
-                return <Eight 
-                    formData={formData} 
+                return <Eight
+                    formData={formData}
                     setFormData={setFormData}
-                    page={page} 
+                    page={page}
                     numPages={numPages}
                     handleForward={handleForward}
                     handleBack={handleBack}
                 />;
             case 8:
                 return <Ninth
-                    formData={formData} 
+                    formData={formData}
                     setFormData={setFormData}
-                    page={page} 
+                    page={page}
                     numPages={numPages}
                     handleBack={handleBack}
+                    handleSubmit={handleSubmit}
                 />;
             default:
-                return <First 
-                    formData={formData} 
+                return <First
+                    formData={formData}
                     setFormData={setFormData}
-                    page={page} 
+                    page={page}
                     numPages={numPages}
                     handleForward={handleForward}
                     handleBack={handleBack}
@@ -163,56 +164,56 @@ const GarmentDetails = () => {
     }
 
     function handleForward() {
-        if(page+1 < numPages)
-            setPage(page+1);
+        if (page + 1 < numPages)
+            setPage(page + 1);
     }
 
     function handleBack() {
-        setPage(page-1);
+        setPage(page - 1);
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         // Ensure you are checking the correct identifier as per your user object
         if (!user || !user._id) { // Assuming your user object has an _id property
             console.error("User ID is not available.");
             toast.error("Unable to identify user. Please make sure you are logged in.");
             return;
         }
-    
+
         const uploadFormData = new FormData();
         // Directly append file objects
         if (formData.fileFront) uploadFormData.append('fileFront', formData.fileFront);
         if (formData.fileBack) uploadFormData.append('fileBack', formData.fileBack);
-    
+
         // Append other form data
         const fieldsToDirectlyAppend = [
-            'purchaseLocation', 'purchaseMethod', 'purchaseDate', 'garmentType', 
-            'garmentDescription', 'garmentCountry', 'garmentCost', 'garmentDiscount', 
+            'purchaseLocation', 'purchaseMethod', 'purchaseDate', 'garmentType',
+            'garmentDescription', 'garmentCountry', 'garmentCost', 'garmentDiscount',
             'garmentOgCost', 'hasLining', 'hasPadding'
         ];
-        
+
         fieldsToDirectlyAppend.forEach(field => {
             uploadFormData.append(field, formData[field]);
         });
-    
+
         // For the willSubmit boolean, convert to string
         uploadFormData.append("willSubmit", formData.willSubmit.toString());
-    
+
         // For complex objects or arrays, ensure they are stringified
         const complexFields = [
-            'compositionMain', 'compositionLining', 'compositionPadding', 
-            'instructionWash', 'instructionDry', 'instructionTumble', 
+            'compositionMain', 'compositionLining', 'compositionPadding',
+            'instructionWash', 'instructionDry', 'instructionTumble',
             'instructionDryC', 'instructionIron', 'instructionBleach'
         ];
         complexFields.forEach(field => {
             uploadFormData.append(field, JSON.stringify(formData[field]));
         });
-    
+
         // Append user ID correctly
         uploadFormData.append("userId", user._id); // Adjust based on your user object's structure
-    
+
         try {
             const response = await axios.post('/addgarmentdetails', uploadFormData, {
                 headers: {
@@ -220,15 +221,15 @@ const GarmentDetails = () => {
                 },
                 withCredentials: true, // Correct placement for withCredentials
             });
-    
+
             const { data } = response;
-    
+
             if (data.error) {
                 toast.error(data.error);
             } else {
                 // Reset form data upon successful submission
                 setFormData({
-                  
+
                 });
                 toast.success("Garment details added successfully!");
                 navigate('/dashboard'); // Or any other path as needed
@@ -238,8 +239,6 @@ const GarmentDetails = () => {
             toast.error("An error occurred while submitting the form.");
         }
     };
-    
-    
 
     changeTitle("Garment Details")
     return (
@@ -247,9 +246,9 @@ const GarmentDetails = () => {
             <ScreenHeaderIn />
             <div className="container main">
                 <div>
-                    <label className="container-subtitle-2" style={{textAlign: "right"}}>{page+1}/{numPages}</label>
+                    <label className="container-subtitle-2" style={{ textAlign: "right" }}>{page + 1}/{numPages}</label>
                     <label className="container-title">Garment Details</label>
-                    <hr/>
+                    <hr />
                 </div>
                 <form action="" method="POST" onSubmit={handleSubmit}>
                     {conditionalComponent()}

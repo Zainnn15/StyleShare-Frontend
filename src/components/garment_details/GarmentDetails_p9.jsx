@@ -9,22 +9,21 @@ import CircleBtn from "../common/CircleBtn";
 import CircleImg from "../common/CircleImg";
 import PopupImg from "../common/PopupImg";
 
-const GarmentDetails_p9 = ({formData, setFormData, page, numPages, handleBack}) => {
+const GarmentDetails_p9 = ({formData, setFormData, handleBack, handleSubmit}) => {
     //validation
     function validatePage() {
         return validateInpName("canBleach", formData.instructionBleach.Bleach);
     }
 
-    function validateAndNext() {
+    function validateAndNext(e) {
+        e.preventDefault();
         if(!validatePage()) {
             return false;
         }
         setFormData({
             ...formData
-            // willSubmit: true
         });
-        //handleForward();
-        console.log("submit");
+        handleSubmit(e);
         return true;
     }
 
@@ -114,17 +113,7 @@ const GarmentDetails_p9 = ({formData, setFormData, page, numPages, handleBack}) 
 
             </div>
             <div className="container-button-form">
-                {
-                    page > 0 &&
-                    <button type="button" className="button-form" onClick={handleBack}>Back</button>
-                }
-                <button 
-                    className="button-form" 
-                    onClick={validateAndNext}
-                    type={ page+1 < numPages ? "button" : "submit" }
-                >
-                    { page+1 < numPages ? "Next" : "Submit" }
-                </button>
+                <button type="button" className="button-form" onClick={handleBack}>Back</button>
             </div>
         </div>
     );

@@ -248,7 +248,6 @@ export default function Profile() {
       toast.error('Failed to delete garment');
     }
   };
-  
 
   const openDeleteModal = (garmentId) => {
     setGarmentToDelete(garmentId);
@@ -471,8 +470,7 @@ export default function Profile() {
                 {garmentList.map((garmentOpt, index) => {
                   return (
                     <option key={'garmentOpt_' + index} value={index}>
-                      {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} (
-                      {formatDate(garmentOpt.purchaseDate)})
+                      {garmentOpt.garmentDescription} ({formatDate(garmentOpt.purchaseDate)})
                     </option>
                   );
                 })}

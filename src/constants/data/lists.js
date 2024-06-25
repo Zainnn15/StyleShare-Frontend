@@ -343,15 +343,8 @@ const genericFibre = [
 	{"class": "synthetic", "type":"natural polymers", "code":"CV", "name":"Viscose"},
 	{"class": "natural", "type":"cellulosic", "code":"HA", "name":"Hemp"},
 	{"class": "natural", "type":"cellulosic", "code":"JU", "name":"Jute"},
-    // {"class": "natural", "type":"protein", "code":"WV", "name":"Virgin/Fleece Wool"},
-    // {"class": "natural", "type":"protein", "code":"WM", "name":"Mohair"},
-    // {"class": "natural", "type":"protein", "code":"WP", "name":"Alpaca"},
-    // {"class": "synthetic", "type":"natural polymers", "code":"ALG", "name":"Alginate"},
-    // {"class": "synthetic", "type":"natural polymers", "code":"CUP", "name":"Cupro"},
-    // {"class": "synthetic", "type":"natural polymers", "code":"CLY", "name":"Lyocell"},
-    // {"class": "synthetic", "type":"synthetic polymers", "code":"AR", "name":"Aramid"},
-    // {"class": "synthetic", "type":"synthetic polymers", "code":"PE", "name":"Polyethylene"},
-    // {"class": "synthetic", "type":"synthetic polymers", "code":"PP", "name":"Polypropylene"}
+	{"class": "natural", "type":"cellulosic", "code":"RA", "name":"Ramie"},
+
 ];
 
 const careInstructions = {
