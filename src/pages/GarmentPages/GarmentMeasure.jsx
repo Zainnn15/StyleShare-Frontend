@@ -33,6 +33,7 @@ const GarmentMeasurement = () => {
         garmentFit: '',
     });
     const [measures, setMeasures] = useState([]);
+    const [unit, setUnit] = useState('cm'); // State to manage the unit
     const options = GARMENT_TYPES;
 
     useEffect(() => {
@@ -90,6 +91,11 @@ const GarmentMeasurement = () => {
         return measurementTypes.filter(obj => obj.categories.includes(catID));
     };
 
+    const handleUnitChange = (e) => {
+        const newUnit = e.target.value;
+        setUnit(newUnit);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!user || !user._id) {
@@ -99,11 +105,10 @@ const GarmentMeasurement = () => {
 
         const garmentMeasurements = measures.map((measureType, index) => {
             const valueElement = document.getElementById(`measure_${measureType.value}_${index}`);
-            const unitElement = document.getElementById(`unit_${measureType.value}_${index}`);
             return {
                 measureType: measureType.label,
                 value: parseFloat(valueElement ? valueElement.value : '0'),
-                unit: unitElement ? unitElement.value : 'cm',
+                unit: unit,
             };
         }).filter(measure => measure.value > 0);
 
@@ -234,6 +239,8 @@ const GarmentMeasurement = () => {
                                             <select
                                                 id={"unit_" + measureType.value + "_" + index}
                                                 name={"unit_" + measureType.value}
+                                                value={unit}
+                                                onChange={handleUnitChange}
                                             >
                                                 <option value='cm'> cm </option>
                                                 <option value='inches'> in </option>
@@ -325,6 +332,9 @@ const GarmentMeasurement = () => {
                                     <div className='container-input'>
                                         <button className="button-form" type="submit">
                                             Save
+                                        </button>
+                                        <button className="button-form" type="reset">
+                                             Reset
                                         </button>
                                     </div>
                                 </div>

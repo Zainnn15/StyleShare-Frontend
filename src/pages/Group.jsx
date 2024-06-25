@@ -207,7 +207,7 @@ export default function Group() {
                                                         </div>
                                                     </div>
                                                     <br/>
-                                                    <div className='container-card-list' style={{maxWidth:"14em"}}>
+                                                    <div className='container-card-list' style={{maxWidth:"15em"}}>
                                                         {member.garments && member.garments.length > 0 ? (
                                                             member.garments.map((garment, index) => (
                                                                 <div key={garment._id} className="garment-details container-border">
