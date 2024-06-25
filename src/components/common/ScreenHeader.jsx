@@ -12,8 +12,8 @@ import CircleBtn from "./CircleBtn.jsx";
 const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
 
     const headings = [
-        "Welcome to Seneca School of Fashion",
-        "Any garment which is cut to fit you is much more becoming.",
+        "Welcome to Style Share",
+        "Your platform for sharing garments",
         "Contact Seneca team for futher information",
       ];
       const [i, setI] = useState(0);
