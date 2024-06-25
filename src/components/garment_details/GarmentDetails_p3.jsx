@@ -37,6 +37,16 @@ const GarmentDetails_p3 = ({ formData, setFormData, page, numPages, handleForwar
                 }
                 errMessage = "Must be a valid price";
                 break;
+            case "price_comparison":
+                let discountedPrice = parseFloat(document.getElementById("garmentCost").value);
+                let originalPrice = parseFloat(document.getElementById("garmentOgCost").value);
+                if (originalPrice > discountedPrice) {
+                    // remove error message if any
+                    addErrorMessage(e_to.id + "_error", null);
+                    return true;
+                }
+                errMessage = "Original price must be greater than the discounted price";
+                break;
             default:
                 for (let i = 0; i < options.length; i++) {
                     if (options[i].label.toLowerCase() === val) {
@@ -62,6 +72,7 @@ const GarmentDetails_p3 = ({ formData, setFormData, page, numPages, handleForwar
         isValid = validateInpName("garmentDiscount", formData["garmentDiscount"]) && isValid;
         if (formData.garmentDiscount === "discount_yes") {
             isValid = validate("price", "garmentOgCost") && isValid;
+            isValid = validate("price_comparison", "garmentOgCost") && isValid;
         }
 
         if (!isValid) {
@@ -192,6 +203,7 @@ const GarmentDetails_p3 = ({ formData, setFormData, page, numPages, handleForwar
                                     garmentOgCost: e.target.value
                                 });
                                 validate("price", "garmentOgCost");
+                                validate("price_comparison", "garmentOgCost");
                             }}
                             min={0}
                             max={99999}
