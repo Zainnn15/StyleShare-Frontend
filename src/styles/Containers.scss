@@ -378,8 +378,9 @@ $screen-xl-min: 1200px;
 .container-input {
     @include container-row;
     @include input;
-
+    
     label {
+    
         margin: 1em;
     }
 }

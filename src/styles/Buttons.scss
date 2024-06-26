@@ -77,6 +77,7 @@ button:active {
 
 .button-form {
     @include form;
+    margin-left: 40px;
 }
 .button-form:hover {
     background-color: hoverColor(Colors.$purpleScarlet);
