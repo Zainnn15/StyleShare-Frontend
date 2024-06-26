@@ -10,7 +10,7 @@ import CircleImg from "../common/CircleImg";
 import PopupImg from "../common/PopupImg";
 
 const GarmentDetails_p9 = ({formData, setFormData, handleBack, handleSubmit}) => {
-    //validation
+    // Validation
     function validatePage() {
         return validateInpName("canBleach", formData.instructionBleach.Bleach);
     }
@@ -27,7 +27,7 @@ const GarmentDetails_p9 = ({formData, setFormData, handleBack, handleSubmit}) =>
         return true;
     }
 
-    return(
+    return (
         <div>
             <PopupImg id="info_care_symbols" className="container-popup" iconUrl={symbols} height="45%" />
             <div className="container-info">
@@ -114,6 +114,13 @@ const GarmentDetails_p9 = ({formData, setFormData, handleBack, handleSubmit}) =>
             </div>
             <div className="container-button-form">
                 <button type="button" className="button-form" onClick={handleBack}>Back</button>
+                <button 
+                    className="button-form" 
+                    onClick={validateAndNext}
+                    type="submit"
+                >
+                    Submit
+                </button>
             </div>
         </div>
     );
