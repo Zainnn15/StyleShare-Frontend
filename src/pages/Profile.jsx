@@ -17,12 +17,10 @@ import Feel from '../components/profile/Garment_feel';
 import TrashIcon from '../assets/icons/trash.png';
 import '../styles/marcus.css';
 import {
-  findAttribute,
   formatDate,
   getImageFromURL,
 } from '../constants/functions/valueHandlers'
 import defaultProfile from '../assets/images/profile_default.jpg'
-import { GARMENT_TYPES } from '../constants/data/options'
 import { clickID } from '../constants/functions/inputHandlers'
 
 export default function Profile() {
