@@ -15,7 +15,7 @@ const GarmentTear = ({ garment }) => {
                 <p className='container-subtitle-2'>Tears</p>
               </div>
               <div className="container-grid-3-md gap container-border clear-box">
-                {tear.wearTear.colorFade === 1 && (
+                {tear.colorFading === 1 && (
                   <div>
                     <p>
                       <label className="text-b text-u">Color Fading</label>
@@ -28,7 +28,7 @@ const GarmentTear = ({ garment }) => {
                   </div>
                 )}
 
-                {tear.wearTear.pilling === 1 && (
+                {tear.pillingArea && (
                   <div>
                     <p>
                       <label className="text-b text-u">Pilling</label>
@@ -36,17 +36,17 @@ const GarmentTear = ({ garment }) => {
                     <p>
                       <label className="tab"></label>
                       <label className="text-b">Area:<label className="tab"></label></label>
-                      <label>{tear.tearExtra.pillingArea}</label>
+                      <label>{tear.pillingArea}</label>
                     </p>
                     <p>
                       <label className="tab"></label>
                       <label className="text-b">Strength:<label className="tab"></label></label>
-                      <label>{tear.tearExtra.pillingStrength}</label>
+                      <label>{tear.pillingStrength}</label>
                     </p>
                   </div>
                 )}
 
-                {tear.wearTear.shapeLoss === 1 && (
+                {tear.shapeLossArea && (
                   <div>
                     <p>
                       <label className="text-b text-u">Shape Loss</label>
@@ -54,17 +54,17 @@ const GarmentTear = ({ garment }) => {
                     <p>
                       <label className="tab"></label>
                       <label className="text-b">Area:<label className="tab"></label></label>
-                      <label>{tear.tearExtra.shapeLossArea}</label>
+                      <label>{tear.shapeLossArea}</label>
                     </p>
                     <p>
                       <label className="tab"></label>
                       <label className="text-b">How:<label className="tab"></label></label>
-                      <label>{tear.tearExtra.shapeLossHow}</label>
+                      <label>{tear.shapeLossHow}</label>
                     </p>
                   </div>
                 )}
 
-                {tear.wearTear.twisting === 1 && (
+                {tear.twistingArea && (
                   <div>
                     <p>
                       <label className="text-b text-u">Twisting</label>
@@ -72,24 +72,26 @@ const GarmentTear = ({ garment }) => {
                     <p>
                       <label className="tab"></label>
                       <label className="text-b">Area:<label className="tab"></label></label>
-                      <label>{tear.tearExtra.twistingArea}</label>
+                      <label>{tear.twistingArea}</label>
                     </p>
                     <p>
                       <label className="tab"></label>
                       <label className="text-b">Size:<label className="tab"></label></label>
-                      <label>{tear.tearExtra.twistingSize} cm</label>
+                      <label>{tear.twistingSize} cm</label>
                     </p>
-                    <p>
-                      <label className="tab"></label>
-                      <label className="text-b">Photo:<label className="tab"></label></label>
-                    </p>
-                    <div className='container-input-img img-size-sm'>
-                      {tear.twistingImg && <img src={getImageFromURL(tear.twistingImg)} alt="twisting" />}
-                    </div>
+                    {tear.twistingImg && (
+                      <p>
+                        <label className="tab"></label>
+                        <label className="text-b">Photo:<label className="tab"></label></label>
+                        <div className='container-input-img img-size-sm'>
+                          <img src={getImageFromURL(tear.twistingImg)} alt="twisting" />
+                        </div>
+                      </p>
+                    )}
                   </div>
                 )}
 
-                {tear.wearTear.washShrink === 1 && (
+                {tear.tearExtra?.washShrinkMeasurements && Array.isArray(tear.tearExtra.washShrinkMeasurements) && (
                   <div>
                     <p>
                       <label className="text-b text-u">Shrink from Wash</label>
@@ -106,7 +108,7 @@ const GarmentTear = ({ garment }) => {
                   </div>
                 )}
 
-                {tear.wearTear.washDiscolor === 1 && (
+                {tear.tearExtra.discolorHow && (
                   <div>
                     <p>
                       <label className="text-b text-u">Discolored from Wash</label>
@@ -119,7 +121,7 @@ const GarmentTear = ({ garment }) => {
                   </div>
                 )}
 
-                {tear.wearTear.spandexShrink === 1 && (
+                {tear.tearExtra.spandexShrinkArea && (
                   <div>
                     <p>
                       <label className="text-b text-u">Elastane/Spandex Shrink</label>
@@ -129,17 +131,19 @@ const GarmentTear = ({ garment }) => {
                       <label className="text-b">Area:<label className="tab"></label></label>
                       <label>{tear.tearExtra.spandexShrinkArea}</label>
                     </p>
-                    <p>
-                      <label className="tab"></label>
-                      <label className="text-b">Photo:<label className="tab"></label></label>
-                    </p>
-                    <div className='container-input-img img-size-sm'>
-                      {tear.spandexShrinkImg && <img src={getImageFromURL(tear.spandexShrinkImg)} alt="spandex shrink" />}
-                    </div>
+                    {tear.spandexShrinkImg && (
+                      <p>
+                        <label className="tab"></label>
+                        <label className="text-b">Photo:<label className="tab"></label></label>
+                        <div className='container-input-img img-size-sm'>
+                          <img src={getImageFromURL(tear.spandexShrinkImg)} alt="spandex shrink" />
+                        </div>
+                      </p>
+                    )}
                   </div>
                 )}
 
-                {tear.wearTear.printFade === 1 && (
+                {tear.printWashingOut && (
                   <div>
                     <p>
                       <label className="text-b text-u">Print Washing Out</label>
@@ -147,19 +151,21 @@ const GarmentTear = ({ garment }) => {
                     <p>
                       <label className="tab"></label>
                       <label className="text-b">Print Lost:<label className="tab"></label></label>
-                      <label>{tear.tearExtra.printFade}</label>
+                      <label>{tear.printWashingOut}</label>
                     </p>
-                    <p>
-                      <label className="tab"></label>
-                      <label className="text-b">Photo:<label className="tab"></label></label>
-                    </p>
-                    <div className='container-input-img img-size-sm'>
-                      {tear.printFadeImg && <img src={getImageFromURL(tear.printFadeImg)} alt="print fade" />}
-                    </div>
+                    {tear.printFadeImg && (
+                      <p>
+                        <label className="tab"></label>
+                        <label className="text-b">Photo:<label className="tab"></label></label>
+                        <div className='container-input-img img-size-sm'>
+                          <img src={getImageFromURL(tear.printFadeImg)} alt="print fade" />
+                        </div>
+                      </p>
+                    )}
                   </div>
                 )}
 
-                {tear.wearTear.hole === 1 && (
+                {tear.tearExtra.holeArea && (
                   <div>
                     <p>
                       <label className="text-b text-u">Holes</label>
@@ -174,17 +180,19 @@ const GarmentTear = ({ garment }) => {
                       <label className="text-b">Size:<label className="tab"></label></label>
                       <label>{tear.tearExtra.holeSize} cm</label>
                     </p>
-                    <p>
-                      <label className="tab"></label>
-                      <label className="text-b">Photo:<label className="tab"></label></label>
-                    </p>
-                    <div className='container-input-img img-size-sm'>
-                      {tear.holeImg && <img src={getImageFromURL(tear.holeImg)} alt="hole" />}
-                    </div>
+                    {tear.holeImg && (
+                      <p>
+                        <label className="tab"></label>
+                        <label className="text-b">Photo:<label className="tab"></label></label>
+                        <div className='container-input-img img-size-sm'>
+                          <img src={getImageFromURL(tear.holeImg)} alt="hole" />
+                        </div>
+                      </p>
+                    )}
                   </div>
                 )}
 
-                {tear.wearTear.labelItching === 1 && (
+                {tear.labelItching && (
                   <div>
                     <p>
                       <label className="text-b text-u">Label is Itching</label>
@@ -192,7 +200,7 @@ const GarmentTear = ({ garment }) => {
                   </div>
                 )}
 
-                {tear.wearTear.looseButton === 1 && (
+                {tear.tearExtra.looseButtonArea && (
                   <div>
                     <p>
                       <label className="text-b text-u">Buttons Loose</label>
@@ -210,7 +218,7 @@ const GarmentTear = ({ garment }) => {
                   </div>
                 )}
 
-                {tear.wearTear.stain === 1 && (
+                {tear.stainArea && (
                   <div>
                     <p>
                       <label className="text-b text-u">Stains</label>
@@ -218,7 +226,7 @@ const GarmentTear = ({ garment }) => {
                     <p>
                       <label className="tab"></label>
                       <label className="text-b">Area:<label className="tab"></label></label>
-                      <label>{tear.tearExtra.stainArea}</label>
+                      <label>{tear.stainArea}</label>
                     </p>
                     {tear.tearExtra.stainSourceKnow === "stainSourceKnow_yes" && (
                       <p>
@@ -232,17 +240,19 @@ const GarmentTear = ({ garment }) => {
                       <label className="text-b">Too Ugly to Wear:<label className="tab"></label></label>
                       <label>{tear.tearExtra.stainUgly === "stainUgly_yes" ? "Yes" : "No"}</label>
                     </p>
-                    <p>
-                      <label className="tab"></label>
-                      <label className="text-b">Photo:<label className="tab"></label></label>
-                    </p>
-                    <div className='container-input-img img-size-sm'>
-                      {tear.stainImg && <img src={getImageFromURL(tear.stainImg)} alt="stain" />}
-                    </div>
+                    {tear.stainImg && (
+                      <p>
+                        <label className="tab"></label>
+                        <label className="text-b">Photo:<label className="tab"></label></label>
+                        <div className='container-input-img img-size-sm'>
+                          <img src={getImageFromURL(tear.stainImg)} alt="stain" />
+                        </div>
+                      </p>
+                    )}
                   </div>
                 )}
 
-                {tear.wearTear.other === 1 && (
+                {tear.tearExtra.tearOther && (
                   <div>
                     <p>
                       <label className="text-b text-u">Other Tear</label>
@@ -261,23 +271,23 @@ const GarmentTear = ({ garment }) => {
                 <p className='container-subtitle-2'>Repair Request</p>
               </div>
               <ul className="container-grid-3-md gap container-border clear-box">
-                {tear.repairRequest.looseButton === 1 && (
+                {tear.repairRequest?.looseButton && (
                   <li>{findAttribute(repairRequests, "looseButton")}</li>
                 )}
 
-                {tear.repairRequest.brokenZipper === 1 && (
+                {tear.repairRequest?.brokenZipper && (
                   <li>{findAttribute(repairRequests, "brokenZipper")}</li>
                 )}
 
-                {tear.repairRequest.lostString === 1 && (
+                {tear.repairRequest?.lostString && (
                   <li>{findAttribute(repairRequests, "lostString")}</li>
                 )}
 
-                {tear.repairRequest.looseHem === 1 && (
+                {tear.repairRequest?.looseHem && (
                   <li>{findAttribute(repairRequests, "looseHem")}</li>
                 )}
 
-                {tear.repairRequest.other === 1 && (
+                {tear.repairRequest?.other && (
                   <li>{tear.repairOther}</li>
                 )}
               </ul>

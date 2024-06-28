@@ -4,6 +4,7 @@ import wash from '../../assets/icons/wash.png';
 import washHand from '../../assets/icons/wash_hand.png';
 import washPress from '../../assets/icons/wash_press.png';
 import washDelicate from '../../assets/icons/wash_delicate.png';
+import tetrachloroethylene from '../../assets/icons/Minimalist_info_Icon.png';
 import washAgitationMin from '../../assets/icons/wash_agitation_min.png';
 import washAgitationMed from '../../assets/icons/wash_agitation_med.png';
 import washHeatXX from '../../assets/icons/wash_xx.png';
@@ -357,12 +358,6 @@ const careInstructions = {
 	"washDelicate":{"type":"wash", "subtype":"Wash", "name":"Machine wash delicate/gentle", "value":"washDelicate", "img":washDelicate},
 	"washAgitationMin":{"type":"wash", "subtype":"Wash", "name":"Minimum agitation", "value":"washAgitationMin", "img":washAgitationMin},
 	"washAgitationMed":{"type":"wash", "subtype":"Wash", "name":"Medium agitation", "value":"washAgitationMed", "img":washAgitationMed},
-	// "wash30Min":{"type":"wash", "name":"Max temp 30"+String.fromCharCode(176)+", minimum agitation", 
-	// 	"value":"wash30Min", "img":wash30Min},
-	// "wash30Med":{"type":"wash", "name":"Max temp 30"+String.fromCharCode(176)+", medium agitation", 
-	// 	"value":"wash30Med", "img":wash30Med},
-	// "wash30Max":{"type":"wash", "name":"Max temp 30"+String.fromCharCode(176)+", max agitation", 
-	// 	"value":"wash30Max", "img":wash30Max},
 	"washCold":{"type":"wash", "subtype":"Heat", "name":"Machine wash cold", "value":"washCold", "img":washCold},
 	"washWarm":{"type":"wash", "subtype":"Heat", "name":"Machine wash warm", "value":"washWarm", "img":washWarm},
 	"washHot":{"type":"wash", "subtype":"Heat", "name":"Machine wash hot", "value":"washHot", "img":washHot},
@@ -399,9 +394,6 @@ const careInstructions = {
 	"dryCP":{"type":"dryC", "subtype":"Solvent", "name":"Dry cleaning in any solvent except trichloroethylene (P)", 
 		"value":"dryCP", "img":dryCP},
 	"dryCF":{"type":"dryC", "subtype":"Solvent", "name":"Dry cleaning in petroleum solvent (F)", "value":"dryCF", "img":dryCF},
-
-	"dryCI":{"type":"dryC", "subtype":"Solvent", "name":"Dry cleaning in tetrachloroethylene solvent (I)", "value":"dryCI", "img":dryCI},
-
 	"dryCRegular":{"type":"dryC", "subtype":"Care", "name":"Regular cycle", "value":"dryCRegular", "img":dryCRegular},
 	"dryCSort":{"type":"dryC", "subtype":"Care", "name":"Sort cycle", "value":"dryCSort", "img":dryCSort},
 	"dryCRedMoist":{"type":"dryC", "subtype":"Care", "name":"Reduce moisture", "value":"dryCRedMoist", "img":dryCRedMoist},
@@ -424,6 +416,7 @@ const careInstructions = {
 	"bleachNonCl":{"type":"bleach", "subtype":"Bleach", "name":"Only non-chloride bleach", 
 		"value":"bleachNonCl", "img":bleachNonCl},
 };
+
 
 //garment measurement per category
 const measurementTypes = [

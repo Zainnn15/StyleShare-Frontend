@@ -56,7 +56,28 @@ export default function GarmentTear() {
     stain: 0,
     other: 0,
   })
-  const [tearExtra, setTearExtra] = useState({})
+  const [tearExtra, setTearExtra] = useState({
+    colorLost: '',
+    pillingArea: '',
+    pillingStrength: '',
+    shapeLossArea: '',
+    shapeLossHow: '',
+    twistingArea: '',
+    twistingSize: '',
+    washShrinkMeasurements: [],
+    discolorHow: '',
+    spandexShrinkArea: '',
+    printFade: '',
+    holeArea: '',
+    holeSize: '',
+    looseButtonArea: '',
+    looseButtonQty: '',
+    stainArea: '',
+    stainSource: '',
+    stainSourceKnow: '',
+    stainUgly: '',
+    tearOther: '',
+  })
   const [repairRequest, setRepairRequest] = useState({
     looseButton: '',
     brokenZipper: '',
@@ -105,108 +126,131 @@ export default function GarmentTear() {
   }
 
   const sendGarmentDetails = async (e) => {
-    e.preventDefault()
-    const formData = new FormData()
-    formData.append('garmentId', garment._id)
-    formData.append('tearDate', tearDate)
-    formData.append('wantRepair', wantRepair.toString())
-    formData.append('wearTear', JSON.stringify(wearTear))
-    formData.append('repairRequest', JSON.stringify(repairRequest))
-    formData.append('repairOther', repairOther)
+  e.preventDefault();
+  const formData = new FormData();
+  formData.append('garmentId', garment._id);
+  formData.append('tearDate', tearDate);
+  formData.append('wantRepair', wantRepair.toString());
+  formData.append('wearTear', JSON.stringify(wearTear));
+  formData.append('repairRequest', JSON.stringify(repairRequest));
+  formData.append('repairOther', repairOther);
 
-    const sampleTearInfo = [
-      {
-        tearDate: tearDate,
-        hasTear: true,
-        wantRepair: wantRepair,
-        wearTear: wearTear,
-        tearExtra: tearExtra,
-        repairRequest: repairRequest,
-        repairOther: repairOther,
+  const sampleTearInfo = [
+    {
+      tearDate: tearDate,
+      hasTear: true,
+      wantRepair: wantRepair,
+      colorFading: wearTear.colorFade,
+      pillingArea: tearExtra.pillingArea,
+      pillingStrength: tearExtra.pillingStrength,
+      shapeLossArea: tearExtra.shapeLossArea,
+      shapeLossHow: tearExtra.shapeLossHow,
+      twistingArea: tearExtra.twistingArea,
+      twistingSize: tearExtra.twistingSize,
+      shrinkFromWashArea: wearTear.washShrink ? tearExtra.shrinkFromWashArea : '',
+      discoloredFromWashHow: wearTear.washDiscolor ? tearExtra.discoloredFromWashHow : '',
+      printWashingOut: wearTear.printFade ? tearExtra.printFade : '',
+      labelItching: wearTear.labelItching ? tearExtra.labelItching : '',
+      tearExtra: {
+        colorLost: tearExtra.colorLost,
+        pillingArea: tearExtra.pillingArea,
+        pillingStrength: tearExtra.pillingStrength,
+        shapeLossArea: tearExtra.shapeLossArea,
+        shapeLossHow: tearExtra.shapeLossHow,
+        twistingArea: tearExtra.twistingArea,
+        twistingSize: tearExtra.twistingSize,
+        washShrinkMeasurements: measuresData,
+        discolorHow: tearExtra.discolorHow,
+        spandexShrinkArea: tearExtra.spandexShrinkArea,
+        printFade: tearExtra.printFade,
+        holeArea: tearExtra.holeArea,
+        holeSize: tearExtra.holeSize,
+        looseButtonArea: tearExtra.looseButtonArea,
+        looseButtonQty: tearExtra.looseButtonQty,
+        stainArea: tearExtra.stainArea,
+        stainSource: tearExtra.stainSource,
+        stainSourceKnow: tearExtra.stainSourceKnow,
+        stainUgly: tearExtra.stainUgly,
+        tearOther: tearExtra.tearOther,
       },
-    ]
-    formData.append('tearInfo', JSON.stringify(sampleTearInfo))
+      twistingImg: twistingImg,
+      spandexShrinkImg: spandexShrinkImg,
+      printFadeImg: printFadeImg,
+      holeImg: holeImg,
+      stainImg: stainImg,
+      repairRequest: {
+        looseButton: !!repairRequest.looseButton,
+        brokenZipper: !!repairRequest.brokenZipper,
+        lostString: !!repairRequest.lostString,
+        looseHem: !!repairRequest.looseHem,
+        other: !!repairRequest.other
+      },
+      repairOther: repairOther,
+    },
+  ];
+  formData.append('tearInfo', JSON.stringify(sampleTearInfo));
 
-    if (twistingImg) formData.append('twistingImg', twistingImg)
-    if (spandexShrinkImg) formData.append('spandexShrinkImg', spandexShrinkImg)
-    if (printFadeImg) formData.append('printFadeImg', printFadeImg)
-    if (holeImg) formData.append('holeImg', holeImg)
-    if (stainImg) formData.append('stainImg', stainImg)
-    formData.append('userId', user._id)
+  if (twistingImg) formData.append('twistingImg', twistingImg);
+  if (spandexShrinkImg) formData.append('spandexShrinkImg', spandexShrinkImg);
+  if (printFadeImg) formData.append('printFadeImg', printFadeImg);
+  if (holeImg) formData.append('holeImg', holeImg);
+  if (stainImg) formData.append('stainImg', stainImg);
+  formData.append('userId', user._id);
 
-    if (
-      repairRequest.looseButton ||
-      repairRequest.brokenZipper ||
-      repairRequest.lostString ||
-      repairRequest.looseHem ||
-      repairRequest.other
-    ) {
-      var message = `A new repair request has been made from the garment website. The details are as follows: `
+  if (
+    repairRequest.looseButton ||
+    repairRequest.brokenZipper ||
+    repairRequest.lostString ||
+    repairRequest.looseHem ||
+    repairRequest.other
+  ) {
+    var message = `A new repair request has been made from the garment website. The details are as follows: `;
 
-      repairRequest.looseButton ? (message += `a button is loose, `) : ''
-      repairRequest.brokenZipper ? (message += `the zipper is broken, `) : ''
-      repairRequest.lostString ? (message += `a string has been lost, `) : ''
-      repairRequest.looseHem ? (message += `the hem is loose, `) : ''
-      repairRequest.other ? (message += `other: ${repairOther}.`) : ''
+    repairRequest.looseButton ? (message += `a button is loose, `) : '';
+    repairRequest.brokenZipper ? (message += `the zipper is broken, `) : '';
+    repairRequest.lostString ? (message += `a string has been lost, `) : '';
+    repairRequest.looseHem ? (message += `the hem is loose, `) : '';
+    repairRequest.other ? (message += `other: ${repairOther}.`) : '';
 
-      /* 
-        EMAILJS CREDENTIALS
-
-        -- Marcus (test) --
-
-        "service_8xmxyo1",
-        "template_gdt3trk",
+    emailjs
+      .send(
+        'service_t61puog',
+        'template_2awvimh',
         {
-        publicKey: 'Mk7E-K5COHrpI_3lt'
-        }
-
-        -- Arafat (main) --
-
-        process.env.EMAILJS_SERVICE_ID,
-        process.env.EMAILJS_TEMPLATE_ID,
+          user: user.name,
+          message,
+          email: user.email,
+        },
         {
-            publicKey: process.env.EMAILJS_PUBLIC_KEY
+          publicKey: 'Vxalk7N66xyFaokl9',
         }
-        */
-      console.log(import.meta.env)
-      emailjs
-        .send(
-          'service_t61puog',
-          'template_2awvimh',
-          {
-            user: user.name,
-            message,
-            email: user.email,
-          },
-          {
-            publicKey: 'Vxalk7N66xyFaokl9',
-          },
-        )
-        .then(() => {
-          console.log('Email sent successfully')
-          toast.success('Repair request sent successfully')
-        })
-        .catch((error) => {
-          console.error('Error sending email:', error)
-        })
-    }
-
-    try {
-      const response = await axios.post('/updategarmentdetails', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      )
+      .then(() => {
+        console.log('Email sent successfully');
+        toast.success('Repair request sent successfully');
       })
-      if (response.data.error) {
-        toast.error(response.data.error)
-      } else {
-        toast.success('Garment Tear details updated successfully')
-        setGarment(response.data.garmentDetail) // Update local state with new garment details
-        navigate('/garment-care')
-      }
-    } catch (error) {
-      console.error('Error sending garment details:', error)
-      toast.error('An error occurred while updating garment details.')
-    }
+      .catch((error) => {
+        console.error('Error sending email:', error);
+      });
   }
+
+  try {
+    const response = await axios.post('/updategarmentdetails', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    if (response.data.error) {
+      toast.error(response.data.error);
+    } else {
+      toast.success('Garment Tear details updated successfully');
+      setGarment(response.data.garmentDetail); // Update local state with new garment details
+      navigate('/garment-care');
+    }
+  } catch (error) {
+    console.error('Error sending garment details:', error);
+    toast.error('An error occurred while updating garment details.');
+  }
+};
+
 
   function getCategory(val) {
     const category = GARMENT_TYPES.find((option) => option.value === val)?.cat
