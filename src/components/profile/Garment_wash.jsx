@@ -91,7 +91,7 @@ const Garment_wash = ({ garment }) => {
 
                                     {
                                         care.careDry?.Method &&
-                                        care.careDry.Method !== "noTumble" && (
+                                        care.careDry.Method !== "noTumble" && care.careDry.Method !== "" && (
                                             <div>
                                                 <p>
                                                     <label className="text-b">Dry Method:<label className="tab"></label></label>
@@ -112,6 +112,15 @@ const Garment_wash = ({ garment }) => {
                                                     )}
                                                 </p>
                                             </div>
+                                        )
+                                    }
+
+                                    {
+                                        care.careDry?.Method === "" && (
+                                            <p>
+                                                <label className="text-b">Dry Method:<label className="tab"></label></label>
+                                                <label>No Dry</label>
+                                            </p>
                                         )
                                     }
                                 </div>

@@ -115,10 +115,12 @@ function GarmentExchange() {
             console.error('Failed to confirm exchange:', error);
         }
     };
-    
+
     function handleCardPress(garment) {
         setGarmentModalID(garment);
     }
+
+    const today = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
 
     return (
         <div>
@@ -145,7 +147,6 @@ function GarmentExchange() {
                                             titleClassName={"container-row clickable bg-purpleDark space-evenly"}
                                             description={
                                                 <div>
-                                                    <p className="card-text">Type: {findAttribute(GARMENT_TYPES, garment?.garmentType)}</p>
                                                     <p className="card-text">Description: {garment?.garmentDescription || 'Description not available'}</p>
                                                     <p className="card-text">Country: {garment?.garmentCountry || 'Country not available'}</p>
                                                 </div>
@@ -247,6 +248,7 @@ function GarmentExchange() {
                         <label>Date: </label>
                         <input
                             type="date"
+                            min={today} // Set the minimum date to today
                             value={reservationDetails.pickupDate}
                             onChange={(e) => setReservationDetails(prev => ({ ...prev, pickupDate: e.target.value }))}
                         />

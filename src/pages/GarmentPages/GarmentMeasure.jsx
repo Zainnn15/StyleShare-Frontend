@@ -335,11 +335,11 @@ const GarmentMeasurement = () => {
                                         </div>
                                     </div>
                                     <div className='container-input'>
-                                        <button className="button-form" type="submit">
-                                            Save
-                                        </button>
                                         <button className="button-form" type="reset">
                                              Reset
+                                        </button>
+                                        <button className="button-form" type="submit">
+                                            Save
                                         </button>
                                     </div>
                                 </div>

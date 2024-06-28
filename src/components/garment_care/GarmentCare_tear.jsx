@@ -809,8 +809,8 @@ export default function GarmentTear() {
                       id="info_shrinking"
                       className="container-popup"
                       iconUrl={img_shrinking}
-                      height="75%"
-                      width="75%"
+                      height="620px"
+                      width="382px"
                     />
                   </div>
                   {wearTear.spandexShrink === 0 && <div></div>}

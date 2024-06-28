@@ -161,6 +161,7 @@ const CARE_WASH_METHODS = {
 //dry methods
 const CARE_DRY_METHODS = {
   Tumble: [{ value: 'noTumble', label: 'Air dry' }],
+  noDry: [{ value: 'noDry', label: 'Did not dry' }],
   Air: [],
   Shade: [],
   Heat: [],
