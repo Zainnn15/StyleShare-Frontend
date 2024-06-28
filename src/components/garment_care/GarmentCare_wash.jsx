@@ -148,10 +148,10 @@ export default function GarmentWash() {
                             setGarment(garmentList[selectedIndex]);
                         }} value={garmentList.findIndex(g => g === garment)}>
                             {garmentList.map((item, index) => (
-                                <option key={item._id} value={index}>
-                                    {findAttribute(GARMENT_TYPES, item.garmentType)} ({formatDate(item.purchaseDate)})
-                                </option>
-                            ))}
+                        <option key={item._id} value={index}>
+                        {item.garmentDescription} ({formatDate(item.purchaseDate)})
+                        </option>
+                    ))}
                         </select>
                 </div>
                 <br/>
