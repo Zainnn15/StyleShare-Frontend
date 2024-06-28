@@ -48,6 +48,7 @@ const id_instructionDryC = {
     "dryC_a": "dryCA",
     "dryC_p": "dryCP",
     "dryC_f": "dryCF",
+    "dryC_tetrachloroethylene": "dryCTetrachloroethylene",
     "dryC_regular": "dryCRegular",
     "dryC_sort": "dryCSort",
     "dryC_red_moist": "dryCRedMoist",

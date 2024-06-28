@@ -2,6 +2,7 @@
 import '../../styles/main.scss';
 import info from '../../assets/icons/info.png';
 import symbols from '../../assets/images/care_symbols.png';
+import tetrachloroethylene from '../../assets/icons/Minimalist_info_Icon.png';
 
 import { checkOnID, clickID, addErrorMessageByID, validateInpName } from "../../constants/functions/inputHandlers";
 import { careInstructions } from "../../constants/data/lists";
@@ -9,21 +10,21 @@ import CircleBtn from "../common/CircleBtn";
 import CircleImg from "../common/CircleImg";
 import PopupImg from "../common/PopupImg";
 
-const GarmentDetails_p7 = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
+const GarmentDetails_p7 = ({ formData, setFormData, page, numPages, handleForward, handleBack }) => {
     const dryCTree = {
         "DryC": "dryC_yes",
     };
 
-    //validation
+    // validation
     function validatePage() {
-        if(!validateInpName("canDryC", formData.instructionDryC.DryC)) {
+        if (!validateInpName("canDryC", formData.instructionDryC.DryC)) {
             return false;
         }
-        if(formData.instructionDryC.DryC === "dryC_no") {
+        if (formData.instructionDryC.DryC === "dryC_no") {
             return true;
         }
 
-        if(!validateInpName("dryCSolvent", formData.instructionDryC.Solvent)) {
+        if (!validateInpName("dryCSolvent", formData.instructionDryC.Solvent)) {
             return false;
         }
 
@@ -31,40 +32,40 @@ const GarmentDetails_p7 = ({formData, setFormData, page, numPages, handleForward
     }
 
     function validateAndNext() {
-        if(!validatePage()) {
+        if (!validatePage()) {
             return false;
         }
-        handleForward();        
+        handleForward();
         return true;
     }
 
-    return(
+    return (
         <div>
             <PopupImg id="info_care_symbols" className="container-popup" iconUrl={symbols} height="45%" />
             <div className="container-info">
                 <label className="container-subtitle-2">Dry Cleaning Instructions</label>
-                <CircleBtn 
-                    iconUrl={info} 
-                    className="button-info" 
-                    width="1em" 
-                    handlePress={()=>{
+                <CircleBtn
+                    iconUrl={info}
+                    className="button-info"
+                    width="1em"
+                    handlePress={() => {
                         let e = document.getElementById("info_care_symbols");
-                        if(e) {
+                        if (e) {
                             e.classList.toggle("hide", false);
                         }
                     }}
                 />
             </div>
-            <hr/>
+            <hr />
             <div>
                 <div className="container-prompt">
                     <p>Can Dry Clean?</p>
                 </div>
-                <div id={"canDryC_error"} style={{textAlign:"center"}}></div>
+                <div id={"canDryC_error"} style={{ textAlign: "center" }}></div>
                 <div className="container-care">
                     <div className="container-care-group">
                         <input type="radio" id="dryC_no" name="canDryC"
-                            value={0} 
+                            value={0}
                             onClick={(e) => {
                                 const newDryC = formData.instructionDryC;
                                 newDryC.DryC = e.target.id;
@@ -76,14 +77,14 @@ const GarmentDetails_p7 = ({formData, setFormData, page, numPages, handleForward
                             }}
                             defaultChecked={checkOnID("dryC_no", formData.instructionDryC.DryC)}
                         />
-                        <span className="container-care-img" onClick={()=>clickID("dryC_no")}>
-                            <CircleImg className="img-care" iconUrl={careInstructions.noDryC.img} width="50%"/>
+                        <span className="container-care-img" onClick={() => clickID("dryC_no")}>
+                            <CircleImg className="img-care" iconUrl={careInstructions.noDryC.img} width="50%" />
                             <label>{careInstructions.noDryC.name}</label>
                         </span>
                     </div>
                     <div className="container-care-group">
                         <input type="radio" id="dryC_yes" name="canDryC"
-                            value={1} 
+                            value={1}
                             onClick={(e) => {
                                 const newDryC = formData.instructionDryC;
                                 newDryC.DryC = e.target.id;
@@ -95,25 +96,25 @@ const GarmentDetails_p7 = ({formData, setFormData, page, numPages, handleForward
                             }}
                             defaultChecked={checkOnID("dryC_yes", formData.instructionDryC.DryC)}
                         />
-                        <span className="container-care-img" onClick={()=>clickID("dryC_yes")}>
-                            <CircleImg className="img-care" iconUrl={careInstructions.dryC.img} width="50%"/>
+                        <span className="container-care-img" onClick={() => clickID("dryC_yes")}>
+                            <CircleImg className="img-care" iconUrl={careInstructions.dryC.img} width="50%" />
                             <label>{careInstructions.dryC.name}</label>
                         </span>
                     </div>
                 </div>
 
                 {
-                    //if dry cleaning is selected
+                    // if dry cleaning is selected
                     formData.instructionDryC.DryC === dryCTree.DryC && (
                         <div>
                             <div className="container-prompt">
                                 <p>Dry Cleaning Solvent</p>
                             </div>
-                            <div id={"dryCSolvent_error"} style={{textAlign:"center"}}></div>
-                            <div className="container-care">
+                            <div id={"dryCSolvent_error"} style={{ textAlign: "center" }}></div>
+                            <div className="container-care container-care-horizontal">
                                 <div className="container-care-group">
                                     <input type="radio" id="dryC_a" name="dryCSolvent"
-                                        value={"dryCA"} 
+                                        value={"dryCA"}
                                         onClick={(e) => {
                                             const newDryC = formData.instructionDryC;
                                             newDryC.Solvent = e.target.id;
@@ -125,15 +126,15 @@ const GarmentDetails_p7 = ({formData, setFormData, page, numPages, handleForward
                                         }}
                                         defaultChecked={checkOnID("dryC_a", formData.instructionDryC.Solvent)}
                                     />
-                                    <span className="container-care-img" onClick={()=>clickID("dryC_a")}>
-                                        <CircleImg className="img-care" 
-                                            iconUrl={careInstructions.dryCA.img} width="50%"/>
+                                    <span className="container-care-img" onClick={() => clickID("dryC_a")}>
+                                        <CircleImg className="img-care"
+                                            iconUrl={careInstructions.dryCA.img} width="50%" />
                                         <label>{careInstructions.dryCA.name}</label>
                                     </span>
                                 </div>
                                 <div className="container-care-group">
                                     <input type="radio" id="dryC_p" name="dryCSolvent"
-                                        value={"dryCP"} 
+                                        value={"dryCP"}
                                         onClick={(e) => {
                                             const newDryC = formData.instructionDryC;
                                             newDryC.Solvent = e.target.id;
@@ -145,15 +146,15 @@ const GarmentDetails_p7 = ({formData, setFormData, page, numPages, handleForward
                                         }}
                                         defaultChecked={checkOnID("dryC_p", formData.instructionDryC.Solvent)}
                                     />
-                                    <span className="container-care-img" onClick={()=>clickID("dryC_p")}>
-                                        <CircleImg className="img-care" 
-                                            iconUrl={careInstructions.dryCP.img} width="50%"/>
+                                    <span className="container-care-img" onClick={() => clickID("dryC_p")}>
+                                        <CircleImg className="img-care"
+                                            iconUrl={careInstructions.dryCP.img} width="50%" />
                                         <label>{careInstructions.dryCP.name}</label>
                                     </span>
                                 </div>
                                 <div className="container-care-group">
                                     <input type="radio" id="dryC_f" name="dryCSolvent"
-                                        value={"dryCF"} 
+                                        value={"dryCF"}
                                         onClick={(e) => {
                                             const newDryC = formData.instructionDryC;
                                             newDryC.Solvent = e.target.id;
@@ -165,10 +166,30 @@ const GarmentDetails_p7 = ({formData, setFormData, page, numPages, handleForward
                                         }}
                                         defaultChecked={checkOnID("dryC_f", formData.instructionDryC.Solvent)}
                                     />
-                                    <span className="container-care-img" onClick={()=>clickID("dryC_f")}>
-                                        <CircleImg className="img-care" 
-                                            iconUrl={careInstructions.dryCF.img} width="50%"/>
+                                    <span className="container-care-img" onClick={() => clickID("dryC_f")}>
+                                        <CircleImg className="img-care"
+                                            iconUrl={careInstructions.dryCF.img} width="50%" />
                                         <label>{careInstructions.dryCF.name}</label>
+                                    </span>
+                                </div>
+                                <div className="container-care-group">
+                                    <input type="radio" id="dryC_tetrachloroethylene" name="dryCSolvent"
+                                        value={"dryCTetrachloroethylene"}
+                                        onClick={(e) => {
+                                            const newDryC = formData.instructionDryC;
+                                            newDryC.Solvent = e.target.id;
+                                            setFormData({
+                                                ...formData,
+                                                instructionDryC: newDryC
+                                            });
+                                            addErrorMessageByID("dryCSolvent_error", null);
+                                        }}
+                                        defaultChecked={checkOnID("dryC_tetrachloroethylene", formData.instructionDryC.Solvent)}
+                                    />
+                                    <span className="container-care-img" onClick={() => clickID("dryC_tetrachloroethylene")}>
+                                        <CircleImg className="img-care"
+                                            iconUrl={tetrachloroethylene} width="50%" />
+                                        <label>{careInstructions.dryCTetrachloroethylene.name}</label>
                                     </span>
                                 </div>
                             </div>
@@ -176,8 +197,8 @@ const GarmentDetails_p7 = ({formData, setFormData, page, numPages, handleForward
                     )
                 }
 
-                {   
-                    //if dry cleaning solvent is selected
+                {
+                    // if dry cleaning solvent is selected
                     formData.instructionDryC.DryC === dryCTree.DryC &&
                     formData.instructionDryC.Solvent !== "" &&
                     (
@@ -185,11 +206,11 @@ const GarmentDetails_p7 = ({formData, setFormData, page, numPages, handleForward
                             <div className="container-prompt">
                                 <p>Dry Cleaning Extra Care</p>
                             </div>
-                            <div id={"dryCCare_error"} style={{textAlign:"center"}}></div>
+                            <div id={"dryCCare_error"} style={{ textAlign: "center" }}></div>
                             <div className="container-care">
-                            <div className="container-care-group">
+                                <div className="container-care-group">
                                     <input type="radio" id="dryC_regular" name="dryCCare"
-                                        value={"dryCRegular"} 
+                                        value={"dryCRegular"}
                                         onClick={(e) => {
                                             const newDryC = formData.instructionDryC;
                                             newDryC.Care = e.target.id;
@@ -201,15 +222,15 @@ const GarmentDetails_p7 = ({formData, setFormData, page, numPages, handleForward
                                         }}
                                         defaultChecked={checkOnID("dryC_regular", formData.instructionDryC.Care)}
                                     />
-                                    <span className="container-care-img" onClick={()=>clickID("dryC_regular")}>
-                                        <CircleImg className="img-care" 
-                                            iconUrl={careInstructions.dryCRegular.img} width="50%"/>
+                                    <span className="container-care-img" onClick={() => clickID("dryC_regular")}>
+                                        <CircleImg className="img-care"
+                                            iconUrl={careInstructions.dryCRegular.img} width="50%" />
                                         <label>{careInstructions.dryCRegular.name}</label>
                                     </span>
                                 </div>
                                 <div className="container-care-group">
                                     <input type="radio" id="dryC_sort" name="dryCCare"
-                                        value={"dryCSort"} 
+                                        value={"dryCSort"}
                                         onClick={(e) => {
                                             const newDryC = formData.instructionDryC;
                                             newDryC.Care = e.target.id;
@@ -221,15 +242,15 @@ const GarmentDetails_p7 = ({formData, setFormData, page, numPages, handleForward
                                         }}
                                         defaultChecked={checkOnID("dryC_sort", formData.instructionDryC.Care)}
                                     />
-                                    <span className="container-care-img" onClick={()=>clickID("dryC_sort")}>
-                                        <CircleImg className="img-care" 
-                                            iconUrl={careInstructions.dryCSort.img} width="50%"/>
+                                    <span className="container-care-img" onClick={() => clickID("dryC_sort")}>
+                                        <CircleImg className="img-care"
+                                            iconUrl={careInstructions.dryCSort.img} width="50%" />
                                         <label>{careInstructions.dryCSort.name}</label>
                                     </span>
                                 </div>
                                 <div className="container-care-group">
                                     <input type="radio" id="dryC_red_moist" name="dryCCare"
-                                        value={"dryCRedMoist"} 
+                                        value={"dryCRedMoist"}
                                         onClick={(e) => {
                                             const newDryC = formData.instructionDryC;
                                             newDryC.Care = e.target.id;
@@ -241,15 +262,15 @@ const GarmentDetails_p7 = ({formData, setFormData, page, numPages, handleForward
                                         }}
                                         defaultChecked={checkOnID("dryC_red_moist", formData.instructionDryC.Care)}
                                     />
-                                    <span className="container-care-img" onClick={()=>clickID("dryC_red_moist")}>
-                                        <CircleImg className="img-care" 
-                                            iconUrl={careInstructions.dryCRedMoist.img} width="50%"/>
+                                    <span className="container-care-img" onClick={() => clickID("dryC_red_moist")}>
+                                        <CircleImg className="img-care"
+                                            iconUrl={careInstructions.dryCRedMoist.img} width="50%" />
                                         <label>{careInstructions.dryCRedMoist.name}</label>
                                     </span>
                                 </div>
                                 <div className="container-care-group">
                                     <input type="radio" id="dryC_steam_no" name="dryCCare"
-                                        value={"dryCSteamNo"} 
+                                        value={"dryCSteamNo"}
                                         onClick={(e) => {
                                             const newDryC = formData.instructionDryC;
                                             newDryC.Care = e.target.id;
@@ -261,15 +282,15 @@ const GarmentDetails_p7 = ({formData, setFormData, page, numPages, handleForward
                                         }}
                                         defaultChecked={checkOnID("dryC_steam_no", formData.instructionDryC.Care)}
                                     />
-                                    <span className="container-care-img" onClick={()=>clickID("dryC_steam_no")}>
-                                        <CircleImg className="img-care" 
-                                            iconUrl={careInstructions.dryCSteamNo.img} width="50%"/>
+                                    <span className="container-care-img" onClick={() => clickID("dryC_steam_no")}>
+                                        <CircleImg className="img-care"
+                                            iconUrl={careInstructions.dryCSteamNo.img} width="50%" />
                                         <label>{careInstructions.dryCSteamNo.name}</label>
                                     </span>
                                 </div>
                                 <div className="container-care-group">
                                     <input type="radio" id="dryC_heat_low" name="dryCCare"
-                                        value={"dryCHeatLow"} 
+                                        value={"dryCHeatLow"}
                                         onClick={(e) => {
                                             const newDryC = formData.instructionDryC;
                                             newDryC.Care = e.target.id;
@@ -281,9 +302,9 @@ const GarmentDetails_p7 = ({formData, setFormData, page, numPages, handleForward
                                         }}
                                         defaultChecked={checkOnID("dryC_heat_low", formData.instructionDryC.Care)}
                                     />
-                                    <span className="container-care-img" onClick={()=>clickID("dryC_heat_low")}>
-                                        <CircleImg className="img-care" 
-                                            iconUrl={careInstructions.dryCHeatLow.img} width="50%"/>
+                                    <span className="container-care-img" onClick={() => clickID("dryC_heat_low")}>
+                                        <CircleImg className="img-care"
+                                            iconUrl={careInstructions.dryCHeatLow.img} width="50%" />
                                         <label>{careInstructions.dryCHeatLow.name}</label>
                                     </span>
                                 </div>
@@ -297,12 +318,12 @@ const GarmentDetails_p7 = ({formData, setFormData, page, numPages, handleForward
                     page > 0 &&
                     <button type="button" className="button-form" onClick={handleBack}>Back</button>
                 }
-                <button 
-                    className="button-form" 
-                    type={ page+1 < numPages ? "button" : "submit" }
+                <button
+                    className="button-form"
+                    type={page + 1 < numPages ? "button" : "submit"}
                     onClick={validateAndNext}
                 >
-                    { page+1 < numPages ? "Next" : "Submit" }
+                    {page + 1 < numPages ? "Next" : "Submit"}
                 </button>
             </div>
         </div>
