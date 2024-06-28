@@ -186,9 +186,10 @@ function GarmentExchange() {
                 <h3>Exchange Requests</h3>
                 <hr />
                 {exchangeRequests.length > 0 ? (
-                    <div className='container-grid-3-md gap m2-v'>
+                    <div className='container-grid-2-lg gap m2-v'>
                         {exchangeRequests.map((request) => (
                             <div key={request._id} className="container-border clear-box">
+                                {/* <img src={getImageFromURL(garment?.fileFront || 'fallbackImagePath')} alt="Garment" className="exchange-garment-img" /> */}
                                 <p><strong>From:</strong> {request.senderId?.username || 'Unknown User'} <strong>To:</strong> {request.recipientId?.username || 'Unknown User'}</p>
                                 <p><strong>Exchange For:</strong> {request.recipientGarmentDescription}</p>
                                 {request.recipientGarmentImage && (
