@@ -14,7 +14,6 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
     const headings = [
         "Welcome to Style Share",
         "Your platform for sharing garments",
-        "Contact Seneca team for futher information",
       ];
       const [i, setI] = useState(0);
     
