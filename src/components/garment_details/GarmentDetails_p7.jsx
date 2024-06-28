@@ -168,7 +168,7 @@ const GarmentDetails_p7 = ({ formData, setFormData, page, numPages, handleForwar
                                     />
                                     <span className="container-care-img" onClick={()=>clickID("dryC_i")}>
                                         <CircleImg className="img-care" 
-                                            iconUrl={careInstructions.dryCI.img} width="10%"/>
+                                            iconUrl={careInstructions.dryCI.img} width="50%"/>
                                         <label>{careInstructions.dryCI.name}</label>
                                     </span>
                                 </div>
@@ -192,7 +192,7 @@ const GarmentDetails_p7 = ({ formData, setFormData, page, numPages, handleForwar
                                         <label>{careInstructions.dryCF.name}</label>
                                     </span>
                                 </div>
-                                <div className="container-care-group">
+                                {/* <div className="container-care-group">
                                     <input type="radio" id="dryC_tetrachloroethylene" name="dryCSolvent"
                                         value={"dryCTetrachloroethylene"}
                                         onClick={(e) => {
@@ -211,7 +211,7 @@ const GarmentDetails_p7 = ({ formData, setFormData, page, numPages, handleForwar
                                             iconUrl={tetrachloroethylene} width="50%" />
                                         <label>{careInstructions.dryCTetrachloroethylene.name}</label>
                                     </span>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     )
