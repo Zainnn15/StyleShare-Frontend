@@ -35,6 +35,7 @@ import dryC from '../../assets/icons/dryclean.png';
 import dryCA from '../../assets/icons/dryclean_a.png';
 import dryCP from '../../assets/icons/dryclean_p.png';
 import dryCF from '../../assets/icons/dryclean_f.png';
+import dryCI from '../../assets/icons/dryclean_i.png';
 import dryCRegular from '../../assets/icons/dryclean.png';
 import dryCSort from '../../assets/icons/dryclean_sort.png';
 import dryCRedMoist from '../../assets/icons/dryclean_redmoist.png';
@@ -398,6 +399,9 @@ const careInstructions = {
 	"dryCP":{"type":"dryC", "subtype":"Solvent", "name":"Dry cleaning in any solvent except trichloroethylene (P)", 
 		"value":"dryCP", "img":dryCP},
 	"dryCF":{"type":"dryC", "subtype":"Solvent", "name":"Dry cleaning in petroleum solvent (F)", "value":"dryCF", "img":dryCF},
+
+	"dryCI":{"type":"dryC", "subtype":"Solvent", "name":"Dry cleaning in tetrachloroethylene solvent (I)", "value":"dryCI", "img":dryCI},
+
 	"dryCRegular":{"type":"dryC", "subtype":"Care", "name":"Regular cycle", "value":"dryCRegular", "img":dryCRegular},
 	"dryCSort":{"type":"dryC", "subtype":"Care", "name":"Sort cycle", "value":"dryCSort", "img":dryCSort},
 	"dryCRedMoist":{"type":"dryC", "subtype":"Care", "name":"Reduce moisture", "value":"dryCRedMoist", "img":dryCRedMoist},

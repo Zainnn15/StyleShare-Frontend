@@ -631,6 +631,15 @@ $screen-xl-min: 1200px;
     }
 }
 
+.exchange-garment-img {
+    width: 100%;           /* Ensures the image takes up the full width of the card */
+    height: auto;          /* Maintains the aspect ratio */
+    max-height: 50px;     /* Limits the maximum height of the image */
+    object-fit: cover;     /* Ensures the image covers the container without stretching */
+    border-radius: 8px;    /* Rounds the corners of the image */
+    margin-bottom: 10px;   /* Adds some space below the image */
+}
+
 .container-input-img {
     @include container-row;
     @include input;

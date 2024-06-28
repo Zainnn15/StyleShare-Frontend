@@ -152,6 +152,26 @@ const GarmentDetails_p7 = ({formData, setFormData, page, numPages, handleForward
                                     </span>
                                 </div>
                                 <div className="container-care-group">
+                                    <input type="radio" id="dryC_i" name="dryCSolvent"
+                                        value={"dryCI"} 
+                                        onClick={(e) => {
+                                            const newDryC = formData.instructionDryC;
+                                            newDryC.Solvent = e.target.id;
+                                            setFormData({
+                                                ...formData,
+                                                instructionDryC: newDryC
+                                            });
+                                            addErrorMessageByID("dryCSolvent_error", null);
+                                        }}
+                                        defaultChecked={checkOnID("dryC_i", formData.instructionDryC.Solvent)}
+                                    />
+                                    <span className="container-care-img" onClick={()=>clickID("dryC_i")}>
+                                        <CircleImg className="img-care" 
+                                            iconUrl={careInstructions.dryCI.img} width="10%"/>
+                                        <label>{careInstructions.dryCI.name}</label>
+                                    </span>
+                                </div>
+                                <div className="container-care-group">
                                     <input type="radio" id="dryC_f" name="dryCSolvent"
                                         value={"dryCF"} 
                                         onClick={(e) => {
