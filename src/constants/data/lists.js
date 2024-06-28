@@ -346,6 +346,7 @@ const genericFibre = [
 	{"class": "natural", "type":"cellulosic", "code":"HA", "name":"Hemp"},
 	{"class": "natural", "type":"cellulosic", "code":"JU", "name":"Jute"},
 	{"class": "natural", "type":"cellulosic", "code":"RA", "name":"Ramie"},
+	{"class": "natural", "type":"cellulosic", "code":"OT", "name":"Others"},
 
 ];
 
