@@ -15,8 +15,6 @@ import { measurementTypes } from "../../constants/data/lists";
 import PopupImg from "../../components/common/PopupImg";
 import CircleBtn from "../../components/common/CircleBtn";
 import { useNavigate } from "react-router-dom";
-//comment out to enable selecting of garment
-//import { GarmentContext } from "../../../context/garmentContext";
 import { findAttribute, formatDate } from "../../constants/functions/valueHandlers";
 import Axios from "axios";
 
@@ -44,13 +42,20 @@ const GarmentMeasurement = () => {
                     console.log('Garment Data:', garmentData); // Logging fetched data
 
                     if (Array.isArray(garmentData) && garmentData.length > 0) {
-                        setGarmentList(garmentData);
-                        setGarment(garmentData[0]);
-                        initializeFormData(garmentData[0]);
+                        const userGarments = garmentData.filter(g => g.user === user._id && g.originalOwner === user._id);
+                        setGarmentList(userGarments);
+                        if (userGarments.length > 0) {
+                            setGarment(userGarments[0]);
+                            initializeFormData(userGarments[0]);
+                        }
                     } else if (garmentData) {
-                        setGarmentList([garmentData]);
-                        setGarment(garmentData);
-                        initializeFormData(garmentData);
+                        if (garmentData.user === user._id && garmentData.originalOwner === user._id) {
+                            setGarmentList([garmentData]);
+                            setGarment(garmentData);
+                            initializeFormData(garmentData);
+                        } else {
+                            console.error('No garment data found');
+                        }
                     } else {
                         console.error('No garment data found');
                     }
@@ -175,7 +180,7 @@ const GarmentMeasurement = () => {
                                 >
                                     {garmentList.map((garmentOpt, index) => (
                                         <option key={"garmentOpt_" + index} value={index}>
-                                            {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} ({formatDate(garmentOpt.purchaseDate)})
+                                            {garmentOpt.garmentDescription} ({formatDate(garmentOpt.purchaseDate)})
                                         </option>
                                     ))}
                                 </select>

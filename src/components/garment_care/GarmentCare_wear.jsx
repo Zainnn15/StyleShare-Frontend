@@ -114,10 +114,9 @@ export default function GarmentWear() {
                 }
               >
                 {garmentList.map((garmentOpt, index) => (
-                  <option key={garmentOpt._id} value={index}>
-                    {garmentOpt.garmentType} (
-                    {formatDate(garmentOpt.purchaseDate)})
-                  </option>
+                   <option key={"garmentOpt_" + index} value={index}>
+                   {garmentOpt.garmentDescription} ({formatDate(garmentOpt.purchaseDate)})
+               </option>
                 ))}
               </select>
             </div>

@@ -115,7 +115,7 @@ function GarmentExchange() {
             console.error('Failed to confirm exchange:', error);
         }
     };
-
+    
     function handleCardPress(garment) {
         setGarmentModalID(garment);
     }
@@ -192,6 +192,11 @@ function GarmentExchange() {
                                 {/* <img src={getImageFromURL(garment?.fileFront || 'fallbackImagePath')} alt="Garment" className="exchange-garment-img" /> */}
                                 <p><strong>From:</strong> {request.senderId?.username || 'Unknown User'} <strong>To:</strong> {request.recipientId?.username || 'Unknown User'}</p>
                                 <p><strong>Exchange For:</strong> {request.recipientGarmentDescription}</p>
+                                {request.recipientGarmentImage && (
+                                    <div className='container-input-img img-size-sm'>
+                                        <img src={getImageFromURL(request.recipientGarmentImage)} alt="Recipient Garment" />
+                                    </div>
+                                )}
                                 {request.status === 'pending' && user._id === request.recipientId?._id && (
                                     <div className='container-row space-evenly'>
                                         <button className='button-accept' onClick={() => handleExchangeResponse(request._id, 'accepted')}>Accept</button>
@@ -420,7 +425,7 @@ function GarmentExchange() {
                                                 setTabPage(7);
                                                 let e_div = document.getElementById(`tab7`)
                                                 if (e_div) {
-                                                    e.div.classList.toggle("active", true);
+                                                    e_div.classList.toggle("active", true);
                                                 }
                                             }}
                                         >
