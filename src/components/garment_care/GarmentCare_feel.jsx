@@ -1,19 +1,17 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import '../../styles/main.scss';
 import { toast } from 'react-hot-toast';
 import ScreenHeaderIn from "../common/ScreenHeaderIn";
 import axios from 'axios';
-import { useContext } from 'react';
 import { UserContext } from '../../../context/userContext';
 import { useNavigate } from "react-router-dom";
-import {addErrorMessageByID, scrollToID, selectID, validate, validatePage } from '../../constants/functions/inputHandlers';
+import { addErrorMessageByID, scrollToID, selectID, validate, validatePage } from '../../constants/functions/inputHandlers';
 import { formatDate } from '../../constants/functions/valueHandlers';
 
 
 export default function GarmentFeel() {
     const navigate = useNavigate();
-    //const {user} = useContext(UserContext);
     const { user, loading: userLoading } = useContext(UserContext);
     const [setProfile] = useState(null);
     const [garment, setGarment] = useState(null); 
@@ -28,51 +26,40 @@ export default function GarmentFeel() {
     const [feelHasOccur, setFeelHasOccur] = useState('');
     const [feelOccur, setFeelOccur] = useState('');
 
-    //get user and garment data
     useEffect(() => {
         if (!userLoading && user && user._id) {
-          // Fetch user profile
           axios.get('/profile', { withCredentials: true })
           .then((response) => {
             const data = response.data;
-            setProfile(data); // Assuming this sets user-specific profile details
+            setProfile(data);
           })
           .catch((error) => console.error('Error fetching user profile:', error));
       
-          // Fetch garment details based on the user ID
           axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true })
         .then((response) => {
           const garmentData = response.data;
-          //console.log('Garment Details:', garmentData);
-          //setGarmentDetails(garmentData); // Assuming this sets specific garment details
           if(Array.isArray(garmentData) && garmentData.length > 0) {
             setGarmentList(garmentData);
             setGarment(garmentData[0]);
             return garmentData[0];
           }
           else {
-            setGarmentList([...garmentData]); // Assuming this sets specific garment details
+            setGarmentList([...garmentData]);
             setGarment(garmentData);
             return garmentData;
           }
-          // No need to sort here as we'll handle sorting directly where the data is rendered to ensure reactivity
-          
         })
         .catch((error) => console.error('Error fetching garment details:', error));
-  
         }
-  
       }, [user, userLoading]);
-      //if (userLoading || garmentLoading) {
+
       if (userLoading) {
-        return <div>Loading...</div>; // Show loading state while data is being fetched
+        return <div>Loading...</div>;
       }
-      //if (!user || !garment) {
       if (!user) {
-        return <div>No user or garment data available.</div>; // Show a message or redirect if data is not available
+        return <div>No user data available.</div>;
       }
 
-    // Function to send the garment details to the backend
     const sendGarmentDetails = async () => {
         const garmentFeelData = {
             userId: user._id,
@@ -95,61 +82,53 @@ export default function GarmentFeel() {
                 headers: { 'Content-Type': 'application/json' },
                 withCredentials: true
             });
-            // Check for a specific success indicator in the response, or check the status code
             if (response.data.success || response.status === 200) {
                 toast.success('Garment Feel saved successfully!');
-                navigate('/garment-care'); // Navigate on success
+                navigate('/garment-care');
             } else {
-                // If the success flag isn't set, and there's an error message, throw an error to catch it below
                 throw new Error(response.data.error || 'Unknown error occurred.');
             }
         } catch (error) {
             console.error('Error submitting garment feel:', error);
-            // Display the error message from the server if it exists or a generic error message
             toast.error(error.response?.data?.error || 'Failed to save Garment Feel. Please try again.');
         }
     };
     
-
-
     function validateAndSubmit(e) {
-    e.preventDefault(); // Always call preventDefault in submit handlers
-    let querySelect = "input[type='text'],input[type='date'],input[type='radio']:checked";
-    if (!validatePage(querySelect)) {
-        return false;
-    }
+      e.preventDefault();
+      let querySelect = "input[type='text'],input[type='date'],input[type='radio']:checked";
+      if (!validatePage(querySelect)) {
+          return false;
+      }
 
-    // Validation blocks
-    if (feelComfyExp === '') {
-        addErrorMessageByID("feelComfyExp_error", "Select an option");
-        scrollToID("feelComfyExp_error");
-        return false;
-    }
-    if (feelHasComment === '') {
-        addErrorMessageByID("feelHasComment_error", "Select an option");
-        scrollToID("feelHasComment_error");
-        return false;
-    }
-    if (feelInOccasion === '') {
-        addErrorMessageByID("feelInOccasion_error", "Select an option");
-        scrollToID("feelInOccasion_error");
-        return false;
-    }
-    if (feelInOccasion === 'Yes' && feelOccasionExp === '') {
-        addErrorMessageByID("feelOccasionExp_error", "Select an option");
-        scrollToID("feelOccasionExp_error");
-        return false;
-    }
-    if (feelHasOccur === '') {
-        addErrorMessageByID("feelHasOccur_error", "Select an option");
-        scrollToID("feelHasOccur_error");
-        return false;
-    }
+      if (feelComfyExp === '') {
+          addErrorMessageByID("feelComfyExp_error", "Select an option");
+          scrollToID("feelComfyExp_error");
+          return false;
+      }
+      if (feelHasComment === '') {
+          addErrorMessageByID("feelHasComment_error", "Select an option");
+          scrollToID("feelHasComment_error");
+          return false;
+      }
+      if (feelInOccasion === '') {
+          addErrorMessageByID("feelInOccasion_error", "Select an option");
+          scrollToID("feelInOccasion_error");
+          return false;
+      }
+      if (feelInOccasion === 'Yes' && feelOccasionExp === '') {
+          addErrorMessageByID("feelOccasionExp_error", "Select an option");
+          scrollToID("feelOccasionExp_error");
+          return false;
+      }
+      if (feelHasOccur === '') {
+          addErrorMessageByID("feelHasOccur_error", "Select an option");
+          scrollToID("feelHasOccur_error");
+          return false;
+      }
 
-    // If all validations pass, submit the data
-    sendGarmentDetails();
-}
-
+      sendGarmentDetails();
+    }
 
     return (
     <div>
@@ -161,29 +140,28 @@ export default function GarmentFeel() {
         </div>
         <form onSubmit={validateAndSubmit}>
             <div className='container-content'>
+              <div>
+                  <p className="container-subtitle-2">Selected Garment</p>
+                  <select onChange={(e) => {
+                    const index = parseInt(e.target.value, 10);
+                    if (index >= 0 && index < garmentList.length) {
+                        setGarment(garmentList[index]);
+                    }
+                  }} value={garment ? garmentList.findIndex(g => g._id === garment._id) : ''}>
+                    {garmentList.map((garmentOpt, index) => (
+                        <option key={"garmentOpt_" + index} value={index}>
+                        {garmentOpt.garmentDescription} ({formatDate(garmentOpt.purchaseDate)})
+                    </option>
+                    
+                    ))}
+                  </select>
+              </div>
+              <br/>
 
-            <div>
-                <p className="container-subtitle-2">Selected Garment</p>
-                <select onChange={(e) => {
-    const index = parseInt(e.target.value, 10);
-    if (index >= 0 && index < garmentList.length) {
-        setGarment(garmentList[index]);
-    }
-}} value={garment ? garmentList.findIndex(g => g._id === garment._id) : ''}>
-    {garmentList.map((garmentOpt, index) => (
-        <option key={"garmentOpt_" + index} value={index}>
-        {garmentOpt.garmentDescription} ({formatDate(garmentOpt.purchaseDate)})
-    </option>
-    
-    ))}
-</select>
-            </div>
-            <br/>
-
-            <div id={"dateWorn_error"} style={{textAlign:"center"}}></div>
-            <label className='text-b'>Date worn:</label>
-            <label className='tab'></label>
-            <input type='date' id='dateWorn' value={feelDate} onChange={(e)=>setFeelDate(e.target.value)} required/>
+              <div id={"dateWorn_error"} style={{textAlign:"center"}}></div>
+              <label className='text-b'>Date worn:</label>
+              <label className='tab'></label>
+              <input type='date' id='dateWorn' value={feelDate} onChange={(e)=>setFeelDate(e.target.value)} required/>
             </div> 
             
             <div>
@@ -417,7 +395,6 @@ export default function GarmentFeel() {
                         </div>
                     </div>
                 </div>
-                
             )
             }
 

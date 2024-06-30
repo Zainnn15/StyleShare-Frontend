@@ -128,7 +128,7 @@ const GarmentMeasurement = () => {
         };
 
         try {
-            const response = await axios.post('/updateGarmentDetails', payload, {
+            const response = await axios.post('/updateGarmentMeasurement', payload, {
                 headers: { 'Content-Type': 'application/json' },
             });
 
@@ -335,6 +335,7 @@ const GarmentMeasurement = () => {
                                         </div>
                                     </div>
                                     <div className='container-input'>
+                                        
                                         <button className="button-form" type="reset">
                                              Reset
                                         </button>

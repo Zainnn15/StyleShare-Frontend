@@ -41,6 +41,7 @@ export default function GarmentWash() {
     const [ironDuration, setIronDuration] = useState('');
     const [isVentilated, setIsVentilated] = useState(false);
     const [ventilatedTime, setVentilatedTime] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (!userLoading && user && user._id) {
@@ -73,47 +74,59 @@ export default function GarmentWash() {
         return <div>No user data available.</div>;
     }
 
+    
+
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        const washCareInstructions = {
-            washDate,
-            careWash,
-            careDry,
-            careDryC: useDryC ? careDryC : {},
-            careIron: useIron ? careIron : {},
-            useDryC,
-            useIron,
-            ironDuration,
-            isVentilated,
-            ventilatedTime,
-        };
-
-        const formData = {
-            garmentId: garment._id,
-            washCareInstructions: JSON.stringify([washCareInstructions]),
-            userId: user._id,
-        };
-
-        try {
-            const { data } = await axios.post('/updateGarmentDetails', formData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (data.error) {
-                toast.error(data.error);
-            } else {
-                toast.success('Garment wash details updated successfully');
-                navigate('/dashboard');
-            }
-        } catch (error) {
-            console.error('Error sending garment details:', error);
-            toast.error('Failed to update garment details.');
+      
+        if (isSubmitting) {
+          return; // Prevent multiple submissions
         }
-    };
-
+      
+        setIsSubmitting(true);
+      
+        const washCareInstructions = {
+          washDate,
+          careWash,
+          careDry,
+          careDryC: useDryC ? careDryC : {},
+          careIron: useIron ? careIron : {},
+          useDryC,
+          useIron,
+          ironDuration,
+          isVentilated,
+          ventilatedTime,
+        };
+      
+        try {
+          const formData = {
+            garmentId: garment._id,
+            washCareInstructions: [washCareInstructions], // Wrap the new instruction in an array
+            userId: user._id,
+          };
+      
+          const { data } = await axios.post('/updateGarmentDetails', formData, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+      
+          if (data.error) {
+            toast.error(data.error);
+          } else {
+            toast.success('Garment wash details updated successfully');
+            navigate('/dashboard');
+          }
+        } catch (error) {
+          console.error('Error sending garment details:', error);
+          toast.error('Failed to update garment details.');
+        } finally {
+          setIsSubmitting(false);
+        }
+      };
+      
+      
+    
     return (
         <div>
             <ScreenHeaderIn />

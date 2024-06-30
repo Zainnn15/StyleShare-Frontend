@@ -126,17 +126,17 @@ export default function GarmentTear() {
   }
 
   const sendGarmentDetails = async (e) => {
-  e.preventDefault();
-  const formData = new FormData();
-  formData.append('garmentId', garment._id);
-  formData.append('tearDate', tearDate);
-  formData.append('wantRepair', wantRepair.toString());
-  formData.append('wearTear', JSON.stringify(wearTear));
-  formData.append('repairRequest', JSON.stringify(repairRequest));
-  formData.append('repairOther', repairOther);
-
-  const sampleTearInfo = [
-    {
+    e.preventDefault();
+  
+    const formData = new FormData();
+    formData.append('garmentId', garment._id);
+    formData.append('tearDate', tearDate);
+    formData.append('wantRepair', wantRepair.toString());
+    formData.append('wearTear', JSON.stringify(wearTear));
+    formData.append('repairRequest', JSON.stringify(repairRequest));
+    formData.append('repairOther', repairOther);
+  
+    const sampleTearInfo = {
       tearDate: tearDate,
       hasTear: true,
       wantRepair: wantRepair,
@@ -186,72 +186,72 @@ export default function GarmentTear() {
         other: !!repairRequest.other
       },
       repairOther: repairOther,
-    },
-  ];
-  formData.append('tearInfo', JSON.stringify(sampleTearInfo));
-
-  if (twistingImg) formData.append('twistingImg', twistingImg);
-  if (spandexShrinkImg) formData.append('spandexShrinkImg', spandexShrinkImg);
-  if (printFadeImg) formData.append('printFadeImg', printFadeImg);
-  if (holeImg) formData.append('holeImg', holeImg);
-  if (stainImg) formData.append('stainImg', stainImg);
-  formData.append('userId', user._id);
-
-  if (
-    repairRequest.looseButton ||
-    repairRequest.brokenZipper ||
-    repairRequest.lostString ||
-    repairRequest.looseHem ||
-    repairRequest.other
-  ) {
-    var message = `A new repair request has been made from the garment website. The details are as follows: `;
-
-    repairRequest.looseButton ? (message += `a button is loose, `) : '';
-    repairRequest.brokenZipper ? (message += `the zipper is broken, `) : '';
-    repairRequest.lostString ? (message += `a string has been lost, `) : '';
-    repairRequest.looseHem ? (message += `the hem is loose, `) : '';
-    repairRequest.other ? (message += `other: ${repairOther}.`) : '';
-
-    emailjs
-      .send(
-        'service_t61puog',
-        'template_2awvimh',
-        {
-          user: user.name,
-          message,
-          email: user.email,
-        },
-        {
-          publicKey: 'Vxalk7N66xyFaokl9',
-        }
-      )
-      .then(() => {
-        console.log('Email sent successfully');
-        toast.success('Repair request sent successfully');
-      })
-      .catch((error) => {
-        console.error('Error sending email:', error);
-      });
-  }
-
-  try {
-    const response = await axios.post('/updategarmentdetails', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
-    if (response.data.error) {
-      toast.error(response.data.error);
-    } else {
-      toast.success('Garment Tear details updated successfully');
-      setGarment(response.data.garmentDetail); // Update local state with new garment details
-      navigate('/garment-care');
+    };
+  
+    formData.append('tearInfo', JSON.stringify([sampleTearInfo]));
+  
+    if (twistingImg) formData.append('twistingImg', twistingImg);
+    if (spandexShrinkImg) formData.append('spandexShrinkImg', spandexShrinkImg);
+    if (printFadeImg) formData.append('printFadeImg', printFadeImg);
+    if (holeImg) formData.append('holeImg', holeImg);
+    if (stainImg) formData.append('stainImg', stainImg);
+    formData.append('userId', user._id);
+  
+    if (
+      repairRequest.looseButton ||
+      repairRequest.brokenZipper ||
+      repairRequest.lostString ||
+      repairRequest.looseHem ||
+      repairRequest.other
+    ) {
+      var message = `A new repair request has been made from the garment website. The details are as follows: `;
+  
+      repairRequest.looseButton ? (message += `a button is loose, `) : '';
+      repairRequest.brokenZipper ? (message += `the zipper is broken, `) : '';
+      repairRequest.lostString ? (message += `a string has been lost, `) : '';
+      repairRequest.looseHem ? (message += `the hem is loose, `) : '';
+      repairRequest.other ? (message += `other: ${repairOther}.`) : '';
+  
+      emailjs
+        .send(
+          'service_t61puog',
+          'template_2awvimh',
+          {
+            user: user.name,
+            message,
+            email: user.email,
+          },
+          {
+            publicKey: 'Vxalk7N66xyFaokl9',
+          }
+        )
+        .then(() => {
+          console.log('Email sent successfully');
+          toast.success('Repair request sent successfully');
+        })
+        .catch((error) => {
+          console.error('Error sending email:', error);
+        });
     }
-  } catch (error) {
-    console.error('Error sending garment details:', error);
-    toast.error('An error occurred while updating garment details.');
-  }
-};
-
-
+  
+    try {
+      const response = await axios.post('/updateGarmentDetails', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      if (response.data.error) {
+        toast.error(response.data.error);
+      } else {
+        toast.success('Garment Tear details updated successfully');
+        setGarment(response.data.garmentDetail); // Update local state with new garment details
+        navigate('/garment-care');
+      }
+    } catch (error) {
+      console.error('Error sending garment details:', error);
+      toast.error('An error occurred while updating garment details.');
+    }
+  };
+  
+  
   function getCategory(val) {
     const category = GARMENT_TYPES.find((option) => option.value === val)?.cat
     return category

@@ -1,11 +1,10 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import '../../styles/main.scss'
 import { toast } from 'react-hot-toast'
 import ScreenHeaderIn from '../../components/common/ScreenHeaderIn'
 import InfoPopup from '../../components/common/InfoPopup'
 import axios from 'axios'
-import { useContext } from 'react'
 import { UserContext } from '../../../context/userContext'
 import { useNavigate } from 'react-router-dom'
 import { clickID } from '../../constants/functions/inputHandlers'
@@ -55,10 +54,14 @@ export default function GarmentWear() {
       formData.append('wearBack', wearBack)
     }
 
-    // Logging to see what's being sent
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ', ' + pair[1])
-    }
+    const sampleWearInfo = {
+      wearDate,
+      wearTime,
+      wearFront: wearFront ? URL.createObjectURL(wearFront) : null,
+      wearBack: wearBack ? URL.createObjectURL(wearBack) : null,
+    };
+
+    formData.append('wearInfo', JSON.stringify([sampleWearInfo]));
 
     try {
       const response = await axios.post('/updateGarmentDetails', formData, {
