@@ -85,12 +85,14 @@ export default function Login() {
             <div>
   {/* Existing login form code */}
   <div className="forgetPassword">
-  <Link to="/forgetPassword">Forgot Password?</Link>
+    <Link to="/forgetPassword">Forgot Password?</Link>
   </div>
 </div>
         </div>
         <br/>
-        <button className='button-form' type="submit" style={{width:"100%"}}>Login</button>
+        <div style={{ marginRight: '55px' }}>
+            <button className='button-form' type="submit" style={{width:"100%"}}>Login</button>
+        </div>
     </div>
 </form>
 
