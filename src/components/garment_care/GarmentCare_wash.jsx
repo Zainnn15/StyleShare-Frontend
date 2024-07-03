@@ -76,6 +76,7 @@ export default function GarmentWash() {
 
     
 
+
     const handleSubmit = async (event) => {
         event.preventDefault();
       

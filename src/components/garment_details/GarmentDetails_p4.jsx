@@ -211,7 +211,7 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                 if (toIdName === 'Others') {
                     // Remove error message if any
                     addErrorMessage(e_to.id + "_error", null);
-                    return true;
+                    return false;
                 }
 
                 // Validate against options
