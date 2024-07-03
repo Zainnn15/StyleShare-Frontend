@@ -133,50 +133,6 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
 
     //validation functions
     function validate(fieldType, idName, toIdName) {
-        // let e_inp = document.getElementById(idName);
-        // if (!e_inp) {
-        //     return false;
-        // }
-        // let e_to = e_inp;
-        // if (toIdName) {
-        //     e_to = document.getElementById(toIdName);
-        //     if (!e_to) {
-        //         return;
-        //     }
-        // }
-
-        // let val = e_inp.value.trim().toLowerCase();
-        // if (val.length === 0) {
-        //     addErrorMessage(e_to.id + "_error", "Must not be empty");
-        //     return false;
-        // }
-
-        // let errMessage = "";
-        // let pattern = /^[0-9]{1,3}$/;
-        // switch (fieldType) {
-        //     case "percent":
-        //         if (pattern.test(val) && val <= 100 && val > 0) {
-        //             //remove error message if any
-        //             addErrorMessage(e_to.id + "_error", null);
-        //             return true;
-        //         }
-        //         errMessage = "Must be an integer from 1-100";
-        //         break;
-        //     default:
-                
-        //         for (let i = 0; i < options.length; i++) {
-        //             if (options[i].label.toLowerCase() === val) {
-        //                 //remove error message if any
-        //                 addErrorMessage(e_to.id + "_error", null);
-        //                 return true;
-        //             }
-        //         }
-        //         errMessage = "Must be a valid option in the list";
-        // }
-
-        // //add error message
-        // addErrorMessage(e_to.id + "_error", errMessage);
-        // return false;
         let e_inp = document.getElementById(idName);
         if (!e_inp) {
             return false;
@@ -208,21 +164,23 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                 break;
             default:
                 // Check if the value is "others"
-                if (toIdName === 'Others') {
-                    // Remove error message if any
-                    addErrorMessage(e_to.id + "_error", null);
-                    return false;
-                }
+                // if (toIdName === 'Others') {
+                //     // Remove error message if any
+                //     addErrorMessage(e_to.id + "_error", null);
+                //     return false;
+                // }
 
-                // Validate against options
-                for (let i = 0; i < options.length; i++) {
-                    if (options[i].label.toLowerCase() === val) {
-                        // Remove error message if any
-                        addErrorMessage(e_to.id + "_error", null);
-                        return true;
-                    }
-                }
-                errMessage = "Must be a valid option in the list";
+                // // Validate against options
+                // for (let i = 0; i < options.length; i++) {
+                //     if (options[i].label.toLowerCase() === val) {
+                //         // Remove error message if any
+                //         addErrorMessage(e_to.id + "_error", null);
+                //         return true;
+                //     }
+                // }
+                // errMessage = "Must be a valid option in the list";
+                addErrorMessage(e_to.id + "_error", errMessage);
+                return true;
             }
 
             // Add error message

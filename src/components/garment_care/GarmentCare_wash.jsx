@@ -74,7 +74,13 @@ export default function GarmentWash() {
         return <div>No user data available.</div>;
     }
 
-    
+    const getTodayDate = () => {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const dd = String(today.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+    };
 
 
     const handleSubmit = async (event) => {
@@ -153,13 +159,14 @@ export default function GarmentWash() {
                         </div>
                         <br/>
                         <div id={"washDate_error"} style={{textAlign:"center"}}></div>
-                        <label className='text-b'>Wash Date:</label>
+                        <label className='text-b'>Care Date:</label>
                         <label className='tab'></label>
                         <input type='date' id='washDate' value={washDate} 
                             onChange={(e) => {
                                 setWashDate(e.target.value);
                                 addErrorMessageByID("washDate_error", null);
                             }} 
+                            max={getTodayDate()}
                             required 
                         />
                     </div>
