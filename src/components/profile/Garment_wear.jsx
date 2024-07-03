@@ -34,6 +34,10 @@ const Garment_wear = ({garment}) => {
                                 </div>
                             </div>
                         </div>
+                        <div>
+                            <button>Edit</button>
+                            <button>Delete</button>
+                        </div>
                         <br/>
                     </div>
                 )})

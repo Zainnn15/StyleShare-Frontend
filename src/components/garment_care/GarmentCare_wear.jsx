@@ -233,6 +233,7 @@ export default function GarmentWear() {
             <button className="button-form full" type="submit">
               Save
             </button>
+            <br />
             <button className="button-form full" type="reset">
               Reset
             </button>

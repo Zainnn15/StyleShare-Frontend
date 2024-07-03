@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import '../../styles/main.scss'
 import { toast } from 'react-hot-toast'
 import ScreenHeaderIn from '../../components/common/ScreenHeaderIn'
-import { wearTears, repairRequests } from '../../constants/data/lists'
+import { wearTears, repairRequests, colorStatus } from '../../constants/data/lists'
 import InfoPopup from '../../components/common/InfoPopup'
 import {
   addErrorMessageByID,
@@ -1384,7 +1384,7 @@ export default function GarmentTear() {
           {wantRepair && (
             <div>
               <div className="container-prompt">
-                <p>Select which repairs are needed (Check all that apply)</p>
+                <p>Select which repairs are needed (Check all that apply) and an automated email will be sent to our help center</p>
               </div>
               <div id={'repair_error'} style={{ textAlign: 'center' }}></div>
               {repairRequests.map((repair, index) => (
@@ -1433,11 +1433,11 @@ export default function GarmentTear() {
           )}
 
           {Object.values(repairRequest).some((v) => v) && (
-            <div>
-              <p>Please send an email to Arafat to arrange garment repair:</p>
-              <a href="mailto:arafat@example.com">
+            <div >
+              <a href="mailto:arafat@example.com" style={{color: 'red'}}><strong>Any concerns, contact Arafat to arrange garment repair!</strong></a>
+              {/* <a href="mailto:arafat@example.com">
                 md-arafat-ali.khan@senecapolytechnic.ca
-              </a>
+              </a> */}
             </div>
           )}
 
