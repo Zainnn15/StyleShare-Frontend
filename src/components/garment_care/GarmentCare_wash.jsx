@@ -122,14 +122,6 @@ export default function GarmentWash() {
           setIsSubmitting(false);
         }
       };
-      
-      const getMaxDate = () => {
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, '0');
-        const dd = String(today.getDate()).padStart(2, '0');
-        return `${yyyy}-${mm}-${dd}`;
-      };
     
     return (
         <div>
@@ -163,7 +155,6 @@ export default function GarmentWash() {
                                 setWashDate(e.target.value);
                                 addErrorMessageByID("washDate_error", null);
                             }} 
-                            max={getMaxDate()} // Set the max attribute to prevent future dates
                             required 
                         />
                     </div>

@@ -13,7 +13,7 @@ export default function GarmentCare() {
             <ScreenHeaderIn />
             <div className='container main'>
                 <div className="m2-v">
-                    <label className="container-title">Garment Wear, Care, Tear & Feel</label>
+                    <label className="container-title">Garment Wear, Feel, Care and Tear</label>
                     <hr/>
                 </div>
                 <div className="container-grid-4-lg gap">

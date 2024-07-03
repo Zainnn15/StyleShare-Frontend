@@ -2,7 +2,7 @@
 import '../../styles/main.scss';
 import info from '../../assets/icons/info.png';
 import symbols from '../../assets/images/care_symbols.png';
-import tetrachloroethylene from '../../assets/icons/Minimalist_info_Icon.png';
+// import tetrachloroethylene from '../../assets/icons/Minimalist_info_Icon.png';
 
 import { checkOnID, clickID, addErrorMessageByID, validateInpName } from "../../constants/functions/inputHandlers";
 import { careInstructions } from "../../constants/data/lists";
@@ -128,7 +128,7 @@ const GarmentDetails_p7 = ({ formData, setFormData, page, numPages, handleForwar
                                     />
                                     <span className="container-care-img" onClick={() => clickID("dryC_a")}>
                                         <CircleImg className="img-care"
-                                            iconUrl={careInstructions.dryCA.img} width="50%" />
+                                            iconUrl={careInstructions.dryCA.img} width="80%" />
                                         <label>{careInstructions.dryCA.name}</label>
                                     </span>
                                 </div>
@@ -148,7 +148,7 @@ const GarmentDetails_p7 = ({ formData, setFormData, page, numPages, handleForwar
                                     />
                                     <span className="container-care-img" onClick={() => clickID("dryC_p")}>
                                         <CircleImg className="img-care"
-                                            iconUrl={careInstructions.dryCP.img} width="50%" />
+                                            iconUrl={careInstructions.dryCP.img} width="80%" />
                                         <label>{careInstructions.dryCP.name}</label>
                                     </span>
                                 </div>
@@ -168,7 +168,7 @@ const GarmentDetails_p7 = ({ formData, setFormData, page, numPages, handleForwar
                                     />
                                     <span className="container-care-img" onClick={()=>clickID("dryC_i")}>
                                         <CircleImg className="img-care" 
-                                            iconUrl={careInstructions.dryCI.img} width="50%"/>
+                                            iconUrl={careInstructions.dryCI.img} width="80%"/>
                                         <label>{careInstructions.dryCI.name}</label>
                                     </span>
                                 </div>
@@ -188,30 +188,11 @@ const GarmentDetails_p7 = ({ formData, setFormData, page, numPages, handleForwar
                                     />
                                     <span className="container-care-img" onClick={() => clickID("dryC_f")}>
                                         <CircleImg className="img-care"
-                                            iconUrl={careInstructions.dryCF.img} width="50%" />
+                                            iconUrl={careInstructions.dryCF.img} width="80%" />
                                         <label>{careInstructions.dryCF.name}</label>
                                     </span>
                                 </div>
-                                {/* <div className="container-care-group">
-                                    <input type="radio" id="dryC_tetrachloroethylene" name="dryCSolvent"
-                                        value={"dryCTetrachloroethylene"}
-                                        onClick={(e) => {
-                                            const newDryC = formData.instructionDryC;
-                                            newDryC.Solvent = e.target.id;
-                                            setFormData({
-                                                ...formData,
-                                                instructionDryC: newDryC
-                                            });
-                                            addErrorMessageByID("dryCSolvent_error", null);
-                                        }}
-                                        defaultChecked={checkOnID("dryC_tetrachloroethylene", formData.instructionDryC.Solvent)}
-                                    />
-                                    <span className="container-care-img" onClick={() => clickID("dryC_tetrachloroethylene")}>
-                                        <CircleImg className="img-care"
-                                            iconUrl={tetrachloroethylene} width="50%" />
-                                        <label>{careInstructions.dryCTetrachloroethylene.name}</label>
-                                    </span>
-                                </div> */}
+                                
                             </div>
                         </div>
                     )

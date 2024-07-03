@@ -547,6 +547,23 @@ export default function Profile() {
                   <p className="text-purpleLight">Wear</p>
                 </div>
                 <div
+                  id="tab7"
+                  className="container-tab-group"
+                  onClick={() => {
+                    let e_active = document.getElementById(`tab${tabPage}`);
+                    if (e_active) {
+                      e_active.classList.toggle('active', false);
+                    }
+                    setTabPage(7);
+                    let e_div = document.getElementById(`tab7`);
+                    if (e_div) {
+                      e_div.classList.toggle('active', true);
+                    }
+                  }}
+                >
+                  <p className="text-purpleLight">Feel</p>
+                </div>
+                <div
                   id="tab5"
                   className="container-tab-group"
                   onClick={() => {
@@ -561,7 +578,7 @@ export default function Profile() {
                     }
                   }}
                 >
-                  <p className="text-purpleLight">Wash</p>
+                  <p className="text-purpleLight">Care</p>
                 </div>
                 <div
                   id="tab6"
@@ -580,23 +597,7 @@ export default function Profile() {
                 >
                   <p className="text-purpleLight">Tear</p>
                 </div>
-                <div
-                  id="tab7"
-                  className="container-tab-group"
-                  onClick={() => {
-                    let e_active = document.getElementById(`tab${tabPage}`);
-                    if (e_active) {
-                      e_active.classList.toggle('active', false);
-                    }
-                    setTabPage(7);
-                    let e_div = document.getElementById(`tab7`);
-                    if (e_div) {
-                      e_div.classList.toggle('active', true);
-                    }
-                  }}
-                >
-                  <p className="text-purpleLight">Feel</p>
-                </div>
+                
               </div>
 
               {tabPage === 0 && garment && <General garment={garment} />}
