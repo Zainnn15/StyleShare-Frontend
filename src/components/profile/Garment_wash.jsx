@@ -27,7 +27,7 @@ const Garment_wash = ({ garment }) => {
                                 <div>
                                     <p>
                                         <label className="text-b">Wash Method:<label className="tab"></label></label>
-                                        {washMethod && (
+                                        {washMethod && care.careWash.Method !== "noWash" && (
                                             <>
                                                 <img className="w-sm" src={washMethod.img} alt='img' />
                                                 <InfoPopup text={washMethod.name} />

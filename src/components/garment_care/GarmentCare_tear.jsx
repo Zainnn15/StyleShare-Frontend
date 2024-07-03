@@ -264,6 +264,14 @@ export default function GarmentTear() {
     return objArr
   }
 
+  const getTodayDate = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
   return (
     <div>
       <ScreenHeaderIn />
@@ -295,13 +303,14 @@ export default function GarmentTear() {
             <br />
 
             <label className="text-b">Date of Tear:</label>
-            <label className="tab"></label>
-            <input
-              type="date"
-              value={tearDate}
-              onChange={(e) => setTearDate(e.target.value)}
-              required
-            />
+<label className="tab"></label>
+<input
+  type="date"
+  value={tearDate}
+  onChange={(e) => setTearDate(e.target.value)}
+  max={getTodayDate()} // Set the max attribute to today's date
+  required
+/>
           </div>
 
           <div>

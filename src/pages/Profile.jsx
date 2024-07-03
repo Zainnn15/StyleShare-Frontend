@@ -26,7 +26,7 @@ import { clickID } from '../constants/functions/inputHandlers';
 export default function Profile() {
   const { user, loading: userLoading } = useContext(UserContext);
   const { userGroups } = useContext(GroupContext);
-  const [x, setProfile] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [availability, setAvailability] = useState([]);
   const [newSchedule, setNewSchedule] = useState({
@@ -42,6 +42,7 @@ export default function Profile() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [garmentToDelete, setGarmentToDelete] = useState(null);
+  const [marketplaceGarments, setMarketplaceGarments] = useState([]); // Add this state
 
   const weekDays = [
     { value: 0, label: 'Sunday', short: 'Sun' },
@@ -74,31 +75,22 @@ export default function Profile() {
   const addSchedule = async (e) => {
     e.preventDefault();
 
-    // Validation
-    if (
-      !newSchedule.day ||
-      !newSchedule.start ||
-      !newSchedule.end ||
-      !newSchedule.location
-    ) {
+    if (!newSchedule.day || !newSchedule.start || !newSchedule.end || !newSchedule.location) {
       toast.error('Please fill in all fields');
       return;
     }
 
-    // Handle custom campus location
+    if (newSchedule.location === 'Other' && !newSchedule.customCampus) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+
     if (newSchedule.location === 'Other') {
-      if (!newSchedule.customCampus) {
-        toast.error('Please fill in all fields');
-        return;
-      }
       newSchedule.location = newSchedule.customCampus;
     }
 
-    // Update state
     const newAvailability = [...availability, newSchedule];
-    // setAvailability(newAvailability)
 
-    // Make the Axios request with the new availability state
     try {
       const availabilityResult = await Axios.patch(
         `/updateAvailability/${user._id}`,
@@ -106,37 +98,28 @@ export default function Profile() {
         { withCredentials: true },
       );
       setAvailability(availabilityResult.data.availability);
-      // toast.success('Availability added');
+      toast.success('Availability added');
     } catch (error) {
       console.error('Error updating availability:', error);
-      // toast.error('Failed to update availability');
+      toast.error('Failed to update availability');
     }
 
-    // Reset newSchedule
     setNewSchedule({
       day: '',
       start: '',
       end: '',
       location: '',
-      customCampus: '', // Ensure this is reset if applicable
+      customCampus: '',
     });
-
-    // Optionally, refresh the page if necessary
-    // window.location.reload();
   };
 
   const deleteSchedule = async (e, id) => {
     e.preventDefault();
 
-    // Update the state synchronously
     const newAvailability = availability.filter(
       (schedule) => schedule._id !== id,
     );
 
-    // Set the new state
-    // setAvailability(newAvailability)
-
-    // Make the Axios request with the new availability state
     try {
       const availabilityResult = await Axios.patch(
         `/updateAvailability/${user._id}`,
@@ -144,10 +127,10 @@ export default function Profile() {
         { withCredentials: true },
       );
       setAvailability(availabilityResult.data.availability);
-      // toast.success('Availability deleted')
+      toast.success('Availability deleted');
     } catch (error) {
       console.error('Error updating availability:', error);
-      // toast.error('Failed to update availability')
+      toast.error('Failed to update availability');
     }
   };
 
@@ -213,9 +196,15 @@ export default function Profile() {
             setGarment(null);
           }
         })
-        .catch((error) =>
-          console.error('Error fetching garment details:', error),
-        );
+        .catch((error) => console.error('Error fetching garment details:', error));
+
+      // Fetch garments originally owned by the user but now with other users
+      Axios.get(`/getGarmentsNotOwnedByUser/${user._id}`, { withCredentials: true })
+        .then((response) => {
+          const data = response.data;
+          setMarketplaceGarments(data);
+        })
+        .catch((error) => console.error('Error fetching marketplace garments:', error));
     }
   }, [user, userLoading]);
 
@@ -226,7 +215,7 @@ export default function Profile() {
   const handleDeleteGarment = async () => {
     try {
       const response = await Axios.delete(`/deleteGarment/${garmentToDelete}`, {
-        data: { userId: user._id }, // Pass userId in the request body
+        data: { userId: user._id },
         withCredentials: true,
       });
       console.log('Garment deleted:', response.data);
@@ -439,12 +428,6 @@ export default function Profile() {
                 Add Schedule
               </button>
             </div>
-            {/* <button
-              className="button-regular mt-3"
-              onClick={handleUpdateProfile}
-            >
-              Save
-            </button> */}
           </div>
         )}
         <br />
@@ -667,6 +650,33 @@ export default function Profile() {
             </p>
           </div>
         )}
+
+        <hr />
+        <div className="container-content popup">
+          <h3>Garments with Other Users</h3>
+          <hr />
+          <div className="container-grid-2-md gap">
+            {marketplaceGarments.length > 0 ? (
+              marketplaceGarments.map((garment) => (
+                <div key={garment._id} className="container-border clear-box">
+                  <img
+                    src={garment.fileFront}
+                    alt="garment front"
+                    className="garment-image"
+                  />
+                  <p>
+                    <strong>Description:</strong> {garment.garmentDescription}
+                  </p>
+                  <p>
+                    <strong>Current User:</strong> {garment.user.username}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p>No garments are currently held by other users.</p>
+            )}
+          </div>
+        </div>
       </div>
 
       <Modal

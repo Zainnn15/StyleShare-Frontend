@@ -74,8 +74,6 @@ export default function GarmentWash() {
         return <div>No user data available.</div>;
     }
 
-    
-
     const handleSubmit = async (event) => {
         event.preventDefault();
       
@@ -125,7 +123,13 @@ export default function GarmentWash() {
         }
       };
       
-      
+      const getMaxDate = () => {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+      };
     
     return (
         <div>
@@ -152,13 +156,14 @@ export default function GarmentWash() {
                         </div>
                         <br/>
                         <div id={"washDate_error"} style={{textAlign:"center"}}></div>
-                        <label className='text-b'>Wash Date:</label>
+                        <label className='text-b'>Care Date:</label>
                         <label className='tab'></label>
                         <input type='date' id='washDate' value={washDate} 
                             onChange={(e) => {
                                 setWashDate(e.target.value);
                                 addErrorMessageByID("washDate_error", null);
                             }} 
+                            max={getMaxDate()} // Set the max attribute to prevent future dates
                             required 
                         />
                     </div>

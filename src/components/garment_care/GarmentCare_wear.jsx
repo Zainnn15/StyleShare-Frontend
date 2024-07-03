@@ -90,6 +90,14 @@ export default function GarmentWear() {
     sendGarmentDetails()
   }
 
+  const getMaxDate = () => {
+    const today = new Date()
+    const yyyy = today.getFullYear()
+    const mm = String(today.getMonth() + 1).padStart(2, '0')
+    const dd = String(today.getDate()).padStart(2, '0')
+    return `${yyyy}-${mm}-${dd}`
+  }
+
   return (
     <div>
       <ScreenHeaderIn />
@@ -132,6 +140,7 @@ export default function GarmentWear() {
               type="date"
               id="dateWorn"
               value={wearDate}
+              max={getMaxDate()}
               onChange={(e) => setWearDate(e.target.value)}
               required
             />

@@ -52,48 +52,47 @@ export default function Login() {
 
     return (
         <div>
-            <ScreenHeader isLogin={false} linkName={"Register"}/>
+            <ScreenHeader isLogin={false} linkName={"Register"} />
             <div className='container main'>                
-            <form onSubmit={handleSubmit} autoComplete="off">
-    <div className='container-small'>
-        <div className='container-col'>
-            <CircleImg iconUrl={logo_purple} width="30%"/>
-        </div>
-        <div>
-            <label className="container-title">Login</label>
-            <hr/>
-        </div>    
-        <br/>
-        <div>
-            <div id={"login_error"} style={{textAlign:"center"}}></div>
-            <label htmlFor="email">Email</label>
-            <input 
-                type="email" 
-                id="email" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)}
-                autoComplete="off" // Disabling autocomplete for this field
-            />
-            <label htmlFor="password">Password</label>
-            <input 
-                type="password" 
-                id="password" 
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="new-password" // Specially for passwords, this helps prevent autofill
-            />
-            <div>
-  {/* Existing login form code */}
-  <div className="forgetPassword">
-  <Link to="/forgetPassword">Forgot Password?</Link>
-  </div>
-</div>
-        </div>
-        <br/>
-        <button className='button-form' type="submit" style={{width:"100%"}}>Login</button>
-    </div>
-</form>
-
+                <form onSubmit={handleSubmit} autoComplete="off">
+                    <div className='container-small' style={{ textAlign: 'center' }}> {/* Center text in the container */}
+                        <div className='container-col'>
+                            <CircleImg iconUrl={logo_purple} width="30%" />
+                        </div>
+                        <div>
+                            <label className="container-title">Login</label>
+                            <hr />
+                        </div>
+                        <br />
+                        <div>
+                            <div id={"login_error"} style={{ textAlign: "center" }}></div>
+                            <label htmlFor="email">Email</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                value={email} 
+                                onChange={(e) => setEmail(e.target.value)} 
+                                autoComplete="off" // Disabling autocomplete for this field
+                            />
+                            <label htmlFor="password">Password</label>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                value={password} 
+                                onChange={(e) => setPassword(e.target.value)} 
+                                autoComplete="new-password" // Specially for passwords, this helps prevent autofill
+                            />
+                            <div>
+                                {/* Existing login form code */}
+                                <div className="forgetPassword">
+                                    <Link to="/forgetPassword">Forgot Password?</Link>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <button className='button-form' type="submit" style={{ width: "100%", margin: "0 auto" }}>Login</button> {/* Center the button */}
+                    </div>
+                </form>
             </div>
         </div>
     );
