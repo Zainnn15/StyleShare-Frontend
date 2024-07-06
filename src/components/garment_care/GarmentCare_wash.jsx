@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useEffect, useState, useContext } from 'react';
 import '../../styles/main.scss';
 import { toast } from 'react-hot-toast';
@@ -123,6 +122,15 @@ export default function GarmentWash() {
         }
       };
     
+    // Get today's date in the format YYYY-MM-DD
+    const getTodayDate = () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
     return (
         <div>
             <ScreenHeaderIn />
@@ -156,6 +164,7 @@ export default function GarmentWash() {
                                 addErrorMessageByID("washDate_error", null);
                             }} 
                             required 
+                            max={getTodayDate()} // Restrict future dates
                         />
                     </div>
 

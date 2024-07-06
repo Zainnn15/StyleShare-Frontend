@@ -258,6 +258,12 @@ export default function Profile() {
     setEditMode(!editMode);
   }
 
+  const garmentImageStyle = {
+    width: '150px', // Set a fixed width
+    height: '150px', // Set a fixed height
+    objectFit: 'cover', // Ensures the image covers the area without distortion
+  };
+
   return (
     <div>
       <Toaster />
@@ -332,12 +338,7 @@ export default function Profile() {
                     availability.map((schedule) => (
                       <li key={schedule._id}>
                         <label>
-                          {dayMapping[schedule.day]} at{' '}
-                          {schedule.location === 'Other'
-                            ? schedule.customCampus
-                            : schedule.location}
-                          :<label className="tab"></label>
-                          <label>{`${schedule.start} - ${schedule.end}`}</label>
+                          {dayMapping[schedule.day]}: {schedule.start} - {schedule.end} at {schedule.location}
                         </label>
 
                         <button
@@ -482,7 +483,7 @@ export default function Profile() {
                   id="tab1"
                   className="container-tab-group"
                   onClick={() => {
-                    let e_active = document.getElementById(`tab${tabPage}`);
+                    let e_active = document.getElementById(`tab1`);
                     if (e_active) {
                       e_active.classList.toggle('active', false);
                     }
@@ -664,6 +665,7 @@ export default function Profile() {
                     src={garment.fileFront}
                     alt="garment front"
                     className="garment-image"
+                    style={garmentImageStyle}
                   />
                   <p>
                     <strong>Description:</strong> {garment.garmentDescription}

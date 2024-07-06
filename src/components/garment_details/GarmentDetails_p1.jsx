@@ -1,9 +1,20 @@
 /* eslint-disable react/prop-types */
 import '../../styles/main.scss';
-
+import { useEffect, useState } from 'react';
 import { addErrorMessageByID, checkOnID, selectID, validate, validatePage } from "../../constants/functions/inputHandlers";
 
 const GarmentDetails_p1 = ({formData, setFormData, page, numPages, handleForward, handleBack}) => {
+    const [maxDate, setMaxDate] = useState("");
+
+    useEffect(() => {
+        // Get today's date in the format yyyy-mm-dd
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+        const year = today.getFullYear();
+        setMaxDate(`${year}-${month}-${day}`);
+    }, []);
+
     //handle next button
     function validateAndNext() {
         let querySelect = "input[type='text'],input[type='date']";
@@ -91,6 +102,7 @@ const GarmentDetails_p1 = ({formData, setFormData, page, numPages, handleForward
                             validate("purchaseDate");
                         }}
                         required 
+                        max={maxDate} // Setting the max attribute to the current date
                     />
                 </div>
             </div>

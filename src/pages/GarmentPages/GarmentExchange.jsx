@@ -196,6 +196,20 @@ function GarmentExchange() {
                             Country:{' '}
                             {garment?.garmentCountry || 'Country not available'}
                           </p>
+                          <p className="card-text">
+                            Availability:
+                            {member.availability && member.availability.length > 0 ? (
+                              <ul>
+                                {member.availability.map((avail, i) => (
+                                  <li key={i}>
+                                    {avail.day}: {avail.start} - {avail.end} at {avail.location}
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              ' Not available'
+                            )}
+                          </p>
                         </div>
                       }
                       DescClassName={'container-card-description'}
@@ -357,7 +371,7 @@ function GarmentExchange() {
             <input
               type="date"
               value={reservationDetails.pickupDate}
-              min={getTodayDate()}
+              min={getTodayDate()} // Set the min attribute to today's date
               onChange={(e) =>
                 setReservationDetails((prev) => ({
                   ...prev,
