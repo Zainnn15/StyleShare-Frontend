@@ -37,6 +37,27 @@ export default function GarmentCare() {
                             handlePress={()=>clickID("card_wear")}
                         />
                     </div>
+
+                    <div>
+                        <Card 
+                            imgUrl={feel}
+                            width="13em"
+                            imgWidth="13em"
+                            imgHeight="15em"
+                            imgClassName={"container-card-img"}
+                            title={<p className="center text-purpleLight text-midLg">Garment Feel</p>}
+                            titleClassName={"container-row bg-purpleDark"}
+                            description={
+                                <p className="center">
+                                    Log the experience of wearing the garment for a particular day
+                                </p>
+                            }
+                            DescClassName={"container-card-description"}
+                            footer={<Link id="card_feel" style={{color:"white"}} to={"/garment-feel"}>Log Details</Link>}
+                            footerClassName={"container-card-button"}
+                            handlePress={()=>clickID("card_feel")}
+                        />
+                    </div>
                 
                     <div>
                         <Card 
@@ -77,27 +98,6 @@ export default function GarmentCare() {
                             footer={<Link id="card_tear" style={{color:"white"}} to={"/garment-tear"}>Log Details</Link>}
                             footerClassName={"container-card-button"}
                             handlePress={()=>clickID("card_tear")}
-                        />
-                    </div>
-
-                    <div>
-                        <Card 
-                            imgUrl={feel}
-                            width="13em"
-                            imgWidth="13em"
-                            imgHeight="15em"
-                            imgClassName={"container-card-img"}
-                            title={<p className="center text-purpleLight text-midLg">Garment Feel</p>}
-                            titleClassName={"container-row bg-purpleDark"}
-                            description={
-                                <p className="center">
-                                    Log the experience of wearing the garment for a particular day
-                                </p>
-                            }
-                            DescClassName={"container-card-description"}
-                            footer={<Link id="card_feel" style={{color:"white"}} to={"/garment-feel"}>Log Details</Link>}
-                            footerClassName={"container-card-button"}
-                            handlePress={()=>clickID("card_feel")}
                         />
                     </div>
 

@@ -1432,14 +1432,14 @@ export default function GarmentTear() {
             </div>
           )}
 
-          {Object.values(repairRequest).some((v) => v) && (
+          {/* {Object.values(repairRequest).some((v) => v) && (
             <div >
               <a href="mailto:arafat@example.com" style={{color: 'red'}}><strong>Any concerns, contact Arafat to arrange garment repair!</strong></a>
-              {/* <a href="mailto:arafat@example.com">
+              <a href="mailto:arafat@example.com">
                 md-arafat-ali.khan@senecapolytechnic.ca
-              </a> */}
+              </a>
             </div>
-          )}
+          )} */}
 
           <br />
 

@@ -168,15 +168,15 @@ export default function GarmentFeel() {
 
               <div id={"dateWorn_error"} style={{textAlign:"center"}}></div>
               <label className='text-b'>Date worn:</label>
-<label className='tab'></label>
-<input
-  type='date'
-  id='dateWorn'
-  value={feelDate}
-  onChange={(e) => setFeelDate(e.target.value)}
-  max={getTodayDate()} // Set the max attribute to today's date
-  required
-/>
+                <label className='tab'></label>
+                <input
+                type='date'
+                id='dateWorn'
+                value={feelDate}
+                onChange={(e) => setFeelDate(e.target.value)}
+                max={getTodayDate()} // Set the max attribute to today's date
+                required
+            />
             </div> 
             
             <div>

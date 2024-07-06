@@ -30,6 +30,7 @@ const Garment_wear = ({ garment }) => {
                                     {wear.wearTime}
                                 </p>
                             </div>
+                            
                             <div>
                                 <p>
                                     <label className="text-b">Front Photo:<label className="tab"></label></label>

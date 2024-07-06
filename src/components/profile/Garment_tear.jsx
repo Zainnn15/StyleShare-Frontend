@@ -1,12 +1,29 @@
 /* eslint-disable react/prop-types */
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { measurementTypes, repairRequests } from '../../constants/data/lists';
 import { findAttribute, formatDate, getImageFromURL } from '../../constants/functions/valueHandlers';
 import '../../styles/main.scss';
 
 const GarmentTear = ({ garment }) => {
+  const [tearInfo, setTearInfo] = useState(garment ? garment.tearInfo : []);
+  const navigate = useNavigate();
+
+  const handleEdit = () => {
+      navigate(`/garment-tear/`);
+  };
+
+  const handleDelete = (id) => {
+      const updatedTearInfo = tearInfo.filter(tear => tear._id !== id);
+      setTearInfo(updatedTearInfo);
+  };
+
   return (
     <div className="m1">
-      {garment && garment.tearInfo && garment.tearInfo.map((tear) => (
+      {
+      // garment && garment.tearInfo && garment.tearInfo.map((tear) => (
+        tearInfo.map((tear) => (
         tear.tearDate && (
           <div key={tear._id}>
             <label className="container-subtitle-2">{formatDate(tear.tearDate)}</label>
@@ -265,32 +282,36 @@ const GarmentTear = ({ garment }) => {
                   </div>
                 )}
               </div>
+              <div>
+                <button className="button-regular" style={{ margin: '5px' }} onClick={() => handleEdit()}>Edit</button>
+                <button className="button-regular" onClick={() => handleDelete(tear._id)}>Delete</button>
+              </div>
               <br />
 
               <div>
                 <p className='container-subtitle-2'>Repair Request</p>
               </div>
-              <ul className="container-grid-3-md gap container-border clear-box">
-                {tear.repairRequest?.looseButton && (
-                  <li>{findAttribute(repairRequests, "looseButton")}</li>
-                )}
+                <ul className="container-grid-3-md gap container-border clear-box">
+                  {tear.repairRequest?.looseButton && (
+                    <li>{findAttribute(repairRequests, "looseButton")}</li>
+                  )}
 
-                {tear.repairRequest?.brokenZipper && (
-                  <li>{findAttribute(repairRequests, "brokenZipper")}</li>
-                )}
+                  {tear.repairRequest?.brokenZipper && (
+                    <li>{findAttribute(repairRequests, "brokenZipper")}</li>
+                  )}
 
-                {tear.repairRequest?.lostString && (
-                  <li>{findAttribute(repairRequests, "lostString")}</li>
-                )}
+                  {tear.repairRequest?.lostString && (
+                    <li>{findAttribute(repairRequests, "lostString")}</li>
+                  )}
 
-                {tear.repairRequest?.looseHem && (
-                  <li>{findAttribute(repairRequests, "looseHem")}</li>
-                )}
+                  {tear.repairRequest?.looseHem && (
+                    <li>{findAttribute(repairRequests, "looseHem")}</li>
+                  )}
 
-                {tear.repairRequest?.other && (
-                  <li>{tear.repairOther}</li>
-                )}
-              </ul>
+                  {tear.repairRequest?.other && (
+                    <li>{tear.repairOther}</li>
+                  )}
+                </ul>
             </div>
             <br />
           </div>

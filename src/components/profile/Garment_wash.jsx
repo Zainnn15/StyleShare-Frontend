@@ -1,15 +1,29 @@
 /* eslint-disable react/prop-types */
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { careInstructions } from '../../constants/data/lists';
 import { formatDate, formatTemp } from '../../constants/functions/valueHandlers';
 import '../../styles/main.scss';
 import InfoPopup from '../common/InfoPopup';
 
 const Garment_wash = ({ garment }) => {
+    const [careInfo, setCareInfo] = useState(garment ? garment.washCareInstructions : []);
+    const navigate = useNavigate();
+
+    const handleEdit = () => {
+        navigate(`/garment-wash/`);
+    };
+
+    const handleDelete = (id) => {
+        const updatedCareInfo = careInfo.filter(care => care._id !== id);
+        setCareInfo(updatedCareInfo);
+    };
     return (
         <div className="m1">
             {
-                garment && garment.washCareInstructions &&
-                garment.washCareInstructions.map((care) => {
+                // garment && garment.washCareInstructions &&
+                // garment.washCareInstructions.map((care) => {
+                careInfo.map((care) => {
                     const washMethod = careInstructions[care.careWash?.Method];
                     const washHeat = care.careWash?.Heat && careInstructions[care.careWash?.Heat];
                     const airMethod = care.careDry?.Air && careInstructions[care.careDry?.Air];
@@ -203,6 +217,10 @@ const Garment_wash = ({ garment }) => {
                                         )
                                     }
                                 </div>
+                            </div>
+                            <div>
+                                <button className="button-regular" style={{ margin: '5px' }} onClick={() => handleEdit()}>Edit</button>
+                                <button className="button-regular" onClick={() => handleDelete(care._id)}>Delete</button>
                             </div>
                             <br />
                         </div>

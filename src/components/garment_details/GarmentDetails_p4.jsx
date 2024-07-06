@@ -164,23 +164,23 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                 break;
             default:
                 // Check if the value is "others"
-                // if (toIdName === 'Others') {
-                //     // Remove error message if any
-                //     addErrorMessage(e_to.id + "_error", null);
-                //     return false;
-                // }
+                if (toIdName === 'Others') {
+                    // Remove error message if any
+                    addErrorMessage(e_to.id + "_error", null);
+                    return false;
+                }
 
-                // // Validate against options
-                // for (let i = 0; i < options.length; i++) {
-                //     if (options[i].label.toLowerCase() === val) {
-                //         // Remove error message if any
-                //         addErrorMessage(e_to.id + "_error", null);
-                //         return true;
-                //     }
-                // }
-                // errMessage = "Must be a valid option in the list";
-                addErrorMessage(e_to.id + "_error", errMessage);
-                return true;
+                // Validate against options
+                for (let i = 0; i < options.length; i++) {
+                    if (options[i].label.toLowerCase() === val) {
+                        // Remove error message if any
+                        addErrorMessage(e_to.id + "_error", null);
+                        return true;
+                    }
+                }
+                errMessage = "Must be a valid option in the list";
+                // addErrorMessage(e_to.id + "_error", errMessage);
+                // return true;
             }
 
             // Add error message
@@ -256,15 +256,17 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
     // Check for duplicate values
     function isDuplicate(type, value) {
         let values = [];
-        switch (type) {
-            case "lining":
-                values = formData.compositionLining.map(item => item.value.toLowerCase());
-                break;
-            case "padding":
-                values = formData.compositionPadding.map(item => item.value.toLowerCase());
-                break;
-            default:
-                values = formData.compositionMain.map(item => item.value.toLowerCase());
+        if (value !== "Others"){
+            switch (type) {
+                case "lining":
+                    values = formData.compositionLining.map(item => item.value.toLowerCase());
+                    break;
+                case "padding":
+                    values = formData.compositionPadding.map(item => item.value.toLowerCase());
+                    break;
+                default:
+                    values = formData.compositionMain.map(item => item.value.toLowerCase());
+            }
         }
         return values.includes(value.toLowerCase());
     }
@@ -298,6 +300,7 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                     <div>
                                         <div id={"main_mat_" + index + "_error"}></div>
                                         <input id={"main_mat_" + index}
+                                            style={{marginBottom: 10}}
                                             type="text"
                                             name="compositionMain[][value]"
                                             placeholder="Select a fibre"
@@ -318,6 +321,19 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                                 }
                                             }}
                                             required
+                                        />
+                                        <input type="text"
+                                            name=""
+                                            className={formData.compositionMain[index].value !== 'Others' ? "hidden" : ""}
+                                            placeholder="Please specify material"
+                                            value={formData.compositionMain[index].otherValue || ""}
+                                            onChange={(e) => {
+                                                formData.compositionMain[index].otherValue = e.target.value;
+                                                setFormData({
+                                                    ...formData,
+                                                    compositionMain: [...formData.compositionMain]
+                                                });
+                                            }}
                                         />
                                     </div>
 
