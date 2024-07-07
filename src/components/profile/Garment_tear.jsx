@@ -32,6 +32,12 @@ const GarmentTear = ({ garment }) => {
                 <p className='container-subtitle-2'>Tears</p>
               </div>
               <div className="container-grid-3-md gap container-border clear-box">
+                {garment?.user?.name ? (
+                    <p>
+                        <label className='text-b'>Username:<label className='tab'></label></label>
+                        {garment.user.name}
+                    </p>
+                ) : null}
                 {tear.colorFading === 1 && (
                   <div>
                     <p>
@@ -284,11 +290,46 @@ const GarmentTear = ({ garment }) => {
               </div>
               <div>
                 <button className="button-regular" style={{ margin: '5px' }} onClick={() => handleEdit()}>Edit</button>
-                <button className="button-regular" onClick={() => handleDelete(tear._id)}>Delete</button>
+                {/* <button className="button-regular" onClick={() => handleDelete(tear._id)}>Delete</button> */}
+                <button 
+                  className="button-regular" 
+                  onClick={() => {
+                  if (window.confirm('Are you sure delete this item?')) {
+                  handleDelete(tear._id);
+                  }
+                }}>Delete</button>
               </div>
               <br />
 
-              <div>
+              {(tear.repairRequest?.looseButton ||
+                tear.repairRequest?.brokenZipper ||
+                tear.repairRequest?.lostString ||
+                tear.repairRequest?.looseHem ||
+                tear.repairRequest?.other) && (
+                <div>
+                  <p className='container-subtitle-2'>Repair Request</p>
+                  <ul className="container-grid-3-md gap container-border clear-box">
+                    {tear.repairRequest?.looseButton && (
+                      <li>{findAttribute(repairRequests, "looseButton")}</li>
+                    )}
+                    {tear.repairRequest?.brokenZipper && (
+                      <li>{findAttribute(repairRequests, "brokenZipper")}</li>
+                    )}
+                    {tear.repairRequest?.lostString && (
+                      <li>{findAttribute(repairRequests, "lostString")}</li>
+                    )}
+                    {tear.repairRequest?.looseHem && (
+                      <li>{findAttribute(repairRequests, "looseHem")}</li>
+                    )}
+                    {tear.repairRequest?.other && (
+                      <li>{tear.repairOther}</li>
+                    )}
+                  </ul>
+                </div>
+              )}
+
+
+              {/* <div>
                 <p className='container-subtitle-2'>Repair Request</p>
               </div>
                 <ul className="container-grid-3-md gap container-border clear-box">
@@ -311,7 +352,7 @@ const GarmentTear = ({ garment }) => {
                   {tear.repairRequest?.other && (
                     <li>{tear.repairOther}</li>
                   )}
-                </ul>
+                </ul> */}
             </div>
             <br />
           </div>

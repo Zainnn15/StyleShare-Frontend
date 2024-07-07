@@ -130,6 +130,12 @@ const GarmentFeel = ({ garment }) => {
                 <label className="text-b">Wear experience:<label className="tab"></label></label>
                 {feel.feelComfyExp}
               </p>
+              {garment?.user?.name ? (
+                  <p>
+                      <label className='text-b'>Username:<label className='tab'></label></label>
+                      {garment.user.name}
+                  </p>
+              ) : null}
             </div>
 
             <div>
@@ -187,7 +193,13 @@ const GarmentFeel = ({ garment }) => {
           </div>
           <div>
             <button className="button-regular" style={{ margin: '5px' }} onClick={handleEdit}>Edit</button>
-            <button className="button-regular" onClick={() => handleDelete(feel._id)}>Delete</button>
+            <button 
+              className="button-regular" 
+              onClick={() => {
+                if (window.confirm('Are you sure delete this item?')) {
+                  handleDelete(feel._id);
+                  }
+                }}>Delete</button>
           </div>
           <br />
         </div>

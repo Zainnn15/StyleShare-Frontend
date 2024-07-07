@@ -39,6 +39,12 @@ const Garment_wash = ({ garment }) => {
                             <label className="container-subtitle-2">{formatDate(care.washDate)}</label>
                             <div className="container-grid-3-md gap container-border clear-box">
                                 <div>
+                                    {garment?.user?.name ? (
+                                        <p>
+                                            <label className='text-b'>Username:<label className='tab'></label></label>
+                                            {garment.user.name}
+                                        </p>
+                                    ) : null}
                                     <p>
                                         <label className="text-b">Wash Method:<label className="tab"></label></label>
                                         {washMethod && care.careWash.Method !== "noWash" && (
@@ -220,7 +226,14 @@ const Garment_wash = ({ garment }) => {
                             </div>
                             <div>
                                 <button className="button-regular" style={{ margin: '5px' }} onClick={() => handleEdit()}>Edit</button>
-                                <button className="button-regular" onClick={() => handleDelete(care._id)}>Delete</button>
+                                {/* <button className="button-regular" onClick={() => handleDelete(care._id)}>Delete</button> */}
+                                <button 
+                                    className="button-regular" 
+                                    onClick={() => {
+                                    if (window.confirm('Are you sure delete this item?')) {
+                                    handleDelete(care._id);
+                                    }
+                                    }}>Delete</button>
                             </div>
                             <br />
                         </div>

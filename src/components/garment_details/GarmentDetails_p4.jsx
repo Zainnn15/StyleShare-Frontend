@@ -328,11 +328,17 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                             placeholder="Please specify material"
                                             value={formData.compositionMain[index].otherValue || ""}
                                             onChange={(e) => {
-                                                formData.compositionMain[index].otherValue = e.target.value;
-                                                setFormData({
-                                                    ...formData,
-                                                    compositionMain: [...formData.compositionMain]
-                                                });
+                                                if (isDuplicate("main", e.target.value)) {
+                                                    addErrorMessage(`main_mat_${index}_error`, "Material already selected");
+                                                }
+                                                else {
+                                                    formData.compositionMain[index].otherValue = e.target.value;
+                                                    setFormData({
+                                                        ...formData,
+                                                        compositionMain: [...formData.compositionMain]
+                                                    });
+                                                    validate("name", "main_mat_" + index);
+                                                }
                                             }}
                                         />
                                     </div>

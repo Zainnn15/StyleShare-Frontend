@@ -29,8 +29,15 @@ const Garment_wear = ({ garment }) => {
                                     <label className="text-b">Wear Time (hours):<label className="tab"></label></label>
                                     {wear.wearTime}
                                 </p>
+                                
+                                {garment?.user?.name ? (
+                                    <p>
+                                        <label className='text-b'>Username:<label className='tab'></label></label>
+                                        {garment.user.name}
+                                    </p>
+                                ) : null}
+
                             </div>
-                            
                             <div>
                                 <p>
                                     <label className="text-b">Front Photo:<label className="tab"></label></label>
@@ -50,7 +57,17 @@ const Garment_wear = ({ garment }) => {
                         </div>
                         <div>
                             <button className="button-regular" style={{ margin: '5px' }} onClick={() => handleEdit()}>Edit</button>
-                            <button className="button-regular" onClick={() => handleDelete(wear._id)}>Delete</button>
+                            {/* <button className="button-regular" onClick={() => handleDelete(wear._id)}>Delete</button> */}
+                            <button 
+                                className="button-regular" 
+                                onClick={() => {
+                                    if (window.confirm('Are you sure delete this item?')) {
+                                    handleDelete(wear._id);
+                                    }
+                                }}
+                                >
+                                Delete
+                            </button>
                         </div>
                         <br />
                     </div>
