@@ -340,6 +340,7 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                                     validate("name", "main_mat_" + index);
                                                 }
                                             }}
+                                            required
                                         />
                                     </div>
 
@@ -419,6 +420,7 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                                 <div>
                                                     <div id={"lining_mat_" + index + "_error"}></div>
                                                     <input id={"lining_mat_" + index}
+                                                        style={{marginBottom: 10}}
                                                         type="text"
                                                         name="compositionLining[][value]"
                                                         placeholder="Select a fibre"
@@ -429,6 +431,26 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                                                 addErrorMessage(`lining_mat_${index}_error`, "Material already selected");
                                                             } else {
                                                                 formData.compositionLining[index].value = e.target.value;
+                                                                setFormData({
+                                                                    ...formData,
+                                                                    compositionLining: [...formData.compositionLining]
+                                                                });
+                                                                validate("name", "lining_mat_" + index);
+                                                            }
+                                                        }}
+                                                        required
+                                                    />
+                                                    <input type="text"
+                                                        name=""
+                                                        className={formData.compositionLining[index].value !== 'Others' ? "hidden" : ""}
+                                                        placeholder="Please specify material"
+                                                        value={formData.compositionLining[index].otherValue || ""}
+                                                        onChange={(e) => {
+                                                            if (isDuplicate("lining", e.target.value)) {
+                                                                addErrorMessage(`lining_mat_${index}_error`, "Material already selected");
+                                                            }
+                                                            else {
+                                                                formData.compositionLining[index].otherValue = e.target.value;
                                                                 setFormData({
                                                                     ...formData,
                                                                     compositionLining: [...formData.compositionLining]
@@ -519,6 +541,7 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                                 <div>
                                                     <div id={"padding_mat_" + index + "_error"}></div>
                                                     <input id={"padding_mat_" + index}
+                                                        style={{marginBottom: 10}}
                                                         type="text"
                                                         name="compositionPadding[][value]"
                                                         placeholder="Select a fibre"
@@ -538,6 +561,27 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                                         }}
                                                         required
                                                     />
+                                                    <input type="text"
+                                                        name=""
+                                                        className={formData.compositionPadding[index].value !== 'Others' ? "hidden" : ""}
+                                                        placeholder="Please specify material"
+                                                        value={formData.compositionPadding[index].otherValue || ""}
+                                                        onChange={(e) => {
+                                                            if (isDuplicate("padding", e.target.value)) {
+                                                                addErrorMessage(`padding_mat_${index}_error`, "Material already selected");
+                                                            }
+                                                            else {
+                                                                formData.compositionPadding[index].otherValue = e.target.value;
+                                                                setFormData({
+                                                                    ...formData,
+                                                                    compositionPadding: [...formData.compositionPadding]
+                                                                });
+                                                                validate("name", "padding_mat_" + index);
+                                                            }
+                                                        }}
+                                                        required
+                                                    />
+                                                    
                                                 </div>
 
                                                 <div className="container-col">
