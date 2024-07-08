@@ -70,6 +70,8 @@ export default function Profile() {
       ...prevState,
       [name]: value,
     }));
+    //New Schedule
+    console.log('Updated newSchedule:', newSchedule);
   };
 
   const addSchedule = async (e) => {
@@ -711,6 +713,7 @@ export default function Profile() {
                   selectedImage
                     ? URL.createObjectURL(selectedImage)
                     : defaultProfile
+
                 }
                 alt="profile"
               />

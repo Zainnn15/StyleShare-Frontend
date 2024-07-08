@@ -31,6 +31,7 @@ const Garment_general = ({ garment }) => {
     Axios.get(`/profile/${garment.originalOwner}`)
       .then((res) => {
         setOriginalOwner(res.data.user.name)
+        // setOriginalOwner(res.data.name)
       })
       .catch((err) => {
         console.log(err)

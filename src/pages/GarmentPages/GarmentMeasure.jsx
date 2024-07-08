@@ -15,6 +15,8 @@ import { measurementTypes } from "../../constants/data/lists";
 import PopupImg from "../../components/common/PopupImg";
 import CircleBtn from "../../components/common/CircleBtn";
 import { useNavigate } from "react-router-dom";
+//comment out to enable selecting of garment
+//import { GarmentContext } from "../../../context/garmentContext";
 import { findAttribute, formatDate } from "../../constants/functions/valueHandlers";
 import Axios from "axios";
 
@@ -31,7 +33,7 @@ const GarmentMeasurement = () => {
         garmentFit: '',
     });
     const [measures, setMeasures] = useState([]);
-    const [unit, setUnit] = useState('cm'); // State to manage the unit
+    const [globalUnit, setGlobalUnit] = useState('cm'); // New state variable
     const options = GARMENT_TYPES;
 
     useEffect(() => {
@@ -42,20 +44,13 @@ const GarmentMeasurement = () => {
                     console.log('Garment Data:', garmentData); // Logging fetched data
 
                     if (Array.isArray(garmentData) && garmentData.length > 0) {
-                        const userGarments = garmentData.filter(g => g.user === user._id && g.originalOwner === user._id);
-                        setGarmentList(userGarments);
-                        if (userGarments.length > 0) {
-                            setGarment(userGarments[0]);
-                            initializeFormData(userGarments[0]);
-                        }
+                        setGarmentList(garmentData);
+                        setGarment(garmentData[0]);
+                        initializeFormData(garmentData[0]);
                     } else if (garmentData) {
-                        if (garmentData.user === user._id && garmentData.originalOwner === user._id) {
-                            setGarmentList([garmentData]);
-                            setGarment(garmentData);
-                            initializeFormData(garmentData);
-                        } else {
-                            console.error('No garment data found');
-                        }
+                        setGarmentList([garmentData]);
+                        setGarment(garmentData);
+                        initializeFormData(garmentData);
                     } else {
                         console.error('No garment data found');
                     }
@@ -96,11 +91,6 @@ const GarmentMeasurement = () => {
         return measurementTypes.filter(obj => obj.categories.includes(catID));
     };
 
-    const handleUnitChange = (e) => {
-        const newUnit = e.target.value;
-        setUnit(newUnit);
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!user || !user._id) {
@@ -110,10 +100,11 @@ const GarmentMeasurement = () => {
 
         const garmentMeasurements = measures.map((measureType, index) => {
             const valueElement = document.getElementById(`measure_${measureType.value}_${index}`);
+            const unitElement = document.getElementById(`unit_${measureType.value}_${index}`);
             return {
                 measureType: measureType.label,
                 value: parseFloat(valueElement ? valueElement.value : '0'),
-                unit: unit,
+                unit: unitElement ? unitElement.value : globalUnit, // Use globalUnit
             };
         }).filter(measure => measure.value > 0);
 
@@ -128,7 +119,7 @@ const GarmentMeasurement = () => {
         };
 
         try {
-            const response = await axios.post('/updateGarmentMeasurement', payload, {
+            const response = await axios.post('/updateGarmentDetails', payload, {
                 headers: { 'Content-Type': 'application/json' },
             });
 
@@ -142,6 +133,10 @@ const GarmentMeasurement = () => {
             console.error('Error submitting form:', error);
             toast.error('An error occurred while updating garment details.');
         }
+    };
+
+    const handleUnitChange = (e) => {
+        setGlobalUnit(e.target.value); // Update global unit state
     };
 
     return (
@@ -180,7 +175,7 @@ const GarmentMeasurement = () => {
                                 >
                                     {garmentList.map((garmentOpt, index) => (
                                         <option key={"garmentOpt_" + index} value={index}>
-                                            {garmentOpt.garmentDescription} ({formatDate(garmentOpt.purchaseDate)})
+                                            {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} ({formatDate(garmentOpt.purchaseDate)})
                                         </option>
                                     ))}
                                 </select>
@@ -244,8 +239,8 @@ const GarmentMeasurement = () => {
                                             <select
                                                 id={"unit_" + measureType.value + "_" + index}
                                                 name={"unit_" + measureType.value}
-                                                value={unit}
-                                                onChange={handleUnitChange}
+                                                value={globalUnit} // Bind to globalUnit
+                                                onChange={handleUnitChange} // Handle unit change
                                             >
                                                 <option value='cm'> cm </option>
                                                 <option value='inches'> in </option>
@@ -335,9 +330,8 @@ const GarmentMeasurement = () => {
                                         </div>
                                     </div>
                                     <div className='container-input'>
-                                        
                                         <button className="button-form" type="reset">
-                                             Reset
+                                            Reset
                                         </button>
                                         <button className="button-form" type="submit">
                                             Save
