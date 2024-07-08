@@ -142,6 +142,11 @@ function GarmentExchange() {
     return `${year}-${month}-${day}`;
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US');
+  };
+
   return (
     <div>
       <ScreenHeader />
@@ -320,7 +325,7 @@ function GarmentExchange() {
                   )}
                 {request.pickupDate && (
                   <p>
-                    <strong>Pickup Date:</strong> {request.pickupDate}
+                    <strong>Pickup Date:</strong> {formatDate(request.pickupDate)}
                   </p>
                 )}
                 {request.pickupTime && (
@@ -337,7 +342,7 @@ function GarmentExchange() {
                   <p>
                     <strong>Sent:</strong>
                     <span style={{ marginRight: '5px' }}></span>
-                    {new Date(request.createdAt).toLocaleString()}
+                    {formatDate(request.createdAt)}
                   </p>
                 )}
               </div>

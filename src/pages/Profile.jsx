@@ -340,7 +340,6 @@ export default function Profile() {
                         <label>
                           {dayMapping[schedule.day]}: {schedule.start} - {schedule.end} at {schedule.location}
                         </label>
-
                         <button
                           className="button-delete"
                           onClick={async (e) => deleteSchedule(e, schedule._id)}
