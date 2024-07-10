@@ -713,7 +713,9 @@ export default function Profile() {
                   selectedImage
                     ? URL.createObjectURL(selectedImage)
                     : defaultProfile
-
+                  // selectedImage
+                  //   ? selectedImage instanceof File ? URL.createObjectURL(selectedImage): selectedImage
+                  //   : defaultProfile
                 }
                 alt="profile"
               />

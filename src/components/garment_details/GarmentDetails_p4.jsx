@@ -256,6 +256,21 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
     // Check for duplicate values
     function isDuplicate(type, value) {
         let values = [];
+        if (type === 'main') {
+            return formData.compositionMain.some(
+                (item) => item.value === value || item.otherValue === value
+            );
+        }
+        if (type === 'lining') {
+            return formData.compositionLining.some(
+                (item) => item.value === value || item.otherValue === value
+            );
+        }
+        if (type === 'padding') {
+            return formData.compositionPadding.some(
+                (item) => item.value === value || item.otherValue === value
+            );
+        }
         if (value !== "Others"){
             switch (type) {
                 case "lining":
