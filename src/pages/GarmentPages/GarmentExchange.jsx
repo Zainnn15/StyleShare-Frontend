@@ -1,91 +1,99 @@
-import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import { UserContext } from '../../../context/userContext';
-import { GroupContext } from '../../../context/groupContext';
-import '../../styles/card.css';
-import ScreenHeader from '../../components/common/ScreenHeaderIn';
-import Modal from 'react-modal';
-import Card from '../../components/common/Card';
-import { findAttribute, getImageFromURL } from '../../constants/functions/valueHandlers';
-import { GARMENT_TYPES } from '../../constants/data/options';
-import notApplicable from '../../assets/icons/not_applicable.png';
-import General from '../../components/profile/Garment_general';
-import Measure from '../../components/profile/Garment_measure';
-import Composition from '../../components/profile/Garment_composition';
-import Care from '../../components/profile/Garment_care';
-import Wear from '../../components/profile/Garment_wear';
-import Wash from '../../components/profile/Garment_wash';
-import Tear from '../../components/profile/Garment_tear';
-import Feel from '../../components/profile/Garment_feel';
+import { useState, useEffect, useContext } from 'react'
+import axios from 'axios'
+import { UserContext } from '../../../context/userContext'
+import { GroupContext } from '../../../context/groupContext'
+import '../../styles/card.css'
+import ScreenHeader from '../../components/common/ScreenHeaderIn'
+import Modal from 'react-modal'
+import Card from '../../components/common/Card'
+import {
+  findAttribute,
+  getImageFromURL,
+} from '../../constants/functions/valueHandlers'
+import { GARMENT_TYPES } from '../../constants/data/options'
+import notApplicable from '../../assets/icons/not_applicable.png'
+import General from '../../components/profile/Garment_general'
+import Measure from '../../components/profile/Garment_measure'
+import Composition from '../../components/profile/Garment_composition'
+import Care from '../../components/profile/Garment_care'
+import Wear from '../../components/profile/Garment_wear'
+import Wash from '../../components/profile/Garment_wash'
+import Tear from '../../components/profile/Garment_tear'
+import Feel from '../../components/profile/Garment_feel'
 
-Modal.setAppElement('#root');
+Modal.setAppElement('#root')
 
 function GarmentExchange() {
-  const { user } = useContext(UserContext);
-  const { userGroups } = useContext(GroupContext);
-  const [exchangeRequests, setExchangeRequests] = useState([]);
-  const [sentRequests, setSentRequests] = useState({});
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [garmentModalID, setGarmentModalID] = useState('');
+  const { user } = useContext(UserContext)
+  const { userGroups } = useContext(GroupContext)
+  const [exchangeRequests, setExchangeRequests] = useState([])
+  const [sentRequests, setSentRequests] = useState({})
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [garmentModalID, setGarmentModalID] = useState('')
+  const [dateError, setDateError] = useState(null)
   const [reservationDetails, setReservationDetails] = useState({
     pickupDate: '',
     pickupTime: '',
     pickupLocation: '',
-  });
-  const [selectedGarmentDetails, setSelectedGarmentDetails] = useState(null);
-  const [tabPage, setTabPage] = useState(0);
+  })
+  const [selectedGarmentDetails, setSelectedGarmentDetails] = useState(null)
+  const [tabPage, setTabPage] = useState(0)
 
-  console.log(exchangeRequests);
+  console.log(exchangeRequests)
 
   exchangeRequests.sort((a, b) => {
     if (a.createdAt && b.createdAt) {
-      return new Date(b.createdAt) - new Date(a.createdAt);
+      return new Date(b.createdAt) - new Date(a.createdAt)
     } else if (a.createdAt) {
-      return -1;
+      return -1
     } else if (b.createdAt) {
-      return 1;
+      return 1
     }
-    return 0;
-  });
+    return 0
+  })
 
   useEffect(() => {
     if (user?._id) {
-      fetchExchangeRequests();
+      fetchExchangeRequests()
     }
-  }, [user?._id]);
+  }, [user?._id])
 
   const openReservationModal = (recipientId, recipientGarmentId) => {
-    setSelectedGarmentDetails({ recipientId, recipientGarmentId });
-    setIsModalOpen(true);
-  };
+    setSelectedGarmentDetails({ recipientId, recipientGarmentId })
+    setIsModalOpen(true)
+  }
 
   const handleModalSubmit = async () => {
-    const { recipientId, recipientGarmentId } = selectedGarmentDetails;
-    await sendExchangeRequest(recipientId, recipientGarmentId);
-    setIsModalOpen(false);
-  };
+    if (!validateDate()) {
+      return
+    }
+
+    const { recipientId, recipientGarmentId } = selectedGarmentDetails
+    await sendExchangeRequest(recipientId, recipientGarmentId)
+    setIsModalOpen(false)
+  }
 
   const fetchExchangeRequests = async () => {
     try {
-      const response = await axios.get(`/listExchangeRequests/${user._id}`);
-      const fetchedExchangeRequests = response.data.exchangeRequests;
-      setExchangeRequests(fetchedExchangeRequests);
+      const response = await axios.get(`/listExchangeRequests/${user._id}`)
+      const fetchedExchangeRequests = response.data.exchangeRequests
+      setExchangeRequests(fetchedExchangeRequests)
     } catch (error) {
-      console.error('Failed to fetch exchange requests:', error);
+      console.error('Failed to fetch exchange requests:', error)
     }
-  };
+  }
 
   const sendExchangeRequest = async (recipientId, recipientGarmentId) => {
-    const requestKey = `${recipientId}_${recipientGarmentId}`;
+    const requestKey = `${recipientId}_${recipientGarmentId}`
     if (sentRequests[requestKey]) {
-      console.log('Request already sent for this garment pair.');
-      return;
+      console.log('Request already sent for this garment pair.')
+      return
     }
 
     const userGarment = userGroups?.members.find(
       (member) => member._id === user._id,
-    )?.garments[0];
-    const userGarmentId = userGarment ? userGarment._id : null;
+    )?.garments[0]
+    const userGarmentId = userGarment ? userGarment._id : null
 
     try {
       await axios.post('/createExchangeRequest', {
@@ -96,13 +104,13 @@ function GarmentExchange() {
         pickupDate: reservationDetails.pickupDate,
         pickupTime: reservationDetails.pickupTime,
         pickupLocation: reservationDetails.pickupLocation,
-      });
-      setSentRequests((prev) => ({ ...prev, [requestKey]: true }));
-      fetchExchangeRequests();
+      })
+      setSentRequests((prev) => ({ ...prev, [requestKey]: true }))
+      fetchExchangeRequests()
     } catch (error) {
-      console.error('Failed to send exchange request:', error);
+      console.error('Failed to send exchange request:', error)
     }
-  };
+  }
 
   const handleExchangeResponse = async (exchangeRequestId, status) => {
     try {
@@ -110,12 +118,12 @@ function GarmentExchange() {
         userId: user._id,
         exchangeRequestId,
         status,
-      });
-      fetchExchangeRequests();
+      })
+      fetchExchangeRequests()
     } catch (error) {
-      console.error('Failed to update exchange request status:', error);
+      console.error('Failed to update exchange request status:', error)
     }
-  };
+  }
 
   const handleConfirmReception = async (exchangeRequestId) => {
     try {
@@ -123,29 +131,44 @@ function GarmentExchange() {
         userId: user._id,
         exchangeRequestId,
         status: 'confirmed',
-      });
-      fetchExchangeRequests();
+      })
+      fetchExchangeRequests()
     } catch (error) {
-      console.error('Failed to confirm exchange:', error);
+      console.error('Failed to confirm exchange:', error)
     }
-  };
+  }
 
   function handleCardPress(garment) {
-    setGarmentModalID(garment);
+    setGarmentModalID(garment)
   }
 
   const getTodayDate = () => {
-    const today = new Date();
-    const day = String(today.getDate()).padStart(2, '0');
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const year = today.getFullYear();
-    return `${year}-${month}-${day}`;
-  };
+    const today = new Date()
+    const day = String(today.getDate()).padStart(2, '0')
+    const month = String(today.getMonth() + 1).padStart(2, '0')
+    const year = today.getFullYear()
+    return `${year}-${month}-${day}`
+  }
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US');
-  };
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US')
+  }
+
+  // Cannot have a pickup date in the past
+  function validateDate() {
+    const today = new Date()
+    const purchaseDate = new Date(reservationDetails.pickupDate)
+
+    if (today > purchaseDate) {
+      setDateError('Pickup date cannot be in the past')
+      return false
+    }
+
+    setDateError(null)
+
+    return true
+  }
 
   return (
     <div>
@@ -203,11 +226,13 @@ function GarmentExchange() {
                           </p>
                           <p className="card-text">
                             Availability:
-                            {member.availability && member.availability.length > 0 ? (
+                            {member.availability &&
+                            member.availability.length > 0 ? (
                               <ul>
                                 {member.availability.map((avail, i) => (
                                   <li key={i}>
-                                    {avail.day}: {avail.start} - {avail.end} at {avail.location}
+                                    {avail.day}: {avail.start} - {avail.end} at{' '}
+                                    {avail.location}
                                   </li>
                                 ))}
                               </ul>
@@ -325,7 +350,8 @@ function GarmentExchange() {
                   )}
                 {request.pickupDate && (
                   <p>
-                    <strong>Pickup Date:</strong> {formatDate(request.pickupDate)}
+                    <strong>Pickup Date:</strong>{' '}
+                    {formatDate(request.pickupDate)}
                   </p>
                 )}
                 {request.pickupTime && (
@@ -384,6 +410,7 @@ function GarmentExchange() {
                 }))
               }
             />
+            <p className="message-error">{dateError}</p>
           </div>
           <br />
           <div className="form-group">
@@ -428,8 +455,8 @@ function GarmentExchange() {
         <Modal
           isOpen={garmentModalID !== ''}
           onRequestClose={() => {
-            setGarmentModalID('');
-            setTabPage(0);
+            setGarmentModalID('')
+            setTabPage(0)
           }}
           contentLabel="Reservation Details"
           style={{
@@ -458,14 +485,14 @@ function GarmentExchange() {
                     id="tab0"
                     className="container-tab-group active"
                     onClick={() => {
-                      let e_active = document.getElementById(`tab${tabPage}`);
+                      let e_active = document.getElementById(`tab${tabPage}`)
                       if (e_active) {
-                        e_active.classList.toggle('active', false);
+                        e_active.classList.toggle('active', false)
                       }
-                      setTabPage(0);
-                      let e_div = document.getElementById(`tab0`);
+                      setTabPage(0)
+                      let e_div = document.getElementById(`tab0`)
                       if (e_div) {
-                        e_div.classList.toggle('active', true);
+                        e_div.classList.toggle('active', true)
                       }
                     }}
                   >
@@ -475,14 +502,14 @@ function GarmentExchange() {
                     id="tab1"
                     className="container-tab-group"
                     onClick={() => {
-                      let e_active = document.getElementById(`tab${tabPage}`);
+                      let e_active = document.getElementById(`tab${tabPage}`)
                       if (e_active) {
-                        e_active.classList.toggle('active', false);
+                        e_active.classList.toggle('active', false)
                       }
-                      setTabPage(1);
-                      let e_div = document.getElementById(`tab1`);
+                      setTabPage(1)
+                      let e_div = document.getElementById(`tab1`)
                       if (e_div) {
-                        e_div.classList.toggle('active', true);
+                        e_div.classList.toggle('active', true)
                       }
                     }}
                   >
@@ -492,14 +519,14 @@ function GarmentExchange() {
                     id="tab2"
                     className="container-tab-group"
                     onClick={() => {
-                      let e_active = document.getElementById(`tab${tabPage}`);
+                      let e_active = document.getElementById(`tab${tabPage}`)
                       if (e_active) {
-                        e_active.classList.toggle('active', false);
+                        e_active.classList.toggle('active', false)
                       }
-                      setTabPage(2);
-                      let e_div = document.getElementById(`tab2`);
+                      setTabPage(2)
+                      let e_div = document.getElementById(`tab2`)
                       if (e_div) {
-                        e_div.classList.toggle('active', true);
+                        e_div.classList.toggle('active', true)
                       }
                     }}
                   >
@@ -509,14 +536,14 @@ function GarmentExchange() {
                     id="tab3"
                     className="container-tab-group"
                     onClick={() => {
-                      let e_active = document.getElementById(`tab${tabPage}`);
+                      let e_active = document.getElementById(`tab${tabPage}`)
                       if (e_active) {
-                        e_active.classList.toggle('active', false);
+                        e_active.classList.toggle('active', false)
                       }
-                      setTabPage(3);
-                      let e_div = document.getElementById(`tab3`);
+                      setTabPage(3)
+                      let e_div = document.getElementById(`tab3`)
                       if (e_div) {
-                        e_div.classList.toggle('active', true);
+                        e_div.classList.toggle('active', true)
                       }
                     }}
                   >
@@ -526,14 +553,14 @@ function GarmentExchange() {
                     id="tab4"
                     className="container-tab-group"
                     onClick={() => {
-                      let e_active = document.getElementById(`tab${tabPage}`);
+                      let e_active = document.getElementById(`tab${tabPage}`)
                       if (e_active) {
-                        e_active.classList.toggle('active', false);
+                        e_active.classList.toggle('active', false)
                       }
-                      setTabPage(4);
-                      let e_div = document.getElementById(`tab4`);
+                      setTabPage(4)
+                      let e_div = document.getElementById(`tab4`)
                       if (e_div) {
-                        e_div.classList.toggle('active', true);
+                        e_div.classList.toggle('active', true)
                       }
                     }}
                   >
@@ -543,14 +570,14 @@ function GarmentExchange() {
                     id="tab5"
                     className="container-tab-group"
                     onClick={() => {
-                      let e_active = document.getElementById(`tab${tabPage}`);
+                      let e_active = document.getElementById(`tab${tabPage}`)
                       if (e_active) {
-                        e_active.classList.toggle('active', false);
+                        e_active.classList.toggle('active', false)
                       }
-                      setTabPage(5);
-                      let e_div = document.getElementById(`tab5`);
+                      setTabPage(5)
+                      let e_div = document.getElementById(`tab5`)
                       if (e_div) {
-                        e_div.classList.toggle('active', true);
+                        e_div.classList.toggle('active', true)
                       }
                     }}
                   >
@@ -560,14 +587,14 @@ function GarmentExchange() {
                     id="tab6"
                     className="container-tab-group"
                     onClick={() => {
-                      let e_active = document.getElementById(`tab${tabPage}`);
+                      let e_active = document.getElementById(`tab${tabPage}`)
                       if (e_active) {
-                        e_active.classList.toggle('active', false);
+                        e_active.classList.toggle('active', false)
                       }
-                      setTabPage(6);
-                      let e_div = document.getElementById(`tab6`);
+                      setTabPage(6)
+                      let e_div = document.getElementById(`tab6`)
                       if (e_div) {
-                        e_div.classList.toggle('active', true);
+                        e_div.classList.toggle('active', true)
                       }
                     }}
                   >
@@ -577,14 +604,14 @@ function GarmentExchange() {
                     id="tab7"
                     className="container-tab-group"
                     onClick={() => {
-                      let e_active = document.getElementById(`tab${tabPage}`);
+                      let e_active = document.getElementById(`tab${tabPage}`)
                       if (e_active) {
-                        e_active.classList.toggle('active', false);
+                        e_active.classList.toggle('active', false)
                       }
-                      setTabPage(7);
-                      let e_div = document.getElementById(`tab7`);
+                      setTabPage(7)
+                      let e_div = document.getElementById(`tab7`)
                       if (e_div) {
-                        e_div.classList.toggle('active', true);
+                        e_div.classList.toggle('active', true)
                       }
                     }}
                   >
@@ -643,7 +670,7 @@ function GarmentExchange() {
         </Modal>
       )}
     </div>
-  );
+  )
 }
 
-export default GarmentExchange;
+export default GarmentExchange
