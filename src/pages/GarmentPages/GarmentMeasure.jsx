@@ -47,7 +47,20 @@ const GarmentMeasurement = () => {
                         setGarmentList(garmentData);
                         setGarment(garmentData[0]);
                         initializeFormData(garmentData[0]);
+                        // const userGarments = garmentData.filter(g => g.user === user._id && g.originalOwner === user._id);
+                        // setGarmentList(userGarments);
+                        // if (userGarments.length > 0) {
+                        //     setGarment(userGarments[0]);
+                        //     initializeFormData(userGarments[0]);
+                        // }
                     } else if (garmentData) {
+                        // if (garmentData.user === user._id && garmentData.originalOwner === user._id) {
+                        //     setGarmentList([garmentData]);
+                        //     setGarment(garmentData);
+                        //     initializeFormData(garmentData);
+                        // } else {
+                        //     console.error('No garment data found');
+                        // }
                         setGarmentList([garmentData]);
                         setGarment(garmentData);
                         initializeFormData(garmentData);
@@ -119,7 +132,8 @@ const GarmentMeasurement = () => {
         };
 
         try {
-            const response = await axios.post('/updateGarmentDetails', payload, {
+            // const response = await axios.post('/updateGarmentDetails', payload, {
+                const response = await axios.post('/updateGarmentMeasurement', payload, {
                 headers: { 'Content-Type': 'application/json' },
             });
 
@@ -175,6 +189,7 @@ const GarmentMeasurement = () => {
                                 >
                                     {garmentList.map((garmentOpt, index) => (
                                         <option key={"garmentOpt_" + index} value={index}>
+                                            {/* {garmentOpt.garmentDescription} ({formatDate(garmentOpt.purchaseDate)}) */}
                                             {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} ({formatDate(garmentOpt.purchaseDate)})
                                         </option>
                                     ))}
