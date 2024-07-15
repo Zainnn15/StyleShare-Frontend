@@ -33,7 +33,7 @@ const GarmentMeasurement = () => {
         garmentFit: '',
     });
     const [measures, setMeasures] = useState([]);
-    const [globalUnit, setGlobalUnit] = useState('cm'); // New state variable
+    const [unit, setUnit] = useState('cm'); // New state variable
     const options = GARMENT_TYPES;
 
     useEffect(() => {
@@ -104,7 +104,7 @@ const GarmentMeasurement = () => {
             return {
                 measureType: measureType.label,
                 value: parseFloat(valueElement ? valueElement.value : '0'),
-                unit: unitElement ? unitElement.value : globalUnit, // Use globalUnit
+                unit: unitElement ? unitElement.value : unit, // Use globalUnit
             };
         }).filter(measure => measure.value > 0);
 
@@ -136,7 +136,7 @@ const GarmentMeasurement = () => {
     };
 
     const handleUnitChange = (e) => {
-        setGlobalUnit(e.target.value); // Update global unit state
+        setUnit(e.target.value); // Update global unit state
     };
 
     return (
@@ -239,7 +239,7 @@ const GarmentMeasurement = () => {
                                             <select
                                                 id={"unit_" + measureType.value + "_" + index}
                                                 name={"unit_" + measureType.value}
-                                                value={globalUnit} // Bind to globalUnit
+                                                value={unit} // Bind to globalUnit
                                                 onChange={handleUnitChange} // Handle unit change
                                             >
                                                 <option value='cm'> cm </option>

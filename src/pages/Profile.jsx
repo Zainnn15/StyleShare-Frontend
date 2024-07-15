@@ -505,11 +505,12 @@ export default function Profile() {
                   id="tab1"
                   className="container-tab-group"
                   onClick={() => {
-                    let e_active = document.getElementById(`tab1`)
+                    //let e_active = document.getElementById(`tab1`)
+                    let e_active = document.getElementById(`tab${tabPage}`);
                     if (e_active) {
                       e_active.classList.toggle('active', false)
                     }
-                    setTabPage(1)
+                    setTabPage(1);
                     let e_div = document.getElementById(`tab1`)
                     if (e_div) {
                       e_div.classList.toggle('active', true)
@@ -654,8 +655,9 @@ export default function Profile() {
                 garment.garmentFeels &&
                 garment.garmentFeels.length > 0 && <Feel garment={garment} />}
             </div>
+    
             <div className="container-content">
-              {garment.user === user._id && (
+              {garment._id && (
                 <button
                   className="button-regular"
                   onClick={() => openDeleteModal(garment._id)}
@@ -664,6 +666,7 @@ export default function Profile() {
                 </button>
               )}
             </div>
+
           </>
         ) : (
           <div className="container-content">
@@ -733,9 +736,6 @@ export default function Profile() {
                   selectedImage
                     ? URL.createObjectURL(selectedImage)
                     : defaultProfile
-                  // selectedImage
-                  //   ? selectedImage instanceof File ? URL.createObjectURL(selectedImage): selectedImage
-                  //   : defaultProfile
                 }
                 alt="profile"
               />
@@ -781,7 +781,7 @@ export default function Profile() {
         <h3>Confirm Delete</h3>
         <p>Are you sure you want to delete this garment?</p>
         <div className="container-row">
-          <button className="button-regular" onClick={handleDeleteGarment}>
+          <button className="button-regular" onClick={handleDeleteGarment} style={{ marginRight: '10px' }}>
             Yes
           </button>
           <button className="button-cancel" onClick={closeDeleteModal}>
