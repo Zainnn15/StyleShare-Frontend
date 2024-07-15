@@ -189,8 +189,8 @@ const GarmentMeasurement = () => {
                                 >
                                     {garmentList.map((garmentOpt, index) => (
                                         <option key={"garmentOpt_" + index} value={index}>
-                                            {/* {garmentOpt.garmentDescription} ({formatDate(garmentOpt.purchaseDate)}) */}
-                                            {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} ({formatDate(garmentOpt.purchaseDate)})
+                                            {garmentOpt.garmentDescription} ({formatDate(garmentOpt.purchaseDate)})
+                                            {/* {findAttribute(GARMENT_TYPES, garmentOpt.garmentType)} ({formatDate(garmentOpt.purchaseDate)}) */}
                                         </option>
                                     ))}
                                 </select>
