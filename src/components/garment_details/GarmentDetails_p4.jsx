@@ -178,9 +178,9 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                         return true;
                     }
                 }
-                errMessage = "Must be a valid option in the list";
-                // addErrorMessage(e_to.id + "_error", errMessage);
-                // return true;
+                //errMessage = "Must be a valid option in the list";
+                addErrorMessage(e_to.id + "_error", errMessage);
+                return true;
             }
 
             // Add error message
@@ -337,7 +337,8 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                             }}
                                             required
                                         />
-                                        <input type="text"
+                                        <input id={"main_mat_" + index}
+                                            type="text"
                                             name=""
                                             className={formData.compositionMain[index].value !== 'Others' ? "hidden" : ""}
                                             placeholder="Please specify material"
@@ -455,7 +456,8 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                                         }}
                                                         required
                                                     />
-                                                    <input type="text"
+                                                    <input id={"lining_mat_" + index} 
+                                                        type="text"
                                                         name=""
                                                         className={formData.compositionLining[index].value !== 'Others' ? "hidden" : ""}
                                                         placeholder="Please specify material"
@@ -576,7 +578,8 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                                         }}
                                                         required
                                                     />
-                                                    <input type="text"
+                                                    <input id={"padding_mat_" + index}
+                                                        type="text"
                                                         name=""
                                                         className={formData.compositionPadding[index].value !== 'Others' ? "hidden" : ""}
                                                         placeholder="Please specify material"
