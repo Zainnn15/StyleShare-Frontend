@@ -249,6 +249,21 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
         if (!validatePage()) {
             return false;
         }
+        for (var i of formData.compositionMain) {
+            if (i.otherValue) {
+                i.value = i.otherValue;
+            }
+        }
+        for (var j of formData.compositionLining) {
+            if (j.otherValue) {
+                j.value = j.otherValue;
+            }
+        }
+        for (var k of formData.compositionPadding) {
+            if (k.otherValue) {
+                k.value = k.otherValue;
+            }
+        }
         handleForward();
         return true;
     }
@@ -337,6 +352,7 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                             }}
                                             required
                                         />
+
                                         <input id={"main_mat_" + index}
                                             type="text"
                                             name=""
@@ -347,6 +363,7 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                                 if (isDuplicate("main", e.target.value)) {
                                                     addErrorMessage(`main_mat_${index}_error`, "Material already selected");
                                                 }
+                                                
                                                 else {
                                                     formData.compositionMain[index].otherValue = e.target.value;
                                                     setFormData({
@@ -356,7 +373,6 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                                     validate("name", "main_mat_" + index);
                                                 }
                                             }}
-                                            required
                                         />
                                     </div>
 
