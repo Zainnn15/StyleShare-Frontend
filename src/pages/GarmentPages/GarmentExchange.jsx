@@ -1,27 +1,27 @@
-import { useState, useEffect, useContext } from 'react'
-import axios from 'axios'
-import { UserContext } from '../../../context/userContext'
-import { GroupContext } from '../../../context/groupContext'
-import '../../styles/card.css'
-import ScreenHeader from '../../components/common/ScreenHeaderIn'
-import Modal from 'react-modal'
-import Card from '../../components/common/Card'
+import { useState, useEffect, useContext } from "react"
+import axios from "axios"
+import { UserContext } from "../../../context/userContext"
+import { GroupContext } from "../../../context/groupContext"
+import "../../styles/card.css"
+import ScreenHeader from "../../components/common/ScreenHeaderIn"
+import Modal from "react-modal"
+import Card from "../../components/common/Card"
 import {
   findAttribute,
   getImageFromURL,
-} from '../../constants/functions/valueHandlers'
-import { GARMENT_TYPES } from '../../constants/data/options'
-import notApplicable from '../../assets/icons/not_applicable.png'
-import General from '../../components/profile/Garment_general'
-import Measure from '../../components/profile/Garment_measure'
-import Composition from '../../components/profile/Garment_composition'
-import Care from '../../components/profile/Garment_care'
-import Wear from '../../components/profile/Garment_wear'
-import Wash from '../../components/profile/Garment_wash'
-import Tear from '../../components/profile/Garment_tear'
-import Feel from '../../components/profile/Garment_feel'
+} from "../../constants/functions/valueHandlers"
+import { GARMENT_TYPES } from "../../constants/data/options"
+import notApplicable from "../../assets/icons/not_applicable.png"
+import General from "../../components/profile/Garment_general"
+import Measure from "../../components/profile/Garment_measure"
+import Composition from "../../components/profile/Garment_composition"
+import Care from "../../components/profile/Garment_care"
+import Wear from "../../components/profile/Garment_wear"
+import Wash from "../../components/profile/Garment_wash"
+import Tear from "../../components/profile/Garment_tear"
+import Feel from "../../components/profile/Garment_feel"
 
-Modal.setAppElement('#root')
+Modal.setAppElement("#root")
 
 function GarmentExchange() {
   const { user } = useContext(UserContext)
@@ -29,12 +29,12 @@ function GarmentExchange() {
   const [exchangeRequests, setExchangeRequests] = useState([])
   const [sentRequests, setSentRequests] = useState({})
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [garmentModalID, setGarmentModalID] = useState('')
+  const [garmentModalID, setGarmentModalID] = useState("")
   const [dateError, setDateError] = useState(null)
   const [reservationDetails, setReservationDetails] = useState({
-    pickupDate: '',
-    pickupTime: '',
-    pickupLocation: '',
+    pickupDate: "",
+    pickupTime: "",
+    pickupLocation: "",
   })
   const [selectedGarmentDetails, setSelectedGarmentDetails] = useState(null)
   const [tabPage, setTabPage] = useState(0)
@@ -64,6 +64,7 @@ function GarmentExchange() {
   }
 
   const handleModalSubmit = async () => {
+    console.log(reservationDetails)
     if (!validateDate()) {
       return
     }
@@ -78,15 +79,16 @@ function GarmentExchange() {
       const response = await axios.get(`/listExchangeRequests/${user._id}`)
       const fetchedExchangeRequests = response.data.exchangeRequests
       setExchangeRequests(fetchedExchangeRequests)
+      console.log(fetchExchangeRequests)
     } catch (error) {
-      console.error('Failed to fetch exchange requests:', error)
+      console.error("Failed to fetch exchange requests:", error)
     }
   }
 
   const sendExchangeRequest = async (recipientId, recipientGarmentId) => {
     const requestKey = `${recipientId}_${recipientGarmentId}`
     if (sentRequests[requestKey]) {
-      console.log('Request already sent for this garment pair.')
+      console.log("Request already sent for this garment pair.")
       return
     }
 
@@ -96,7 +98,7 @@ function GarmentExchange() {
     const userGarmentId = userGarment ? userGarment._id : null
 
     try {
-      await axios.post('/createExchangeRequest', {
+      await axios.post("/createExchangeRequest", {
         userId: user._id,
         recipientId,
         userGarmentId: userGarmentId,
@@ -108,33 +110,33 @@ function GarmentExchange() {
       setSentRequests((prev) => ({ ...prev, [requestKey]: true }))
       fetchExchangeRequests()
     } catch (error) {
-      console.error('Failed to send exchange request:', error)
+      console.error("Failed to send exchange request:", error)
     }
   }
 
   const handleExchangeResponse = async (exchangeRequestId, status) => {
     try {
-      await axios.post('/updateExchangeRequestStatus', {
+      await axios.post("/updateExchangeRequestStatus", {
         userId: user._id,
         exchangeRequestId,
         status,
       })
       fetchExchangeRequests()
     } catch (error) {
-      console.error('Failed to update exchange request status:', error)
+      console.error("Failed to update exchange request status:", error)
     }
   }
 
   const handleConfirmReception = async (exchangeRequestId) => {
     try {
-      await axios.post('/updateExchangeRequestStatus', {
+      await axios.post("/updateExchangeRequestStatus", {
         userId: user._id,
         exchangeRequestId,
-        status: 'confirmed',
+        status: "confirmed",
       })
       fetchExchangeRequests()
     } catch (error) {
-      console.error('Failed to confirm exchange:', error)
+      console.error("Failed to confirm exchange:", error)
     }
   }
 
@@ -144,15 +146,18 @@ function GarmentExchange() {
 
   const getTodayDate = () => {
     const today = new Date()
-    const day = String(today.getDate()).padStart(2, '0')
-    const month = String(today.getMonth() + 1).padStart(2, '0')
+    const day = String(today.getDate()).padStart(2, "0")
+    const month = String(today.getMonth() + 1).padStart(2, "0")
     const year = today.getFullYear()
     return `${year}-${month}-${day}`
   }
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US')
+    return dateString
+    // The following code is commented out because it was causing the day to show up as the previous day
+    // Should not use timezone conversion if not handled correctly in backend and database
+    // const date = new Date(dateString)
+    // return date.toLocaleDateString()
   }
 
   // Cannot have a pickup date in the past
@@ -161,7 +166,7 @@ function GarmentExchange() {
     const purchaseDate = new Date(reservationDetails.pickupDate)
 
     if (today > purchaseDate) {
-      setDateError('Pickup date cannot be in the past')
+      setDateError("Pickup date cannot be in the past")
       return false
     }
 
@@ -185,7 +190,7 @@ function GarmentExchange() {
             <div
               key={member._id}
               className="container-card-list"
-              style={{ width: '14em' }}
+              style={{ width: "14em" }}
             >
               {member.garments && member.garments.length > 0 ? (
                 member.garments.map((garment, index) => (
@@ -193,9 +198,9 @@ function GarmentExchange() {
                     <Card
                       height="33em"
                       imgUrl={getImageFromURL(
-                        garment?.fileFront || 'fallbackImagePath',
+                        garment?.fileFront || "fallbackImagePath",
                       )}
-                      imgClassName={'container-card-img'}
+                      imgClassName={"container-card-img"}
                       title={
                         <label className="center text-purpleLight text-midLg">
                           {member.username}
@@ -207,22 +212,22 @@ function GarmentExchange() {
                         </label>
                       }
                       titleClassName={
-                        'container-row clickable bg-purpleDark space-evenly'
+                        "container-row clickable bg-purpleDark space-evenly"
                       }
                       description={
                         <div>
                           <p className="card-text">
-                            Type:{' '}
+                            Type:{" "}
                             {findAttribute(GARMENT_TYPES, garment?.garmentType)}
                           </p>
                           <p className="card-text">
-                            Description:{' '}
+                            Description:{" "}
                             {garment?.garmentDescription ||
-                              'Description not available'}
+                              "Description not available"}
                           </p>
                           <p className="card-text">
-                            Country:{' '}
-                            {garment?.garmentCountry || 'Country not available'}
+                            Country:{" "}
+                            {garment?.garmentCountry || "Country not available"}
                           </p>
                           <p className="card-text">
                             Availability:
@@ -231,18 +236,18 @@ function GarmentExchange() {
                               <ul>
                                 {member.availability.map((avail, i) => (
                                   <li key={i}>
-                                    {avail.day}: {avail.start} - {avail.end} at{' '}
+                                    {avail.day}: {avail.start} - {avail.end} at{" "}
                                     {avail.location}
                                   </li>
                                 ))}
                               </ul>
                             ) : (
-                              ' Not available'
+                              " Not available"
                             )}
                           </p>
                         </div>
                       }
-                      DescClassName={'container-card-description'}
+                      DescClassName={"container-card-description"}
                       footer={
                         member._id === user._id ? (
                           <p>Your Garment</p>
@@ -261,7 +266,7 @@ function GarmentExchange() {
                         )
                       }
                       isBtn={false}
-                      footerClassName={'center'}
+                      footerClassName={"center"}
                       handleImgPress={() => handleCardPress(garment)}
                       handleTitlePress={() => handleCardPress(garment)}
                       handleDescPress={() => handleCardPress(garment)}
@@ -272,15 +277,15 @@ function GarmentExchange() {
                 <Card
                   height="33em"
                   imgUrl={notApplicable}
-                  imgClassName={'container-card-img'}
+                  imgClassName={"container-card-img"}
                   title={
                     <p className="center text-purpleLight text-midLg">
                       {member.username}
                     </p>
                   }
-                  titleClassName={'container-row bg-purpleDark'}
+                  titleClassName={"container-row bg-purpleDark"}
                   description={<p>No garments found for this member</p>}
-                  DescClassName={'container-card-description'}
+                  DescClassName={"container-card-description"}
                 />
               )}
             </div>
@@ -296,13 +301,13 @@ function GarmentExchange() {
               <div key={request._id} className="container-border clear-box">
                 {/* <img src={getImageFromURL(garment?.fileFront || 'fallbackImagePath')} alt="Garment" className="exchange-garment-img" /> */}
                 <p>
-                  <strong>From:</strong>{' '}
-                  {request.senderId?.username || 'Unknown User'}{' '}
-                  <strong>To:</strong>{' '}
-                  {request.recipientId?.username || 'Unknown User'}
+                  <strong>From:</strong>{" "}
+                  {request.senderId?.username || "Unknown User"}{" "}
+                  <strong>To:</strong>{" "}
+                  {request.recipientId?.username || "Unknown User"}
                 </p>
                 <p>
-                  <strong>Exchange For:</strong>{' '}
+                  <strong>Exchange For:</strong>{" "}
                   {request.recipientGarmentDescription}
                 </p>
                 {request.recipientGarmentImage && (
@@ -313,13 +318,13 @@ function GarmentExchange() {
                     />
                   </div>
                 )}
-                {request.status === 'pending' &&
+                {request.status === "pending" &&
                   user._id === request.recipientId?._id && (
                     <div className="container-row space-evenly">
                       <button
                         className="button-accept"
                         onClick={() =>
-                          handleExchangeResponse(request._id, 'accepted')
+                          handleExchangeResponse(request._id, "accepted")
                         }
                       >
                         Accept
@@ -327,7 +332,7 @@ function GarmentExchange() {
                       <button
                         className="button-reject"
                         onClick={() =>
-                          handleExchangeResponse(request._id, 'rejected')
+                          handleExchangeResponse(request._id, "rejected")
                         }
                       >
                         Reject
@@ -335,11 +340,11 @@ function GarmentExchange() {
                     </div>
                   )}
                 <p>
-                  <strong>Status:</strong>{' '}
+                  <strong>Status:</strong>{" "}
                   {request.status.charAt(0).toUpperCase() +
                     request.status.slice(1)}
                 </p>
-                {request.status === 'accepted' &&
+                {request.status === "accepted" &&
                   user._id === request.senderId?._id && (
                     <button
                       className="button-confirm"
@@ -350,7 +355,7 @@ function GarmentExchange() {
                   )}
                 {request.pickupDate && (
                   <p>
-                    <strong>Pickup Date:</strong>{' '}
+                    <strong>Pickup Date:</strong>{" "}
                     {formatDate(request.pickupDate)}
                   </p>
                 )}
@@ -367,7 +372,7 @@ function GarmentExchange() {
                 {request.createdAt && (
                   <p>
                     <strong>Sent:</strong>
-                    <span style={{ marginRight: '5px' }}></span>
+                    <span style={{ marginRight: "5px" }}></span>
                     {formatDate(request.createdAt)}
                   </p>
                 )}
@@ -385,13 +390,13 @@ function GarmentExchange() {
         contentLabel="Reservation Details"
         style={{
           content: {
-            top: '20%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            transform: 'translate(-50%, 0)',
-            backgroundColor: '#F8E7E7',
-            maxHeight: '65%',
+            top: "20%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            transform: "translate(-50%, 0)",
+            backgroundColor: "#F8E7E7",
+            maxHeight: "65%",
           },
         }}
       >
@@ -441,7 +446,7 @@ function GarmentExchange() {
                   pickupLocation: e.target.value,
                 }))
               }
-              style={{ width: '80%' }}
+              style={{ width: "80%" }}
             />
           </div>
           <br />
@@ -451,28 +456,28 @@ function GarmentExchange() {
         </form>
       </Modal>
 
-      {garmentModalID !== '' && (
+      {garmentModalID !== "" && (
         <Modal
-          isOpen={garmentModalID !== ''}
+          isOpen={garmentModalID !== ""}
           onRequestClose={() => {
-            setGarmentModalID('')
+            setGarmentModalID("")
             setTabPage(0)
           }}
           contentLabel="Reservation Details"
           style={{
             content: {
-              top: '20%',
-              left: '50%',
-              right: 'auto',
-              bottom: 'auto',
-              transform: 'translate(-50%, 0)',
-              backgroundColor: '#F8E7E7',
-              maxHeight: '65%',
-              width: '90%',
+              top: "20%",
+              left: "50%",
+              right: "auto",
+              bottom: "auto",
+              transform: "translate(-50%, 0)",
+              backgroundColor: "#F8E7E7",
+              maxHeight: "65%",
+              width: "90%",
             },
           }}
         >
-          {garmentModalID !== '' && (
+          {garmentModalID !== "" && (
             <div className="container">
               <hr />
               <div className="container-content popup">
@@ -487,12 +492,12 @@ function GarmentExchange() {
                     onClick={() => {
                       let e_active = document.getElementById(`tab${tabPage}`)
                       if (e_active) {
-                        e_active.classList.toggle('active', false)
+                        e_active.classList.toggle("active", false)
                       }
                       setTabPage(0)
                       let e_div = document.getElementById(`tab0`)
                       if (e_div) {
-                        e_div.classList.toggle('active', true)
+                        e_div.classList.toggle("active", true)
                       }
                     }}
                   >
@@ -504,12 +509,12 @@ function GarmentExchange() {
                     onClick={() => {
                       let e_active = document.getElementById(`tab${tabPage}`)
                       if (e_active) {
-                        e_active.classList.toggle('active', false)
+                        e_active.classList.toggle("active", false)
                       }
                       setTabPage(1)
                       let e_div = document.getElementById(`tab1`)
                       if (e_div) {
-                        e_div.classList.toggle('active', true)
+                        e_div.classList.toggle("active", true)
                       }
                     }}
                   >
@@ -521,12 +526,12 @@ function GarmentExchange() {
                     onClick={() => {
                       let e_active = document.getElementById(`tab${tabPage}`)
                       if (e_active) {
-                        e_active.classList.toggle('active', false)
+                        e_active.classList.toggle("active", false)
                       }
                       setTabPage(2)
                       let e_div = document.getElementById(`tab2`)
                       if (e_div) {
-                        e_div.classList.toggle('active', true)
+                        e_div.classList.toggle("active", true)
                       }
                     }}
                   >
@@ -538,12 +543,12 @@ function GarmentExchange() {
                     onClick={() => {
                       let e_active = document.getElementById(`tab${tabPage}`)
                       if (e_active) {
-                        e_active.classList.toggle('active', false)
+                        e_active.classList.toggle("active", false)
                       }
                       setTabPage(3)
                       let e_div = document.getElementById(`tab3`)
                       if (e_div) {
-                        e_div.classList.toggle('active', true)
+                        e_div.classList.toggle("active", true)
                       }
                     }}
                   >
@@ -555,12 +560,12 @@ function GarmentExchange() {
                     onClick={() => {
                       let e_active = document.getElementById(`tab${tabPage}`)
                       if (e_active) {
-                        e_active.classList.toggle('active', false)
+                        e_active.classList.toggle("active", false)
                       }
                       setTabPage(4)
                       let e_div = document.getElementById(`tab4`)
                       if (e_div) {
-                        e_div.classList.toggle('active', true)
+                        e_div.classList.toggle("active", true)
                       }
                     }}
                   >
@@ -572,12 +577,12 @@ function GarmentExchange() {
                     onClick={() => {
                       let e_active = document.getElementById(`tab${tabPage}`)
                       if (e_active) {
-                        e_active.classList.toggle('active', false)
+                        e_active.classList.toggle("active", false)
                       }
                       setTabPage(5)
                       let e_div = document.getElementById(`tab5`)
                       if (e_div) {
-                        e_div.classList.toggle('active', true)
+                        e_div.classList.toggle("active", true)
                       }
                     }}
                   >
@@ -589,12 +594,12 @@ function GarmentExchange() {
                     onClick={() => {
                       let e_active = document.getElementById(`tab${tabPage}`)
                       if (e_active) {
-                        e_active.classList.toggle('active', false)
+                        e_active.classList.toggle("active", false)
                       }
                       setTabPage(6)
                       let e_div = document.getElementById(`tab6`)
                       if (e_div) {
-                        e_div.classList.toggle('active', true)
+                        e_div.classList.toggle("active", true)
                       }
                     }}
                   >
@@ -606,12 +611,12 @@ function GarmentExchange() {
                     onClick={() => {
                       let e_active = document.getElementById(`tab${tabPage}`)
                       if (e_active) {
-                        e_active.classList.toggle('active', false)
+                        e_active.classList.toggle("active", false)
                       }
                       setTabPage(7)
                       let e_div = document.getElementById(`tab7`)
                       if (e_div) {
-                        e_div.classList.toggle('active', true)
+                        e_div.classList.toggle("active", true)
                       }
                     }}
                   >
