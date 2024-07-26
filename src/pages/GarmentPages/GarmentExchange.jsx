@@ -152,6 +152,11 @@ function GarmentExchange() {
     return `${year}-${month}-${day}`
   }
 
+  const getDayName = (day) => {
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    return days[day];
+  };
+
   const formatDate = (dateString) => {
     return dateString
     // The following code is commented out because it was causing the day to show up as the previous day
@@ -236,7 +241,7 @@ function GarmentExchange() {
                               <ul>
                                 {member.availability.map((avail, i) => (
                                   <li key={i}>
-                                    {avail.day}: {avail.start} - {avail.end} at{" "}
+                                    {getDayName(avail.day)}: {avail.start} - {avail.end} at{" "}
                                     {avail.location}
                                   </li>
                                 ))}

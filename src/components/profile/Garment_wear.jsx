@@ -1,11 +1,13 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'
 import {
   formatDate,
   getImageFromURL,
 } from '../../constants/functions/valueHandlers.jsx'
 import '../../styles/main.scss'
+import Axios  from 'axios';
+
 
 const Garment_wear = ({ garment }) => {
   const [wearInfo, setWearInfo] = useState(garment ? garment.wearInfo : [])
@@ -21,6 +23,25 @@ const Garment_wear = ({ garment }) => {
   }
 
   console.log(wearInfo[0])
+  const [originalOwner, setOriginalOwner] = useState('')
+
+  useEffect(() => {
+      setOriginalOwner('')
+      if (!garment.originalOwner) {
+      setOriginalOwner('n/a')
+      return
+      }
+
+      console.log('UPDATING', garment.garmentDescription)
+      Axios.get(`/profile/${garment.originalOwner}`)
+      .then((res) => {
+          setOriginalOwner(res.data.user.name)
+      })
+      .catch((err) => {
+          console.log(err)
+          setOriginalOwner('n/a')
+      })
+  }, [garment])
 
   return (
     <div className="m1">
@@ -38,14 +59,15 @@ const Garment_wear = ({ garment }) => {
                 {wear.wearTime}
               </p>
 
-              {garment?.user?.name ? (
+              {/* {garment?.user?.name ? ( */}
                 <p>
                   <label className="text-b">
-                    Username:<label className="tab"></label>
+                    Owner:<label className="tab"></label>
                   </label>
-                  {garment.user.name}
+                  {/* {garment.user.name} */}
+                  {originalOwner}
                 </p>
-              ) : null}
+              {/* ) : null} */}
             </div>
             <div>
               <p>
@@ -74,7 +96,7 @@ const Garment_wear = ({ garment }) => {
               style={{ margin: '5px' }}
               onClick={() => handleEdit()}
             >
-              Edit
+              Add
             </button>
             {/* <button className="button-regular" onClick={() => handleDelete(wear._id)}>Delete</button> */}
             <button

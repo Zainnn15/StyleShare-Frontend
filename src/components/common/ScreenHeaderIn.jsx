@@ -103,10 +103,10 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
                 {
                     isLogin &&
                     <div className="container-header-button popup">
-                    <CircleBtn iconUrl={user && user.profilePicture ? getImageFromURL(user.profilePicture) : profile} 
-                        className={"button-header"} width={"30px"} height={"30px"}
-                        handlePress={openProfileDropdown}
-                    />
+                        <CircleBtn iconUrl={user && user.profilePicture ? getImageFromURL(user.profilePicture) : profile} 
+                            className={"button-header"} width={"30px"} height={"30px"}
+                            handlePress={openProfileDropdown}
+                        />
                     </div>
                 }
                 {

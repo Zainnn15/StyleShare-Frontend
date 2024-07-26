@@ -505,7 +505,6 @@ export default function Profile() {
                   id="tab1"
                   className="container-tab-group"
                   onClick={() => {
-                    //let e_active = document.getElementById(`tab1`)
                     let e_active = document.getElementById(`tab${tabPage}`);
                     if (e_active) {
                       e_active.classList.toggle('active', false)

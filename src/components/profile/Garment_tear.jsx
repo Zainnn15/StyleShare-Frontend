@@ -1,10 +1,12 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { measurementTypes, repairRequests } from '../../constants/data/lists';
 import { findAttribute, formatDate, getImageFromURL } from '../../constants/functions/valueHandlers';
 import '../../styles/main.scss';
+
+import Axios from 'axios';
 
 const GarmentTear = ({ garment }) => {
   const [tearInfo, setTearInfo] = useState(garment ? garment.tearInfo : []);
@@ -19,6 +21,28 @@ const GarmentTear = ({ garment }) => {
       setTearInfo(updatedTearInfo);
   };
 
+  const [originalOwner, setOriginalOwner] = useState('')
+
+  useEffect(() => {
+    //get latest wear
+
+    setOriginalOwner('')
+    if (!garment.originalOwner) {
+      setOriginalOwner('n/a')
+      return
+    }
+
+    console.log('UPDATING', garment.garmentDescription)
+    Axios.get(`/profile/${garment.originalOwner}`)
+      .then((res) => {
+        setOriginalOwner(res.data.user.name)
+      })
+      .catch((err) => {
+        console.log(err)
+        setOriginalOwner('n/a')
+      })
+  }, [garment])
+
   return (
     <div className="m1">
       {
@@ -32,12 +56,13 @@ const GarmentTear = ({ garment }) => {
                 <p className='container-subtitle-2'>Tears</p>
               </div>
               <div className="container-grid-3-md gap container-border clear-box">
-                {garment?.user?.name ? (
-                    <p>
-                        <label className='text-b'>Username:<label className='tab'></label></label>
-                        {garment.user.name}
-                    </p>
-                ) : null}
+                {/* {garment?.user?.name ? ( */}
+                  <p>
+                      <label className='text-b'>Owner:<label className='tab'></label></label>
+                      {/* {garment.user.name} */}
+                        {originalOwner}
+                  </p>
+                  {/* ) : null} */}
                 {tear.colorFading === 1 && (
                   <div>
                     <p>
@@ -289,8 +314,7 @@ const GarmentTear = ({ garment }) => {
                 )}
               </div>
               <div>
-                <button className="button-regular" style={{ margin: '5px' }} onClick={() => handleEdit()}>Edit</button>
-                {/* <button className="button-regular" onClick={() => handleDelete(tear._id)}>Delete</button> */}
+                <button className="button-regular" style={{ margin: '5px' }} onClick={() => handleEdit()}>Add</button>
                 <button 
                   className="button-regular" 
                   onClick={() => {

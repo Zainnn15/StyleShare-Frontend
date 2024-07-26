@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { careInstructions } from '../../constants/data/lists';
 import { formatDate, formatTemp } from '../../constants/functions/valueHandlers';
 import '../../styles/main.scss';
 import InfoPopup from '../common/InfoPopup';
+import Axios  from 'axios';
 
 const Garment_wash = ({ garment }) => {
     const [careInfo, setCareInfo] = useState(garment ? garment.washCareInstructions : []);
@@ -18,6 +19,28 @@ const Garment_wash = ({ garment }) => {
         const updatedCareInfo = careInfo.filter(care => care._id !== id);
         setCareInfo(updatedCareInfo);
     };
+
+    const [originalOwner, setOriginalOwner] = useState('')
+
+    useEffect(() => {
+        setOriginalOwner('')
+        if (!garment.originalOwner) {
+        setOriginalOwner('n/a')
+        return
+        }
+
+        console.log('UPDATING', garment.garmentDescription)
+        Axios.get(`/profile/${garment.originalOwner}`)
+        .then((res) => {
+            setOriginalOwner(res.data.user.name)
+        })
+        .catch((err) => {
+            console.log(err)
+            setOriginalOwner('n/a')
+        })
+    }, [garment])
+
+
     return (
         <div className="m1">
             {
@@ -39,12 +62,13 @@ const Garment_wash = ({ garment }) => {
                             <label className="container-subtitle-2">{formatDate(care.washDate)}</label>
                             <div className="container-grid-3-md gap container-border clear-box">
                                 <div>
-                                    {garment?.user?.name ? (
+                                    {/* {garment?.user?.name ? ( */}
                                         <p>
-                                            <label className='text-b'>Username:<label className='tab'></label></label>
-                                            {garment.user.name}
+                                            <label className='text-b'>Owner:<label className='tab'></label></label>
+                                            {/* {garment.user.name} */}
+                                            {originalOwner}
                                         </p>
-                                    ) : null}
+                                    {/* ) : null} */}
                                     <p>
                                         <label className="text-b">Wash Method:<label className="tab"></label></label>
                                         {washMethod && care.careWash.Method !== "noWash" && (
@@ -225,7 +249,7 @@ const Garment_wash = ({ garment }) => {
                                 </div>
                             </div>
                             <div>
-                                <button className="button-regular" style={{ margin: '5px' }} onClick={() => handleEdit()}>Edit</button>
+                                <button className="button-regular" style={{ margin: '5px' }} onClick={() => handleEdit()}>Add</button>
                                 {/* <button className="button-regular" onClick={() => handleDelete(care._id)}>Delete</button> */}
                                 <button 
                                     className="button-regular" 
