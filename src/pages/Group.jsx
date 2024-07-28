@@ -151,7 +151,11 @@ export default function Group() {
                                     )}
                                 </div>
                                 <div>
-                                    <button className='button-reject' onClick={handleLeaveGroup}>Leave Group</button>
+                                    <button className='button-reject' onClick={() => {
+                                        if (window.confirm('Are you sure leave your StyleShare group?')) {
+                                            handleLeaveGroup
+                                        }
+                                    }}>Leave Group</button>
                                 </div>
                             </div>
                         </div>
