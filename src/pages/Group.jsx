@@ -150,13 +150,13 @@ export default function Group() {
                                         </div>
                                     )}
                                 </div>
-                                <div>
+                                {/* <div>
                                     <button className='button-reject' onClick={() => {
-                                        if (window.confirm('Are you sure leave your StyleShare group?')) {
+                                         if (window.confirm('Are you sure leave your StyleShare group?')) {
                                             handleLeaveGroup
                                         }
                                     }}>Leave Group</button>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                         <div className="container-border page-tab">
