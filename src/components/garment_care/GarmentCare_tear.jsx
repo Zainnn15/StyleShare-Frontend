@@ -135,9 +135,12 @@ export default function GarmentTear() {
     formData.append('wearTear', JSON.stringify(wearTear));
     formData.append('repairRequest', JSON.stringify(repairRequest));
     formData.append('repairOther', repairOther);
+    formData.append('tearUser', user._id); //I suspect that this line will do the trick.....??
+    formData.append('userId', user._id) //maybe this one does it 
   
     const sampleTearInfo = {
       tearDate: tearDate,
+      tearUser: user._id,
       hasTear: true,
       wantRepair: wantRepair,
       colorFading: wearTear.colorFade,
