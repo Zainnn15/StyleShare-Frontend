@@ -69,6 +69,12 @@ const Garment_wash = ({ garment }) => {
                                             {originalOwner}
                                         </p>
                                     {/* ) : null} */}
+                                    {care.modifier? (
+                                        <p>
+                                            <label className="text-b">Wash Username:<label className="tab"></label></label>
+                                            {care.modifier}
+                                        </p>
+                                    ) : null}
                                     <p>
                                         <label className="text-b">Wash Method:<label className="tab"></label></label>
                                         {washMethod && care.careWash.Method !== "noWash" && (

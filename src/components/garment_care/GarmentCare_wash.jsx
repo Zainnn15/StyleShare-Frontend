@@ -15,6 +15,7 @@ export default function GarmentWash() {
     const { user, loading: userLoading } = useContext(UserContext);
     const [setProfile] = useState(null);
     const [garment, setGarment] = useState(null); 
+    const [modifier, setModifier] = useState(''); //Add a new field
     const [garmentList, setGarmentList] = useState([]);
     const [washDate, setWashDate] = useState('');
     const [careWash, setCareWash] = useState({
@@ -83,6 +84,7 @@ export default function GarmentWash() {
         setIsSubmitting(true);
       
         const washCareInstructions = {
+          modifier,
           washDate,
           careWash,
           careDry,
@@ -155,7 +157,24 @@ export default function GarmentWash() {
                             </select>
                         </div>
                         <br/>
-                        <div id={"washDate_error"} style={{textAlign:"center"}}></div>
+                        <div>
+                            <label className='text-b'>Username:</label> 
+                            <label className='tab'></label>
+                            <input 
+                            type='text' 
+                            id='modifier'
+                            name='modifier'
+                            placeholder='Username'
+                            value={modifier}
+                            onChange={(e) => {
+                                setModifier(e.target.value);
+                            }}
+                            style={{width: "250px"}}  // Set the default username 
+                            required
+                            />
+                        </div>
+                        <br />
+                    <div id={"washDate_error"} style={{textAlign:"center"}}></div>
                         <label className='text-b'>Care Date:</label>
                         <label className='tab'></label>
                         <input type='date' id='washDate' value={washDate} 

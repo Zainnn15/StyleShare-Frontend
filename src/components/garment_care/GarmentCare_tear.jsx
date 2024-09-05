@@ -33,6 +33,7 @@ export default function GarmentTear() {
   const [garment, setGarment] = useState(null)
   const [garmentList, setGarmentList] = useState([])
   const [tearDate, setTearDate] = useState('')
+  const [modifier, setModifier] = useState(''); //Add a new field
   const [wantRepair, setWantRepair] = useState(false)
   const [measures, setMeasures] = useState([])
   const [twistingImg, setTwistingImg] = useState(null)
@@ -131,6 +132,7 @@ export default function GarmentTear() {
     const formData = new FormData();
     formData.append('garmentId', garment._id);
     formData.append('tearDate', tearDate);
+    formData.append('modifier', modifier);
     formData.append('wantRepair', wantRepair.toString());
     formData.append('wearTear', JSON.stringify(wearTear));
     formData.append('repairRequest', JSON.stringify(repairRequest));
@@ -140,6 +142,7 @@ export default function GarmentTear() {
   
     const sampleTearInfo = {
       tearDate: tearDate,
+      modifier: modifier,
       tearUser: user._id,
       hasTear: true,
       wantRepair: wantRepair,
@@ -304,16 +307,32 @@ export default function GarmentTear() {
               </select>
             </div>
             <br />
-
+            <div>
+                <label className='text-b'>Username:</label> 
+                <label className='tab'></label>
+                <input 
+                type='text' 
+                id='modifier'
+                name='modifier'
+                placeholder='Username'
+                value={modifier}
+                onChange={(e) => {
+                    setModifier(e.target.value);
+                }}
+                style={{width: "250px"}}  // Set the default username 
+                required
+                />
+            </div>
+            <br />
             <label className="text-b">Date of Tear:</label>
-<label className="tab"></label>
-<input
-  type="date"
-  value={tearDate}
-  onChange={(e) => setTearDate(e.target.value)}
-  max={getTodayDate()} // Set the max attribute to today's date
-  required
-/>
+            <label className="tab"></label>
+            <input
+              type="date"
+              value={tearDate}
+              onChange={(e) => setTearDate(e.target.value)}
+              max={getTodayDate()} // Set the max attribute to today's date
+              required
+            />
           </div>
 
           <div>

@@ -58,8 +58,13 @@ const Garment_wear = ({ garment }) => {
                 </label>
                 {wear.wearTime}
               </p>
-
-              {/* {garment?.user?.name ? ( */}
+              {wear.modifier? (
+                <p>
+                  <label className="text-b">Wear Username:<label className="tab"></label></label>
+                  {wear.modifier}
+                </p>
+              ) : null}
+              {garment?.originalOwner? (
                 <p>
                   <label className="text-b">
                     Owner:<label className="tab"></label>
@@ -67,7 +72,7 @@ const Garment_wear = ({ garment }) => {
                   {/* {garment.user.name} */}
                   {originalOwner}
                 </p>
-              {/* ) : null} */}
+               ) : null} 
             </div>
             <div>
               <p>

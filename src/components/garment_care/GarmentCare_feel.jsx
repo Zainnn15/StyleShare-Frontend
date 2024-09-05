@@ -15,7 +15,8 @@ export default function GarmentFeel() {
     const { user, loading: userLoading } = useContext(UserContext);
     const [setProfile] = useState(null);
     const [garment, setGarment] = useState(null); 
-    const [garmentList, setGarmentList] = useState([]);
+    const [garmentList, setGarmentList] = useState([]); 
+    const [modifier, setModifier] = useState(''); //Add a new field
     const [feelDate, setFeelDate] = useState('');
     const [feelComfyExp, setFeelComfyExp] = useState('');
     const [feelHasComment, setFeelHasComment] = useState('');
@@ -65,6 +66,7 @@ export default function GarmentFeel() {
             userId: user._id,
             garmentId: garment._id,
             garmentFeels: [{
+                modifier,
                 feelDate,
                 feelComfyExp,
                 feelHasComment,
@@ -99,6 +101,10 @@ export default function GarmentFeel() {
       let querySelect = "input[type='text'],input[type='date'],input[type='radio']:checked";
       if (!validatePage(querySelect)) {
           return false;
+      }
+
+      if (modifier === '') {
+         return false;
       }
 
       if (feelComfyExp === '') {
@@ -160,12 +166,28 @@ export default function GarmentFeel() {
                         <option key={"garmentOpt_" + index} value={index}>
                         {garmentOpt.garmentDescription} ({formatDate(garmentOpt.purchaseDate)})
                     </option>
-                    
                     ))}
                   </select>
               </div>
+              <br />
+              <div>
+                <label className='text-b'>Username:</label> 
+                <label className='tab'></label>
+                <input 
+                type='text' 
+                id='modifier'
+                name='modifier'
+                placeholder='Username'
+                value={modifier}
+                onChange={(e) => {
+                    setModifier(e.target.value);
+                }}
+                style={{width: "250px"}}  // Set the default username 
+                required
+                />
+              </div>
+              
               <br/>
-
               <div id={"dateWorn_error"} style={{textAlign:"center"}}></div>
               <label className='text-b'>Date worn:</label>
                 <label className='tab'></label>

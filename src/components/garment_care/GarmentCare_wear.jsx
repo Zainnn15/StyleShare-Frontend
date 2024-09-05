@@ -16,6 +16,7 @@ export default function GarmentWear() {
   const { user, loading: userLoading } = useContext(UserContext)
   const [garment, setGarment] = useState(null)
   const [garmentList, setGarmentList] = useState([])
+  const [modifier, setModifier] = useState(''); //Add a new field
   const [wearDate, setWearDate] = useState('')
   const [wearTime, setWearTime] = useState('')
   const [wearFront, setWearFront] = useState('')
@@ -43,6 +44,7 @@ export default function GarmentWear() {
 
   const sendGarmentDetails = async () => {
     const formData = new FormData()
+    formData.append('modifier', modifier)
     formData.append('wearDate', wearDate)
     formData.append('wearTime', wearTime)
     formData.append('userId', user._id)
@@ -55,6 +57,7 @@ export default function GarmentWear() {
     }
 
     const sampleWearInfo = {
+      modifier,
       wearDate,
       wearTime,
       wearFront: wearFront ? URL.createObjectURL(wearFront) : null,
@@ -130,6 +133,23 @@ export default function GarmentWear() {
                </option>
                 ))}
               </select>
+            </div>
+            <br />
+            <div>
+                <label className='text-b'>Username:</label> 
+                <label className='tab'></label>
+                <input 
+                type='text' 
+                id='modifier'
+                name='modifier'
+                placeholder='Username'
+                value={modifier}
+                onChange={(e) => {
+                    setModifier(e.target.value);
+                }}
+                style={{width: "250px"}}  // Set the default username 
+                required
+                />
             </div>
             <br />
 

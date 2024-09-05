@@ -51,13 +51,19 @@ const GarmentFeel = ({ garment }) => {
                 <label className="text-b">Wear experience:<label className="tab"></label></label>
                 {feel.feelComfyExp}
               </p>
-              {garment?.originalOwner ? (
+              <p>
+                <label className="text-b">Feel Username:<label className="tab"></label></label>
+                {feel.modifier}
+              </p> 
+              {/* Add the new username */}
+              {garment?.originalOwner? (
                   <p>
                       <label className='text-b'>Owner:<label className='tab'></label></label>
                       {/* {garment.user.name} */}
                       {originalOwner}
                   </p>
-               ) : null} 
+               ) : null}
+               
             </div>
 
             <div>

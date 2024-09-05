@@ -56,14 +56,22 @@ const GarmentTear = ({ garment }) => {
                 <p className='container-subtitle-2'>Tears</p>
               </div>
               <div className="container-grid-3-md gap container-border clear-box">
-                {/* {garment?.user?.name ? ( */}
+                {garment?.originalOwner? (
                   <p>
                       <label className='text-b'>Owner:<label className='tab'></label></label>
                       {/* {garment.user.name} */}
                         {originalOwner}
                   </p>
-                  {/* ) : null} */}
-                {tear.colorFading === 1 && (
+                 ) : null} 
+                {tear.modifier?  (
+                <div>  
+                  <p>
+                    <label className="text-b">Tear Username:<label className="tab"></label></label>
+                    {tear.modifier}
+                  </p>
+                </div>
+                ) : null}
+                {tear.colorFading? (
                   <div>
                     <p>
                       <label className="text-b text-u">Color Fading</label>
@@ -74,7 +82,7 @@ const GarmentTear = ({ garment }) => {
                       <label>{tear.tearExtra.colorLost}%</label>
                     </p>
                   </div>
-                )}
+                ) : null}
 
                 {tear.pillingArea && (
                   <div>
@@ -139,7 +147,7 @@ const GarmentTear = ({ garment }) => {
                   </div>
                 )}
 
-                {tear.tearExtra?.washShrinkMeasurements && Array.isArray(tear.tearExtra.washShrinkMeasurements) && (
+                {/* {tear.tearExtra?.washShrinkMeasurements && Array.isArray(tear.tearExtra.washShrinkMeasurements) && (
                   <div>
                     <p>
                       <label className="text-b text-u">Shrink from Wash</label>
@@ -150,6 +158,25 @@ const GarmentTear = ({ garment }) => {
                           <label className="tab"></label>
                           <label className="text-b">{findAttribute(measurementTypes, measure.measureType)}:<label className="tab"></label></label>
                           <label>{measure.value} {measure.unit}</label>
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : null} */}
+                {tear?.tearExtra?.washShrinkMeasurements?.length > 0 && (
+                  <div>
+                    <p>
+                      <label className="text-b text-u">Shrink from Wash</label>
+                    </p>
+                    {tear.tearExtra.washShrinkMeasurements.map((measure) => (
+                      <div key={"shrink_" + measure.measureType}>
+                        <p>
+                          <label className="tab"></label>
+                          <label className="text-b">
+                            {findAttribute(measurementTypes, measure.measureType)}:
+                            <label className="tab"></label>
+                          </label>
+                          <label>{measure.value ?? 'N/A'} {measure.unit ?? ''}</label>
                         </p>
                       </div>
                     ))}
