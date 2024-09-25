@@ -239,27 +239,23 @@ export default function Group() {
                                             <h3>Group Chat</h3>
                                             <hr/>
                                             <div className="container-chat-history">
-                                                {chatHistory.map((msg, index) => (
-                                                    <div key={index} className="container-chat-message">
-                                                        <div className={
-                                                            (msg.user.username === user.username ? 'container-chat-message-group user' : 
-                                                                'container-chat-message-group')
-                                                            }
-                                                        >
-                                                            <div className="container-chat-message-header">
-                                                                <span className="username text-b">{msg.user.username}</span>
-                                                                <label className='tab'></label>
-                                                                <small>
-                                                                    <span className="timestamp">{new Date(msg.createdAt).toLocaleString()}</span>
-                                                                </small>
-                                                            </div>
-                                                            <div className="message-content">{msg.message}</div>
-                                                        </div>
-                                                        <div id='div_to_scroll'>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
+    {chatHistory.map((msg, index) => (
+        <div key={index} className="container-chat-message">
+            <div className={msg.user?.username === user.username ? 'container-chat-message-group user' : 'container-chat-message-group'}>
+                <div className="container-chat-message-header">
+                    <span className="username text-b">{msg.user?.username || 'Unknown User'}</span>
+                    <label className='tab'></label>
+                    <small>
+                        <span className="timestamp">{new Date(msg.createdAt).toLocaleString()}</span>
+                    </small>
+                </div>
+                <div className="message-content">{msg.message}</div>
+            </div>
+            <div id='div_to_scroll'></div>
+        </div>
+    ))}
+</div>
+
                                             <br/>
                                             <form onSubmit={handleSendChat}>
                                                 <div className='container-chat-input'>

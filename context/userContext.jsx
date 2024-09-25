@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 // UserContext.js
-// UserContext.js
 import { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -17,7 +16,7 @@ export const UserContextProvider = ({ children }) => {
         const response = await axios.get('/checkSession', { withCredentials: true });
         // Assuming the backend directly returns the user object if the session is valid
         if (response.data) {
-          setUser(response.data); // Adjust according to your response structure
+          setUser(response.data); // This should now include user.isAdmin if present
         }
       } catch (error) {
         console.error('Session check failed:', error);

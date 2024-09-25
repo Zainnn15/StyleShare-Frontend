@@ -172,19 +172,17 @@ export default function GarmentFeel() {
               <br />
               <div>
                 <label className='text-b'>Username:</label> 
-                <label className='tab'></label>
-                <input 
-                type='text' 
+                <input
+                type='text'
                 id='modifier'
                 name='modifier'
                 placeholder='Username'
-                value={modifier}
-                onChange={(e) => {
-                    setModifier(e.target.value);
-                }}
-                style={{width: "250px"}}  // Set the default username 
+                value={user?.username || ''} // Automatically fill with logged-in user's username
+                readOnly // Make the field read-only
+                style={{ width: "250px" }}
                 required
                 />
+
               </div>
               
               <br/>

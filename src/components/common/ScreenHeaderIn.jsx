@@ -3,22 +3,20 @@
 import '../../styles/main.scss';
 import { Link } from "react-router-dom";
 import { useContext } from 'react';
-//import { GarmentContext } from "../../../context/garmentContext.jsx";
 import { UserContext } from "../../../context/userContext.jsx";
 import logo from '../../assets/images/thumbnail_Style Share White.png';
 import menu from '../../assets/icons/menu.png';
 import profile from '../../assets/images/profile_default.jpg';
 import { useNavigate } from 'react-router-dom';
-
 import CircleBtn from "./CircleBtn.jsx";
 import { getImageFromURL } from '../../constants/functions/valueHandlers.jsx';
 
-const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
+const ScreenHeader = ({ isLogin = true, linkName = "Login" }) => {
     const navigate = useNavigate();
     const { setUser, user } = useContext(UserContext);
-    //const {garment} = useContext(GarmentContext);
-      // logout function
-      const handleLogout = async () => {
+
+    // logout function
+    const handleLogout = async () => {
         try {
             await fetch(`${import.meta.env.VITE_API_URL}/logout`, {
                 method: 'GET',
@@ -37,17 +35,16 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
 
     function openProfileDropdown() {
         let e_dropdown = document.getElementById("profile_dropdown");
-        if(!e_dropdown) {
+        if (!e_dropdown) {
             return;
         }
 
-        if(e_dropdown.classList.contains("pop-active")) {
+        if (e_dropdown.classList.contains("pop-active")) {
             e_dropdown.classList.toggle("pop-active", false);
-        }
-        else {
-            //close other menus
+        } else {
+            // Close other menus
             const menus = document.querySelectorAll(".pop-active");
-            for(let menu of menus) {
+            for (let menu of menus) {
                 menu.classList.toggle("pop-active", false);
             }
             e_dropdown.classList.toggle("pop-active", true);
@@ -56,54 +53,53 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
 
     function openMenuDropdown() {
         let e_dropdown = document.getElementById("menu_dropdown");
-        if(!e_dropdown) {
+        if (!e_dropdown) {
             return;
         }
 
-        if(e_dropdown.classList.contains("pop-active")) {
+        if (e_dropdown.classList.contains("pop-active")) {
             e_dropdown.classList.toggle("pop-active", false);
-        }
-        else {
-            //close other menus
+        } else {
+            // Close other menus
             const menus = document.querySelectorAll(".pop-active");
-            for(let menu of menus) {
+            for (let menu of menus) {
                 menu.classList.toggle("pop-active", false);
             }
             e_dropdown.classList.toggle("pop-active", true);
         }
     }
 
-    window.addEventListener('click', ({target}) => {
+    window.addEventListener('click', ({ target }) => {
         const popup = target.closest('.popup');
 
-        if(popup == null) {
+        if (popup == null) {
             let menus = document.querySelectorAll(".pop-active");
-            for(let menu of menus) {
+            for (let menu of menus) {
                 menu.classList.toggle("pop-active", false);
             }
         }
     });
 
-    return(
+    return (
         <div>
             <div className="container-header">
                 <div className="container-row">
                     <Link className="container-header-button" to="/dashboard">
-                        <CircleBtn iconUrl={logo} className={"button-header"}  width={"250px"} height={"250px"}/>
+                        <CircleBtn iconUrl={logo} className={"button-header"} width={"250px"} height={"250px"} />
                     </Link>
-                    {  
+                    {
                         isLogin &&
                         <div className="container-header-button popup">
-                        <CircleBtn iconUrl={menu} className={"button-header"} width={"30px"} height={"30px"} 
-                            handlePress={openMenuDropdown}
-                        />
+                            <CircleBtn iconUrl={menu} className={"button-header"} width={"30px"} height={"30px"}
+                                handlePress={openMenuDropdown}
+                            />
                         </div>
                     }
                 </div>
                 {
                     isLogin &&
                     <div className="container-header-button popup">
-                        <CircleBtn iconUrl={user && user.profilePicture ? getImageFromURL(user.profilePicture) : profile} 
+                        <CircleBtn iconUrl={user && user.profilePicture ? getImageFromURL(user.profilePicture) : profile}
                             className={"button-header"} width={"30px"} height={"30px"}
                             handlePress={openProfileDropdown}
                         />
@@ -136,6 +132,10 @@ const ScreenHeader = ({isLogin=true, linkName="Login"}) => {
                             <Link to="/garment-care">Garment Wear, Feel, Care and Tear</Link>
                             <Link to="/garment-exchange">Exchange Garment</Link>
                             <Link to='/help'>Help & Support</Link>
+                            {/* Admin link, visible only to admins */}
+                            {user && user.isAdmin && (
+                                <Link to="/admin">Admin</Link>
+                            )}
                         </div>
                     </div>
                 )

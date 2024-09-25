@@ -24,6 +24,7 @@ import GarmentExchange from "./pages/GarmentPages/GarmentExchange"
 import ForgetPassword from "./pages/ForgetPassword"
 import ResetPassword from "./pages/ResetPassword"
 import Help from "./pages/Help"
+import Admin from "./pages/Admin"
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL
 axios.defaults.withCredentials = true
@@ -53,6 +54,7 @@ function App() {
             <Route path="/forgetPassword" element={<ForgetPassword />} />
             <Route path="/resetPassword/:token" element={<ResetPassword />} />
             <Route path="/help" element={<Help />} />
+            <Route path="/admin" element={<Admin />} />
           </Routes>
         </GroupContextProvider>
       </GarmentContextProvider>

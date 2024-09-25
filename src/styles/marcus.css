@@ -1,87 +1,270 @@
-.mb-sm {
-  margin-bottom: 15px;
-}
-.mt-sm {
-  margin-top: 15px;
-}
-
-
-/* Base styles for the video container */
-.video-container {
-  margin-left: 130px;
-  overflow: hidden;
-  position: relative;
-  height: 0;
+/* Add base container styles to ensure uniformity */
+.container {
+  max-width: 1200px;
+  margin: 0 auto; /* Centers the container */
+  padding: 20px; /* Adds padding inside the container */
   display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Update the main container to be consistent */
+.container.main {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+/* Admin-specific styles */
+.container.admin-page {
+  padding-top: 20px;
+}
+
+/* Video container styles */
+.video-container {
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  max-width: 853px; /* Restrict max width */
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
 }
 
 /* Responsive styles for different screen sizes */
 @media (min-width: 1201px) {
   .video-container {
-    width: 853px;
-    padding-bottom: 0;
-    height: 480px;
-  }
-
-  .video-responsive iframe {
-    width: 853px;
     height: 480px;
   }
 }
 
 @media (max-width: 1200px) {
   .video-container {
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
     padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-    height: 0;
-  }
-
-  .video-responsive iframe {
-    width: 100%;
-    height: 100%;
   }
 }
 
 @media (max-width: 768px) {
   .video-container {
     margin-top: 30px;
-    height: 100%;
+    height: auto; /* Adjust height */
   }
 }
 
 @media (max-width: 480px) {
   .video-container {
     margin-top: 20px;
-    height: 100%;
   }
 }
 
-.video-responsive iframe {
-  left: 0;
-  top: 0;
-  position: absolute;
-}
-
+/* Button styles */
+.button-regular,
 .button-delete {
-  background-color: #dc3545;
+  background-color: #dc3545; /* Default color for delete button */
   border: none;
   color: white;
-  padding: 4px;
+  padding: 10px 20px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 12px;
+  font-size: 14px;
   cursor: pointer;
   border-radius: 4px;
   transition: background-color 0.3s ease;
-  margin-left: 12px;
-  margin-bottom: 5px;
+  margin: 10px 0;
+}
+
+.button-regular {
+  background-color: #6c757d; /* Adjust color for regular button */
+}
+
+.button-regular:hover,
+.button-delete:hover {
+  background-color: #5a6268; /* Adjust hover color */
 }
 
 .button-delete img {
   height: 15px;
+}
+
+/* Ensure uniform margins */
+.mb-sm {
+  margin-bottom: 15px;
+}
+.mt-sm {
+  margin-top: 15px;
+}
+/* Container for the admin page */
+.container.admin-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Use min-height instead of height for flexibility */
+  padding: 20px;
+  background-color: #f8ecec; /* Soft background color */
+}
+
+/* Content wrapper to control max width and centering */
+.admin-content {
+  width: 100%;
+  max-width: 600px; /* Control max width for better readability */
+  text-align: center; /* Center-align text */
+  padding: 30px;
+  background-color: #ffffff; /* Card background color */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  border-radius: 12px; /* Rounded corners */
+  margin-top: 20px; /* Space from top */
+}
+
+
+.container-title {
+  margin-bottom: 20px;
+  font-size: 2.5rem; /* Larger font for emphasis */
+  color: #a05252; /* Matching theme color */
+  font-weight: bold; /* Bold font for better visibility */
+}
+
+/* Styling for the card section */
+.container-card.admin-card {
+  background-color: #ffffff; /* Card background */
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Softer shadow */
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center; /* Center-align text within the card */
+}
+
+/* Subtitle styling */
+.container-subtitle {
+  margin-bottom: 15px;
+  font-size: 1.8rem; /* Slightly larger subtitle */
+  color: #a05252; /* Matching theme color */
+  font-weight: 600; /* Semi-bold for visibility */
+}
+
+/* Button styling */
+.admin-button {
+  background-color: #a05252; /* Primary color for button */
+  color: white;
+  padding: 12px 24px; /* Larger padding for better touch targets */
+  border: none;
+  border-radius: 6px; /* Rounded corners */
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth transition */
+  margin-top: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.admin-button:hover {
+  background-color: #8e3c3c; /* Darker shade for hover effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Elevated shadow on hover */
+}
+
+.admin-button:disabled {
+  background-color: #cccccc; /* Greyed-out color for disabled state */
+  cursor: not-allowed;
+  box-shadow: none; /* Remove shadow for disabled button */
+}
+
+/* Dropdown styling */
+.dropdown-container {
+  margin-bottom: 1rem;
+}
+
+.group-dropdown {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #f8f8f8;
+}
+
+/* Exchange card styling */
+.exchange-requests {
+  margin-top: 1rem;
+}
+
+.exchange-card {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  border-left: 5px solid #4a90e2;
+}
+
+.exchange-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.exchange-body {
+  padding-left: 0.5rem;
+}
+
+.exchange-field {
+  margin-bottom: 0.75rem;
+}
+
+.exchange-status {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.exchange-status.confirmed {
+  color: green;
+}
+
+.exchange-status.pending {
+  color: orange;
+}
+
+.exchange-status.rejected {
+  color: red;
+}
+
+/* Overall container adjustments */
+.admin-card {
+  padding: 1rem;
+}
+
+.container-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.container-subtitle {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+/* Box for Wear Details */
+.wear-details-box {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  width: 100%;
+  max-width: 600px;
+  text-align: left;
+}
+
+.wear-entry {
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.total-wear-time {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #a05252;
 }

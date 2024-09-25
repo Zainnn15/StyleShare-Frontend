@@ -1,63 +1,60 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState, useContext } from 'react'
-import '../../styles/main.scss'
-import { toast } from 'react-hot-toast'
-import ScreenHeaderIn from '../../components/common/ScreenHeaderIn'
-import InfoPopup from '../../components/common/InfoPopup'
-import axios from 'axios'
-import { UserContext } from '../../../context/userContext'
-import { useNavigate } from 'react-router-dom'
-import { clickID } from '../../constants/functions/inputHandlers'
-import selectImg from '../../assets/icons/select_img.png'
-import { formatDate } from '../../constants/functions/valueHandlers'
+import { useEffect, useState, useContext } from 'react';
+import '../../styles/main.scss';
+import { toast } from 'react-hot-toast';
+import ScreenHeaderIn from '../../components/common/ScreenHeaderIn';
+import InfoPopup from '../../components/common/InfoPopup';
+import axios from 'axios';
+import { UserContext } from '../../../context/userContext';
+import { useNavigate } from 'react-router-dom';
+import { clickID } from '../../constants/functions/inputHandlers';
+import selectImg from '../../assets/icons/select_img.png';
+import { formatDate } from '../../constants/functions/valueHandlers';
 
 export default function GarmentWear() {
-  const navigate = useNavigate()
-  const { user, loading: userLoading } = useContext(UserContext)
-  const [garment, setGarment] = useState(null)
-  const [garmentList, setGarmentList] = useState([])
-  const [modifier, setModifier] = useState(''); //Add a new field
-  const [wearDate, setWearDate] = useState('')
-  const [wearTime, setWearTime] = useState('')
-  const [wearFront, setWearFront] = useState('')
-  const [wearBack, setWearBack] = useState('')
+  const navigate = useNavigate();
+  const { user, loading: userLoading } = useContext(UserContext); // Access the logged-in user from the context
+  const [garment, setGarment] = useState(null);
+  const [garmentList, setGarmentList] = useState([]);
+  const [wearDate, setWearDate] = useState('');
+  const [wearTime, setWearTime] = useState('');
+  const [wearFront, setWearFront] = useState('');
+  const [wearBack, setWearBack] = useState('');
 
   useEffect(() => {
     if (!userLoading && user && user._id) {
       axios
         .get(`/getGarmentDetails/${user._id}`, { withCredentials: true })
         .then((response) => {
-          const garmentData = response.data
+          const garmentData = response.data;
           if (Array.isArray(garmentData) && garmentData.length > 0) {
-            setGarmentList(garmentData)
-            setGarment(garmentData[0])
+            setGarmentList(garmentData);
+            setGarment(garmentData[0]);
           } else {
-            setGarmentList([garmentData])
-            setGarment(garmentData)
+            setGarmentList([garmentData]);
+            setGarment(garmentData);
           }
         })
-        .catch((error) =>
-          console.error('Error fetching garment details:', error),
-        )
+        .catch((error) => console.error('Error fetching garment details:', error));
     }
-  }, [user, userLoading])
+  }, [user, userLoading]);
 
   const sendGarmentDetails = async () => {
-    const formData = new FormData()
-    formData.append('modifier', modifier)
-    formData.append('wearDate', wearDate)
-    formData.append('wearTime', wearTime)
-    formData.append('userId', user._id)
-    formData.append('garmentId', garment._id)
+    const formData = new FormData();
+    formData.append('modifier', user.username); // Use logged-in user's username as the modifier
+    formData.append('wearDate', wearDate);
+    formData.append('wearTime', wearTime);
+    formData.append('userId', user._id);
+    formData.append('garmentId', garment._id);
     if (wearFront && wearFront instanceof File) {
-      formData.append('wearFront', wearFront)
+      formData.append('wearFront', wearFront);
     }
     if (wearBack && wearBack instanceof File) {
-      formData.append('wearBack', wearBack)
+      formData.append('wearBack', wearBack);
     }
 
     const sampleWearInfo = {
-      modifier,
+      modifier: user.username, // Use logged-in user's username
       wearDate,
       wearTime,
       wearFront: wearFront ? URL.createObjectURL(wearFront) : null,
@@ -69,37 +66,37 @@ export default function GarmentWear() {
     try {
       const response = await axios.post('/updateGarmentDetails', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
-      })
+      });
 
       if (response.data && response.data.garmentDetail) {
-        toast.success('Garment Wear details updated successfully')
-        setGarment(response.data.garmentDetail)
-        navigate('/garment-care')
+        toast.success('Garment Wear details updated successfully');
+        setGarment(response.data.garmentDetail);
+        navigate('/garment-care');
       } else {
-        throw new Error('Unexpected response format or error')
+        throw new Error('Unexpected response format or error');
       }
     } catch (error) {
-      console.error('Error sending garment wear details:', error)
-      toast.error('Failed to send garment wear details.')
+      console.error('Error sending garment wear details:', error);
+      toast.error('Failed to send garment wear details.');
     }
-  }
+  };
 
   const validateAndSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!wearDate || !wearTime || !wearFront || !wearBack) {
-      toast.error('Please fill in all fields correctly.')
-      return
+      toast.error('Please fill in all fields correctly.');
+      return;
     }
-    sendGarmentDetails()
-  }
+    sendGarmentDetails();
+  };
 
   const getMaxDate = () => {
-    const today = new Date()
-    const yyyy = today.getFullYear()
-    const mm = String(today.getMonth() + 1).padStart(2, '0')
-    const dd = String(today.getDate()).padStart(2, '0')
-    return `${yyyy}-${mm}-${dd}`
-  }
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  };
 
   return (
     <div>
@@ -115,10 +112,10 @@ export default function GarmentWear() {
               <p className="container-subtitle-2">Selected Garment</p>
               <select
                 onChange={(e) => {
-                  const index = parseInt(e.target.value, 10)
+                  const index = parseInt(e.target.value, 10);
                   if (index >= 0 && index < garmentList.length) {
-                    const selectedGarment = garmentList[index]
-                    setGarment(selectedGarment) // Updates the state with the selected garment
+                    const selectedGarment = garmentList[index];
+                    setGarment(selectedGarment); // Updates the state with the selected garment
                   }
                 }}
                 value={
@@ -128,28 +125,26 @@ export default function GarmentWear() {
                 }
               >
                 {garmentList.map((garmentOpt, index) => (
-                   <option key={"garmentOpt_" + index} value={index}>
-                   {garmentOpt.garmentDescription} ({formatDate(garmentOpt.purchaseDate)})
-               </option>
+                  <option key={"garmentOpt_" + index} value={index}>
+                    {garmentOpt.garmentDescription} ({formatDate(garmentOpt.purchaseDate)})
+                  </option>
                 ))}
               </select>
             </div>
             <br />
             <div>
-                <label className='text-b'>Username:</label> 
-                <label className='tab'></label>
-                <input 
-                type='text' 
+              <label className='text-b'>Username:</label>
+              <label className='tab'></label>
+              <input
+                type='text'
                 id='modifier'
                 name='modifier'
                 placeholder='Username'
-                value={modifier}
-                onChange={(e) => {
-                    setModifier(e.target.value);
-                }}
-                style={{width: "250px"}}  // Set the default username 
+                value={user?.username || ''} // Automatically fill with logged-in user's username
+                readOnly // Make the field read-only
+                style={{ width: "250px" }}
                 required
-                />
+              />
             </div>
             <br />
 
@@ -247,7 +242,6 @@ export default function GarmentWear() {
               </div>
             </div>
           </div>
-
           <br />
           <div className="container-input">
             <button className="button-form full" type="submit">
@@ -261,5 +255,7 @@ export default function GarmentWear() {
         </form>
       </div>
     </div>
-  )
+  );
 }
+
+         
