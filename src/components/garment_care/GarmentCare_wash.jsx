@@ -165,7 +165,7 @@ export default function GarmentWash() {
                             id='modifier'
                             name='modifier'
                             placeholder='Username'
-                            value={modifier}
+                            value={user?.username || ''} // Automatically fill with logged-in user's username
                             onChange={(e) => {
                                 setModifier(e.target.value);
                             }}

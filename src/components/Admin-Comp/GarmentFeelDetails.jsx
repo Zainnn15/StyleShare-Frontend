@@ -9,7 +9,7 @@ const GarmentFeelDetails = ({ garmentId, groupId }) => {
     const fetchGarmentFeelDetails = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:8000/garment-feel/${garmentId}/group/${groupId}`, {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/garment-feel/${garmentId}/group/${groupId}`, {
           withCredentials: true,
         });
         setFeelData(response.data);

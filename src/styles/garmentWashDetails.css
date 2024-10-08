@@ -1,0 +1,39 @@
+.wash-details-container {
+    padding: 20px;
+    margin: 0 auto;
+    width: 90%;
+    max-width: 1200px;
+  }
+  
+  .wash-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #4a90e2;
+  }
+  
+  .wash-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+  }
+  
+  .wash-table th, .wash-table td {
+    padding: 12px 8px;
+    text-align: left;
+    border: 1px solid #ccc;
+    vertical-align: middle;
+  }
+  
+  .wash-table th {
+    background-color: #f4f4f4;
+    color: #333;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .no-data {
+    color: #c94b4b;
+  }
+  

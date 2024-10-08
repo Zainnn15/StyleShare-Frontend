@@ -9,14 +9,12 @@ import { useNavigate } from "react-router-dom";
 import { addErrorMessageByID, scrollToID, selectID, validate, validatePage } from '../../constants/functions/inputHandlers';
 import { formatDate } from '../../constants/functions/valueHandlers';
 
-
 export default function GarmentFeel() {
     const navigate = useNavigate();
     const { user, loading: userLoading } = useContext(UserContext);
-    const [setProfile] = useState(null);
     const [garment, setGarment] = useState(null); 
     const [garmentList, setGarmentList] = useState([]); 
-    const [modifier, setModifier] = useState(''); //Add a new field
+    const [modifier, setModifier] = useState(''); 
     const [feelDate, setFeelDate] = useState('');
     const [feelComfyExp, setFeelComfyExp] = useState('');
     const [feelHasComment, setFeelHasComment] = useState('');
@@ -29,44 +27,37 @@ export default function GarmentFeel() {
 
     useEffect(() => {
         if (!userLoading && user && user._id) {
-          axios.get('/profile', { withCredentials: true })
-          .then((response) => {
-            const data = response.data;
-            setProfile(data);
-          })
-          .catch((error) => console.error('Error fetching user profile:', error));
-      
-          axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true })
-        .then((response) => {
-          const garmentData = response.data;
-          if(Array.isArray(garmentData) && garmentData.length > 0) {
-            setGarmentList(garmentData);
-            setGarment(garmentData[0]);
-            return garmentData[0];
-          }
-          else {
-            setGarmentList([...garmentData]);
-            setGarment(garmentData);
-            return garmentData;
-          }
-        })
-        .catch((error) => console.error('Error fetching garment details:', error));
-        }
-      }, [user, userLoading]);
+          // Set the modifier to the user's username
+          setModifier(user.username); // Automatically set the modifier
 
-      if (userLoading) {
+          axios.get(`/getGarmentDetails/${user._id}`, { withCredentials: true })
+            .then((response) => {
+              const garmentData = response.data;
+              if(Array.isArray(garmentData) && garmentData.length > 0) {
+                setGarmentList(garmentData);
+                setGarment(garmentData[0]);
+              } else {
+                setGarmentList([...garmentData]);
+                setGarment(garmentData);
+              }
+            })
+            .catch((error) => console.error('Error fetching garment details:', error));
+        }
+    }, [user, userLoading]);
+
+    if (userLoading) {
         return <div>Loading...</div>;
-      }
-      if (!user) {
+    }
+    if (!user) {
         return <div>No user data available.</div>;
-      }
+    }
 
     const sendGarmentDetails = async () => {
         const garmentFeelData = {
             userId: user._id,
             garmentId: garment._id,
             garmentFeels: [{
-                modifier,
+                modifier, // Use the modifier from state
                 feelDate,
                 feelComfyExp,
                 feelHasComment,
@@ -84,6 +75,7 @@ export default function GarmentFeel() {
                 headers: { 'Content-Type': 'application/json' },
                 withCredentials: true
             });
+
             if (response.data.success || response.status === 200) {
                 toast.success('Garment Feel saved successfully!');
                 navigate('/garment-care');
@@ -96,45 +88,48 @@ export default function GarmentFeel() {
         }
     };
     
-    function validateAndSubmit(e) {
-      e.preventDefault();
-      let querySelect = "input[type='text'],input[type='date'],input[type='radio']:checked";
-      if (!validatePage(querySelect)) {
-          return false;
-      }
+    const validateAndSubmit = (e) => {
+        e.preventDefault(); // Prevents the form from doing a traditional refresh
+      
+        // Check if the form fields are valid before proceeding
+        let querySelect = "input[type='text'],input[type='date'],input[type='radio']:checked";
+        if (!validatePage(querySelect)) {
+            return false; // Stop execution if validation fails
+        }
+      
+        if (modifier === '') {
+           return false; // Stop execution if modifier is empty
+        }
+      
+        // Check for the presence of required fields
+        if (feelComfyExp === '') {
+            addErrorMessageByID("feelComfyExp_error", "Select an option");
+            scrollToID("feelComfyExp_error");
+            return false;
+        }
+        if (feelHasComment === '') {
+            addErrorMessageByID("feelHasComment_error", "Select an option");
+            scrollToID("feelHasComment_error");
+            return false;
+        }
+        if (feelInOccasion === '') {
+            addErrorMessageByID("feelInOccasion_error", "Select an option");
+            scrollToID("feelInOccasion_error");
+            return false;
+        }
+        if (feelInOccasion === 'Yes' && feelOccasionExp === '') {
+            addErrorMessageByID("feelOccasionExp_error", "Select an option");
+            scrollToID("feelOccasionExp_error");
+            return false;
+        }
+        if (feelHasOccur === '') {
+            addErrorMessageByID("feelHasOccur_error", "Select an option");
+            scrollToID("feelHasOccur_error");
+            return false;
+        }
 
-      if (modifier === '') {
-         return false;
-      }
-
-      if (feelComfyExp === '') {
-          addErrorMessageByID("feelComfyExp_error", "Select an option");
-          scrollToID("feelComfyExp_error");
-          return false;
-      }
-      if (feelHasComment === '') {
-          addErrorMessageByID("feelHasComment_error", "Select an option");
-          scrollToID("feelHasComment_error");
-          return false;
-      }
-      if (feelInOccasion === '') {
-          addErrorMessageByID("feelInOccasion_error", "Select an option");
-          scrollToID("feelInOccasion_error");
-          return false;
-      }
-      if (feelInOccasion === 'Yes' && feelOccasionExp === '') {
-          addErrorMessageByID("feelOccasionExp_error", "Select an option");
-          scrollToID("feelOccasionExp_error");
-          return false;
-      }
-      if (feelHasOccur === '') {
-          addErrorMessageByID("feelHasOccur_error", "Select an option");
-          scrollToID("feelHasOccur_error");
-          return false;
-      }
-
-      sendGarmentDetails();
-    }
+        sendGarmentDetails(); // Proceed with sending the data
+    };
 
     const getTodayDate = () => {
         const today = new Date();
@@ -142,7 +137,7 @@ export default function GarmentFeel() {
         const mm = String(today.getMonth() + 1).padStart(2, '0');
         const dd = String(today.getDate()).padStart(2, '0');
         return `${yyyy}-${mm}-${dd}`;
-      };
+    };
 
     return (
     <div>
@@ -172,19 +167,18 @@ export default function GarmentFeel() {
               <br />
               <div>
                 <label className='text-b'>Username:</label> 
+                <label className='tab'></label>
                 <input
                 type='text'
                 id='modifier'
                 name='modifier'
                 placeholder='Username'
-                value={user?.username || ''} // Automatically fill with logged-in user's username
+                value={modifier} // Use the modifier state
                 readOnly // Make the field read-only
                 style={{ width: "250px" }}
                 required
                 />
-
               </div>
-              
               <br/>
               <div id={"dateWorn_error"} style={{textAlign:"center"}}></div>
               <label className='text-b'>Date worn:</label>
@@ -226,7 +220,7 @@ export default function GarmentFeel() {
                         <label htmlFor="feelComfyExp_1">Comfortable</label>
                     </div>
                     <div className="container-radio-group">
-                        <input type="radio" id="feelComfyExp_0" name="feelComfyExp"
+                        <input type="radio" id="feelComfyExp_0"
                             value={"Nothing special"} 
                             onClick={(e) => {
                                 setFeelComfyExp(e.target.value);
@@ -451,47 +445,49 @@ export default function GarmentFeel() {
                     </div>
                     <div className="container-radio-group">
                         <input type="radio" id="feelHasOccur_no" name="feelHasOccur"
-                            value={"No"} 
-                            onClick={(e) => {
-                                setFeelHasOccur(e.target.value);
-                                addErrorMessageByID("feelHasOccur_error", null);
-                            }}
-                        />
-                        <label htmlFor="feelHasOccur_no">No</label>
-                    </div>
-                </div>
-            </div>
+                                                       value={"No"} 
+                                                       onClick={(e) => {
+                                                           setFeelHasOccur(e.target.value);
+                                                           addErrorMessageByID("feelHasOccur_error", null);
+                                                       }}
+                                                   />
+                                                   <label htmlFor="feelHasOccur_no">No</label>
+                                               </div>
+                                           </div>
+                                       </div>
+                           
+                                       {
+                                       feelHasOccur === 'Yes' && (
+                                           <div>
+                                               <div className="container-prompt" onClick={()=>selectID("feelOccur")}>
+                                                   <p>Please share your occurrences or experiences when you were wearing the garment</p>
+                                               </div>
+                                               <div id={"feelOccur_error"} style={{textAlign:"center"}}></div>
+                                               <div className="container-input">
+                                                   <input type="text" name="feelOccur" id="feelOccur"
+                                                       placeholder="Enter the occurrence that happened while wearing the garment" 
+                                                       value={feelOccur} 
+                                                       onChange={(e) => {
+                                                           setFeelOccur(e.target.value);
+                                                           validate("feelOccur");
+                                                       }}
+                                                       required 
+                                                   />
+                                               </div>
+                                           </div>
+                                       )
+                                       }
+                           
+                                       <br/>
+                                       <div className='container-input'>
+                                           <button className="button-form full" type="submit">
+                                               Save
+                                           </button>
+                                       </div>
+                                   </form>
+                                   </div>      
+                               </div>
+                               );
+                           }
+                           
 
-            {
-            feelHasOccur === 'Yes' && (
-                <div>
-                    <div className="container-prompt" onClick={()=>selectID("feelOccur")}>
-                        <p>Please share your occurrences or experiences when you were wearing the garment</p>
-                    </div>
-                    <div id={"feelOccur_error"} style={{textAlign:"center"}}></div>
-                    <div className="container-input">
-                        <input type="text" name="feelOccur" id="feelOccur"
-                            placeholder="Enter the occurrence that happened while wearing the garment" 
-                            value={feelOccur} 
-                            onChange={(e) => {
-                                setFeelOccur(e.target.value);
-                                validate("feelOccur");
-                            }}
-                            required 
-                        />
-                    </div>
-                </div>
-            )
-            }
-
-            <br/>
-            <div className='container-input'>
-                <button className="button-form full" type="submit">
-                    Save
-                </button>
-            </div>
-        </form>
-        </div>      
-    </div>
-    );
-}

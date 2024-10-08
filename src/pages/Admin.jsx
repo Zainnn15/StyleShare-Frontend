@@ -3,7 +3,9 @@ import { UserContext } from "../../context/userContext.jsx";
 import axios from 'axios';
 import ScreenHeader from '../components/common/ScreenHeaderIn.jsx';
 import GarmentWearDetails from '../components/Admin-Comp/GarmentWearDetails.jsx';
-import GarmentFeelDetails from '../components/Admin-Comp/GarmentFeelDetails.jsx'; // New component for garment feel
+import GarmentFeelDetails from '../components/Admin-Comp/GarmentFeelDetails.jsx';
+import GarmentTearDetails from '../components/Admin-Comp/GarmentTearDetails.jsx';
+import GarmentWashDetails from '../components/Admin-Comp/GarmentWashDetails.jsx'; // New component for garment wash details
 import "../styles/marcus.css";
 
 const Admin = () => {
@@ -166,6 +168,18 @@ const Admin = () => {
                       >
                         Garment Feel Details
                       </button>
+                      <button
+                        className={`tab-button ${activeTab === 'garmentTear' ? 'active' : ''}`}
+                        onClick={() => handleTabChange('garmentTear')}
+                      >
+                        Garment Tear Details
+                      </button>
+                      <button
+                        className={`tab-button ${activeTab === 'garmentWash' ? 'active' : ''}`}
+                        onClick={() => handleTabChange('garmentWash')}
+                      >
+                        Garment Wash Details
+                      </button> {/* New tab for garment wash */}
                     </div>
 
                     <div className="tab-content">
@@ -244,10 +258,10 @@ const Admin = () => {
 
                           {garmentId && (
                             <div className="wear-details-container">
-                                                            <GarmentWearDetails 
-                                garmentId={garmentId} 
-                                groupId={selectedGroup} 
-                                onWearDetailsLoaded={handleWearDetailsLoaded} 
+                              <GarmentWearDetails
+                                garmentId={garmentId}
+                                groupId={selectedGroup}
+                                onWearDetailsLoaded={handleWearDetailsLoaded}
                               />
                               <div className="total-wear-time">
                                 <strong>Total Wear Time for Garment: </strong>
@@ -278,8 +292,66 @@ const Admin = () => {
 
                           {garmentId && (
                             <div className="feel-details-container">
-                              <GarmentFeelDetails 
-                                garmentId={garmentId} 
+                              <GarmentFeelDetails
+                                garmentId={garmentId}
+                                groupId={selectedGroup}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {activeTab === 'garmentTear' && (
+                        <div className="garment-tear-details">
+                          <h3>Garment Tear Details</h3>
+                          <label htmlFor="garment-select">Select Garment:</label>
+                          <select
+                            id="garment-select"
+                            className="garment-dropdown"
+                            value={garmentId}
+                            onChange={(e) => setGarmentId(e.target.value)}
+                          >
+                            <option value="">-- Select a garment --</option>
+                            {groupGarments.map(garment => (
+                              <option key={garment._id} value={garment._id}>
+                                {garment.garmentDescription || 'No Description'}
+                              </option>
+                            ))}
+                          </select>
+
+                          {garmentId && (
+                            <div className="tear-details-container">
+                              <GarmentTearDetails
+                                garmentId={garmentId}
+                                groupId={selectedGroup}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {activeTab === 'garmentWash' && (
+                        <div className="garment-wash-details">
+                          <h3>Garment Wash Details</h3>
+                          <label htmlFor="garment-select">Select Garment:</label>
+                          <select
+                            id="garment-select"
+                            className="garment-dropdown"
+                            value={garmentId}
+                            onChange={(e) => setGarmentId(e.target.value)}
+                          >
+                            <option value="">-- Select a garment --</option>
+                            {groupGarments.map(garment => (
+                              <option key={garment._id} value={garment._id}>
+                                {garment.garmentDescription || 'No Description'}
+                              </option>
+                            ))}
+                          </select>
+
+                          {garmentId && (
+                            <div className="wash-details-container">
+                              <GarmentWashDetails
+                                garmentId={garmentId}
                                 groupId={selectedGroup}
                               />
                             </div>
@@ -299,3 +371,4 @@ const Admin = () => {
 };
 
 export default Admin;
+
