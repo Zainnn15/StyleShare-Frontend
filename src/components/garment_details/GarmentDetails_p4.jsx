@@ -396,6 +396,7 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                                 max={100}
                                                 step={1}
                                                 required
+                                                style={{ width: "4em" }} // Add or adjust this line to increase the width
                                             />
                                             <label>%</label>
                                         </div>
@@ -492,6 +493,7 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                                             }
                                                         }}
                                                         required
+                                                        style={{ width: "4em" }} // Add or adjust this line to increase the width
                                                     />
                                                 </div>
 
@@ -515,6 +517,7 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                                             max={100}
                                                             step={1}
                                                             required
+                                                            style={{ width: "4em" }} // Add or adjust this line to increase the width
                                                         />
                                                         <label>%</label>
                                                     </div>
@@ -593,6 +596,7 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                                             }
                                                         }}
                                                         required
+                                                        
                                                     />
                                                     <input id={"padding_mat_" + index}
                                                         type="text"
@@ -614,6 +618,7 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                                             }
                                                         }}
                                                         required
+                                                        style={{ width: "4em" }} // Add or adjust this line to increase the width
                                                     />
                                                     
                                                 </div>
@@ -638,6 +643,7 @@ const GarmentDetails_p4 = ({ formData, setFormData, page, numPages, handleForwar
                                                             max={100}
                                                             step={1}
                                                             required
+                                                            style={{ width: "4em" }} // Add or adjust this line to increase the width
                                                         />
                                                         <label>%</label>
                                                     </div>
