@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useState, useContext } from 'react';
 import '../../styles/main.scss';
 import { toast } from 'react-hot-toast';
@@ -15,7 +16,7 @@ export default function GarmentWash() {
     const { user, loading: userLoading } = useContext(UserContext);
     const [setProfile] = useState(null);
     const [garment, setGarment] = useState(null); 
-    const [modifier, setModifier] = useState(''); //Add a new field
+    const [modifier, setModifier] = useState(user?.username || '');
     const [garmentList, setGarmentList] = useState([]);
     const [washDate, setWashDate] = useState('');
     const [careWash, setCareWash] = useState({
@@ -133,6 +134,13 @@ export default function GarmentWash() {
         return `${year}-${month}-${day}`;
     };
 
+        // Use useEffect to update modifier when user changes
+        useEffect(() => {
+        if (user && user.username) {
+      setModifier(user.username);
+        }
+    }   , [user]);
+
     return (
         <div>
             <ScreenHeaderIn />
@@ -165,7 +173,7 @@ export default function GarmentWash() {
                             id='modifier'
                             name='modifier'
                             placeholder='Username'
-                            value={user?.username || ''} // Automatically fill with logged-in user's username
+                            value={modifier} // Automatically fill with logged-in user's username
                             onChange={(e) => {
                                 setModifier(e.target.value);
                             }}

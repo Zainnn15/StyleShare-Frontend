@@ -6,11 +6,14 @@ import { useEffect, useState } from 'react';
 import { measurementTypes } from '../../constants/data/lists';
 
 const Garment_measure = ({ garment }) => {
-  const [maxTearInfo, setMaxTearInfo] = useState('');
+  const [maxTearInfo, setMaxTearInfo] = useState(null);
 
   useEffect(() => {
     if (garment.tearInfo && garment.tearInfo.length > 0) {
       setMaxTearInfo(getElemByMaxAttr(garment.tearInfo, 'tearDate', true));
+    } else {
+      // Reset maxTearInfo when there is no tear information
+      setMaxTearInfo(null);
     }
   }, [garment]);
 

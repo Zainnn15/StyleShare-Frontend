@@ -33,7 +33,7 @@ export default function GarmentTear() {
   const [garment, setGarment] = useState(null)
   const [garmentList, setGarmentList] = useState([])
   const [tearDate, setTearDate] = useState('')
-  const [modifier, setModifier] = useState(''); //Add a new field
+  const [modifier, setModifier] = useState(user?.username || '');
   const [wantRepair, setWantRepair] = useState(false)
   const [measures, setMeasures] = useState([])
   const [twistingImg, setTwistingImg] = useState(null)
@@ -278,6 +278,13 @@ export default function GarmentTear() {
     return `${yyyy}-${mm}-${dd}`;
   };
 
+   // Use useEffect to update modifier when user changes
+   useEffect(() => {
+    if (user && user.username) {
+  setModifier(user.username);
+    }
+}   , [user]);
+
   return (
     <div>
       <ScreenHeaderIn />
@@ -315,7 +322,7 @@ export default function GarmentTear() {
                 id='modifier'
                 name='modifier'
                 placeholder='Username'
-                value={user?.username || ''} // Automatically fill with logged-in user's username
+                value={modifier} // Automatically fill with logged-in user's username
                 readOnly // Make the field read-only
                 style={{ width: "250px" }}
                 required

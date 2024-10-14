@@ -81,27 +81,35 @@ const Admin = () => {
     setTotalWearTime(wearTime); 
   };
 
-  const handleDownload = async () => {
+  const handleDownloadGroupData = async () => {
+    if (!selectedGroup) {
+      alert('Please select a group to download its data.');
+      return;
+    }
+
     setLoading(true);
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/download-garment-data`, {
-        responseType: 'blob',
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/download-group-data/${selectedGroup}`, {
+        responseType: 'blob', // Important to handle binary data
         withCredentials: true,
       });
 
+      // Create a link to download the Excel file
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'garment_data.xlsx');
+      link.setAttribute('download', `group_data_${selectedGroup}.xlsx`); // Define the file name
       document.body.appendChild(link);
       link.click();
       link.parentNode.removeChild(link);
     } catch (error) {
-      console.error('Error downloading data:', error);
+      console.error('Error downloading group data:', error);
     } finally {
       setLoading(false);
     }
-  };
+};
+
+  
 
   return (
     <div>
@@ -110,15 +118,16 @@ const Admin = () => {
         <div className="admin-content">
           <h1 className="container-title">Admin Dashboard</h1>
           <section className="container-card admin-card m2">
-            <h2 className="container-subtitle">Data Export</h2>
-            <button
-              className="button-regular admin-button"
-              onClick={handleDownload}
-              disabled={loading}
-            >
-              {loading ? 'Generating Excel...' : 'Download Garment Data'}
-            </button>
-          </section>
+      <h2 className="container-subtitle">Data Export for Selected Group</h2>
+      <button
+        className="button-regular admin-button"
+        onClick={handleDownloadGroupData}
+        disabled={loading || !selectedGroup}
+      >
+        {loading ? 'Generating Excel...' : 'Download Selected Group Data'}
+      </button>
+      </section>
+
 
           <section className="container-card admin-card m2">
             <h2 className="container-subtitle">Groups and Members</h2>
