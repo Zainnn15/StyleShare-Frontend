@@ -107,9 +107,38 @@ const Admin = () => {
     } finally {
       setLoading(false);
     }
-};
+  };
 
-  
+  // New functions to handle admin joining/leaving a group as observer
+  const handleAdminJoinGroup = async () => {
+    if (!selectedGroup) {
+      alert('Please select a group to join as admin.');
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/admin/groups/${selectedGroup}/joinAsAdmin`, {}, { withCredentials: true });
+      alert(response.data.message);
+    } catch (error) {
+      console.error('Error joining group as admin:', error);
+      alert('Failed to join group as admin.');
+    }
+  };
+
+  const handleAdminLeaveGroup = async () => {
+    if (!selectedGroup) {
+      alert('Please select a group to leave as admin.');
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/admin/groups/${selectedGroup}/leaveAsAdmin`, {}, { withCredentials: true });
+      alert(response.data.message);
+    } catch (error) {
+      console.error('Error leaving group as admin:', error);
+      alert('Failed to leave group as admin.');
+    }
+  };
 
   return (
     <div>
@@ -118,16 +147,15 @@ const Admin = () => {
         <div className="admin-content">
           <h1 className="container-title">Admin Dashboard</h1>
           <section className="container-card admin-card m2">
-      <h2 className="container-subtitle">Data Export for Selected Group</h2>
-      <button
-        className="button-regular admin-button"
-        onClick={handleDownloadGroupData}
-        disabled={loading || !selectedGroup}
-      >
-        {loading ? 'Generating Excel...' : 'Download Selected Group Data'}
-      </button>
-      </section>
-
+            <h2 className="container-subtitle">Data Export for Selected Group</h2>
+            <button
+              className="button-regular admin-button"
+              onClick={handleDownloadGroupData}
+              disabled={loading || !selectedGroup}
+            >
+              {loading ? 'Generating Excel...' : 'Download Selected Group Data'}
+            </button>
+          </section>
 
           <section className="container-card admin-card m2">
             <h2 className="container-subtitle">Groups and Members</h2>
@@ -149,6 +177,14 @@ const Admin = () => {
                     </option>
                   ))}
                 </select>
+
+                {/* Show admin join/leave buttons if user is admin and a group is selected */}
+                {user && user.isAdmin && selectedGroup && (
+                  <div className="admin-actions">
+                    <button onClick={handleAdminJoinGroup}>Join Group as Admin</button>
+                    <button onClick={handleAdminLeaveGroup}>Leave Group as Admin</button>
+                  </div>
+                )}
 
                 {selectedGroup && (
                   <>
@@ -188,7 +224,7 @@ const Admin = () => {
                         onClick={() => handleTabChange('garmentWash')}
                       >
                         Garment Wash Details
-                      </button> {/* New tab for garment wash */}
+                      </button>
                     </div>
 
                     <div className="tab-content">
@@ -380,4 +416,3 @@ const Admin = () => {
 };
 
 export default Admin;
-
