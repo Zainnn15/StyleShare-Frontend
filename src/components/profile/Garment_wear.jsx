@@ -1,47 +1,59 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   formatDate,
   getImageFromURL,
-} from '../../constants/functions/valueHandlers.jsx'
-import '../../styles/main.scss'
-import Axios  from 'axios';
-
+} from '../../constants/functions/valueHandlers.jsx';
+import '../../styles/main.scss';
+import Axios from 'axios';
 
 const Garment_wear = ({ garment }) => {
-  const [wearInfo, setWearInfo] = useState(garment ? garment.wearInfo : [])
-  const navigate = useNavigate()
+  const [wearInfo, setWearInfo] = useState(garment ? garment.wearInfo : []);
+  const [originalOwner, setOriginalOwner] = useState('');
+  const navigate = useNavigate();
 
+  // Navigate to the "Add" page
   const handleEdit = () => {
-    navigate(`/garment-wear/`, { state: 3 })
-  }
+    navigate('/garment-wear/', { state: 3 });
+  };
 
-  const handleDelete = (id) => {
-    const updatedWearInfo = wearInfo.filter((wear) => wear._id !== id)
-    setWearInfo(updatedWearInfo)
-  }
+  // Delete single wear entry both in the backend and in local state
+  const handleDelete = (wearId) => {
+    // Make sure we have garment._id before proceeding
+    if (!garment || !garment._id) return;
 
-  console.log(wearInfo[0])
-  const [originalOwner, setOriginalOwner] = useState('')
+    // Ask for confirmation
+    if (window.confirm('Are you sure you want to delete this item?')) {
+      Axios.delete(`/garments/${garment._id}/wear/${wearId}`)
+        .then((res) => {
+          // On success, remove from local state
+          const updatedWearInfo = wearInfo.filter((w) => w._id !== wearId);
+          setWearInfo(updatedWearInfo);
+        })
+        .catch((err) => {
+          console.error('Error deleting wear entry:', err);
+          alert('Failed to delete wear entry from the server.');
+        });
+    }
+  };
 
   useEffect(() => {
-      setOriginalOwner('')
-      if (!garment.originalOwner) {
-      setOriginalOwner('n/a')
-      return
-      }
+    if (!garment?.originalOwner) {
+      setOriginalOwner('n/a');
+      return;
+    }
 
-      console.log('UPDATING', garment.garmentDescription)
-      Axios.get(`/profile/${garment.originalOwner}`)
+    // If there's an originalOwner, fetch their name
+    Axios.get(`/profile/${garment.originalOwner}`)
       .then((res) => {
-          setOriginalOwner(res.data.user.name)
+        setOriginalOwner(res.data.user?.name || 'n/a');
       })
       .catch((err) => {
-          console.log(err)
-          setOriginalOwner('n/a')
-      })
-  }, [garment])
+        console.log(err);
+        setOriginalOwner('n/a');
+      });
+  }, [garment]);
 
   return (
     <div className="m1">
@@ -58,21 +70,22 @@ const Garment_wear = ({ garment }) => {
                 </label>
                 {wear.wearTime}
               </p>
-              {wear.modifier? (
+              {wear.modifier ? (
                 <p>
-                  <label className="text-b">Wear Username:<label className="tab"></label></label>
+                  <label className="text-b">
+                    Wear Username:<label className="tab"></label>
+                  </label>
                   {wear.modifier}
                 </p>
               ) : null}
-              {garment?.originalOwner? (
+              {garment?.originalOwner ? (
                 <p>
                   <label className="text-b">
                     Owner:<label className="tab"></label>
                   </label>
-                  {/* {garment.user.name} */}
                   {originalOwner}
                 </p>
-               ) : null} 
+              ) : null}
             </div>
             <div>
               <p>
@@ -99,18 +112,13 @@ const Garment_wear = ({ garment }) => {
             <button
               className="button-regular"
               style={{ margin: '5px' }}
-              onClick={() => handleEdit()}
+              onClick={handleEdit}
             >
               Add
             </button>
-            {/* <button className="button-regular" onClick={() => handleDelete(wear._id)}>Delete</button> */}
             <button
               className="button-regular"
-              onClick={() => {
-                if (window.confirm('Are you sure delete this item?')) {
-                  handleDelete(wear._id)
-                }
-              }}
+              onClick={() => handleDelete(wear._id)}
             >
               Delete
             </button>
@@ -120,7 +128,7 @@ const Garment_wear = ({ garment }) => {
       ))}
       <br />
     </div>
-  )
-}
+  );
+};
 
-export default Garment_wear
+export default Garment_wear;
